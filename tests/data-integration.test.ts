@@ -23,7 +23,7 @@ describe("real dataset — derived metrics", () => {
     expect(attention.topPost?.post.id).toBe("post-layoffai-2063640043387052174");
 
     const amplification = getAmplificationMetrics(getAmplifications());
-    expect(amplification.verifiedAmplificationCount).toBe(9);
+    expect(amplification.verifiedAmplificationCount).toBe(10);
 
     const media = getMediaMetrics(getMediaReferences());
     // 100 records were imported from the official press page; only the reviewed

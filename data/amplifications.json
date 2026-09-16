@@ -178,5 +178,27 @@
     "notes": "X API confirms: quoted of status 2087170419027526094 (post-layoffai-2087170419027526094).",
     "status": "verified",
     "verified_at": "2026-09-17"
+  },
+  {
+    "id": "amp-brandon-gill-2087634340632998361",
+    "entity_type": "person",
+    "entity_name": "Brandon Gill",
+    "role": "U.S. Representative, Texas's 26th District",
+    "organization": "U.S. House of Representatives",
+    "category": "politics",
+    "action": "quote_post",
+    "date": "2026-08-12",
+    "platform": "x",
+    "account": "@realBrandonGill",
+    "evidence_url": "https://x.com/realBrandonGill/status/2087634340632998361",
+    "related_post_id": "post-layoffai-2087170419027526094",
+    "follower_count": null,
+    "follower_count_observed_at": null,
+    "country": "US",
+    "featured": false,
+    "portrait": null,
+    "notes": "Surfaced through a Breitbart article that embeds the post. X API confirms: quoted of status 2087170419027526094 (post-layoffai-2087170419027526094).",
+    "status": "verified",
+    "verified_at": "2026-09-17"
   }
 ]
