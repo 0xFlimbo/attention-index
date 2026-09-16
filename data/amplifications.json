@@ -35,9 +35,9 @@
     "country": "US",
     "featured": true,
     "portrait": null,
-    "notes": "Exact interaction type and relationship to LayoffHedge material should be confirmed during the one-time X API enrichment pass. X API confirms: quoted of status 2098762091423203710 (post-layoffai-2098762091423203710).",
-    "status": "needs_review",
-    "verified_at": "2026-09-16"
+    "notes": "X API confirms: quoted of status 2098762091423203710 (post-layoffai-2098762091423203710).",
+    "status": "verified",
+    "verified_at": "2026-09-17"
   },
   {
     "id": "amp-elon-musk-2034731489318048232",
@@ -55,9 +55,9 @@
     "country": "US",
     "featured": true,
     "portrait": null,
-    "notes": "Exact interaction type and referenced LayoffHedge post should be confirmed during the one-time X API enrichment pass. X API confirms: replied_to of status 2034123649939079593 (post-layoffai-2034123649939079593).",
-    "status": "needs_review",
-    "verified_at": "2026-09-16"
+    "notes": "X API confirms: replied_to of status 2034123649939079593 (post-layoffai-2034123649939079593).",
+    "status": "verified",
+    "verified_at": "2026-09-17"
   },
   {
     "id": "amp-ansem-2096379852731400569",
@@ -115,7 +115,7 @@
     "country": "US",
     "featured": true,
     "portrait": null,
-    "notes": "Public mirror shows DeSantis commenting on a LayoffHedge post about public universities, H-1B hiring, and layoffs.",
+    "notes": "X API confirms: quoted of status 2071406948411416696, an @LayoffAI reply addressed to @RonDeSantis about public universities and H-1B hiring (roughly 206,000 views observed by the maintainer). That reply is not tracked as an archive post, so related_post_id stays null.",
     "status": "verified",
     "verified_at": "2026-09-16"
   },
@@ -131,11 +131,11 @@
     "platform": "x",
     "account": "@Rep_Davidson",
     "evidence_url": "https://x.com/Rep_Davidson/status/2087206639388516779",
-    "related_post_id": null,
+    "related_post_id": "post-layoffai-2086800985079562516",
     "country": "US",
     "featured": true,
     "portrait": null,
-    "notes": "Public mirror shows Davidson commenting on LayoffHedge's congressional-district H-1B analysis. X API confirms: quoted of status 2086800985079562516 (not currently a tracked post).",
+    "notes": "Public mirror shows Davidson commenting on LayoffHedge's congressional-district H-1B analysis. X API confirms: quoted of status 2086800985079562516, now tracked as post-layoffai-2086800985079562516.",
     "status": "verified",
     "verified_at": "2026-09-16"
   },
@@ -155,9 +155,9 @@
     "country": "US",
     "featured": true,
     "portrait": null,
-    "notes": "Likely related to LayoffHedge's Texas H-1B district analysis. Exact interaction type should be confirmed through X API. X API confirms: quoted of status 2087170419027526094 (post-layoffai-2087170419027526094).",
-    "status": "needs_review",
-    "verified_at": "2026-09-16"
+    "notes": "X API confirms: quoted of status 2087170419027526094 (post-layoffai-2087170419027526094).",
+    "status": "verified",
+    "verified_at": "2026-09-17"
   },
   {
     "id": "amp-chip-roy-2087643804186657243",
@@ -175,8 +175,8 @@
     "country": "US",
     "featured": true,
     "portrait": null,
-    "notes": "Likely related to LayoffHedge's Texas H-1B district analysis. Exact interaction type should be confirmed through X API. X API confirms: quoted of status 2087170419027526094 (post-layoffai-2087170419027526094).",
-    "status": "needs_review",
-    "verified_at": "2026-09-16"
+    "notes": "X API confirms: quoted of status 2087170419027526094 (post-layoffai-2087170419027526094).",
+    "status": "verified",
+    "verified_at": "2026-09-17"
   }
 ]

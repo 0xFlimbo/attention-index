@@ -62,11 +62,15 @@
     "published_at": "2026-09-05",
     "title": "98 of 100 new U.S. jobs in August went to women",
     "subject": "U.S. employment by gender",
-    "summary": null,
+    "summary": "The post says the U.S. economy added 162,000 jobs in August, with 158,000 going to women and 4,000 to men, and cites a 12-month change of +870K for women and -1.5M for men.",
     "url": "https://x.com/LayoffAI/status/2096250047679574269",
     "status": "verified",
     "featured": false,
-    "tags": [],
+    "tags": [
+      "employment",
+      "gender",
+      "labor market"
+    ],
     "metrics": {
       "views": 2800000,
       "likes": 12334,
@@ -108,17 +112,48 @@
     "verified_at": "2026-09-16"
   },
   {
+    "id": "post-layoffai-2086800985079562516",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-08-10",
+    "title": "H-1B filings mapped to congressional districts",
+    "subject": "H-1B visas by congressional district",
+    "summary": "The post announces an interactive tool assigning 6.9 million H-1B filings from FY2015 onward to each of the 436 U.S. congressional districts, searchable by ZIP code.",
+    "url": "https://x.com/LayoffAI/status/2086800985079562516",
+    "status": "verified",
+    "featured": true,
+    "tags": [
+      "H-1B",
+      "data tool",
+      "congressional districts"
+    ],
+    "metrics": {
+      "views": 427443,
+      "likes": 5510,
+      "reposts": 2169,
+      "replies": 224,
+      "bookmarks": null,
+      "observed_at": "2026-09-17"
+    },
+    "screenshot": null,
+    "notes": "Added after the X enrichment pass showed Rep. Warren Davidson quoting this post. Engagement figures supplied by the maintainer.",
+    "verified_at": "2026-09-17"
+  },
+  {
     "id": "post-layoffai-2062172954624999853",
     "platform": "x",
     "account": "@LayoffAI",
     "published_at": "2026-06-03",
     "title": "U.S. immigrant population compared with other countries",
     "subject": "Immigration",
-    "summary": null,
+    "summary": "The post says the United States hosts roughly one in six of the world's immigrants, more than three times any other country, and links that share to recent job growth.",
     "url": "https://x.com/LayoffAI/status/2062172954624999853",
     "status": "verified",
     "featured": false,
-    "tags": [],
+    "tags": [
+      "immigration",
+      "labor market"
+    ],
     "metrics": {
       "views": 1100000,
       "likes": 5704,
@@ -138,11 +173,15 @@
     "published_at": "2026-03-17",
     "title": "AI-driven job replacement and layoffs",
     "subject": "AI and employment",
-    "summary": null,
+    "summary": "The post relays Andrew Yang's account of a public-company CEO describing successive workforce cuts of 15% and then 20%, framed against the size of the U.S. white-collar workforce.",
     "url": "https://x.com/LayoffAI/status/2033937691751157797",
     "status": "verified",
     "featured": false,
-    "tags": [],
+    "tags": [
+      "AI",
+      "layoffs",
+      "white-collar work"
+    ],
     "metrics": {
       "views": 942500,
       "likes": 4771,
@@ -190,11 +229,17 @@
     "published_at": "2026-03-23",
     "title": "H-1B hiring claims and layoffs at major companies",
     "subject": "H-1B and layoffs",
-    "summary": null,
+    "summary": "The post sets layoff totals at Amazon, Meta and Microsoft against H-1B visa approvals recorded at each company over the same period.",
     "url": "https://x.com/LayoffAI/status/2036172276148871395",
     "status": "verified",
     "featured": false,
-    "tags": [],
+    "tags": [
+      "H-1B",
+      "layoffs",
+      "Amazon",
+      "Meta",
+      "Microsoft"
+    ],
     "metrics": {
       "views": 972000,
       "likes": 5521,
@@ -354,11 +399,15 @@
     "published_at": "2026-04-02",
     "title": "Oracle employee reaction after layoffs",
     "subject": "Oracle layoffs and workplace culture",
-    "summary": null,
+    "summary": "The post reproduces a Reddit thread from r/employeesOfOracle in which a remaining employee urges colleagues to withhold discretionary effort after the layoffs.",
     "url": "https://x.com/LayoffAI/status/2039711953602625630",
     "status": "verified",
     "featured": false,
-    "tags": [],
+    "tags": [
+      "Oracle",
+      "layoffs",
+      "workplace culture"
+    ],
     "metrics": {
       "views": 1300000,
       "likes": 17622,
@@ -406,11 +455,15 @@
     "published_at": "2026-04-18",
     "title": "Native-born vs foreign-born U.S. employment since pre-COVID",
     "subject": "U.S. employment and immigration",
-    "summary": null,
+    "summary": "The post says foreign-born employment rose by 4.3M and native-born employment by 471K since before COVID, alongside more than 335,000 U.S. layoffs recorded in 2026.",
     "url": "https://x.com/LayoffAI/status/2045524643906269494",
     "status": "verified",
     "featured": false,
-    "tags": [],
+    "tags": [
+      "employment",
+      "immigration",
+      "layoffs"
+    ],
     "metrics": {
       "views": 1400000,
       "likes": 15921,
@@ -458,11 +511,15 @@
     "published_at": "2026-04-24",
     "title": "H-1B LCA filings and hiring map",
     "subject": "H-1B and labor market",
-    "summary": null,
+    "summary": "The post presents a map of 6.9 million Department of Labor LCA filings over 11 years, the filings legally required before an H-1B petition.",
     "url": "https://x.com/LayoffAI/status/2047676942128685469",
     "status": "verified",
     "featured": false,
-    "tags": [],
+    "tags": [
+      "H-1B",
+      "data tool",
+      "immigration"
+    ],
     "metrics": {
       "views": 2400000,
       "likes": 31369,
@@ -509,11 +566,14 @@
     "published_at": "2026-06-07",
     "title": "Student scholarship loss after AI detector result",
     "subject": "AI detection and education",
-    "summary": null,
+    "summary": "The post describes a student losing a $45,000 scholarship after an AI-detection tool flagged his work, and says the review board declined to examine six months of edit history.",
     "url": "https://x.com/LayoffAI/status/2063640043387052174",
     "status": "verified",
     "featured": false,
-    "tags": [],
+    "tags": [
+      "AI detection",
+      "education"
+    ],
     "metrics": {
       "views": 4500000,
       "likes": 3283,
