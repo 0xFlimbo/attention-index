@@ -4,13 +4,17 @@
     "platform": "x",
     "account": "@LayoffAI",
     "published_at": "2026-09-13",
-    "title": "LayoffAI post — Sep 13, 2026",
-    "subject": null,
-    "summary": null,
+    "title": "Disney World ticket prices since 1971",
+    "subject": "Long-run consumer prices",
+    "summary": "The post pairs the line \"55 years of inflation\" with an image comparing Walt Disney World admission tickets, priced at $3.50 in 1971 and $189 today.",
     "url": "https://x.com/LayoffAI/status/2099180586858393814",
     "status": "verified",
     "featured": false,
-    "tags": [],
+    "tags": [
+      "inflation",
+      "consumer prices",
+      "Disney"
+    ],
     "metrics": {
       "views": 4500000,
       "likes": 176230,
@@ -20,7 +24,7 @@
       "observed_at": "2026-09-16"
     },
     "screenshot": null,
-    "notes": "Post content/title enrichment pending.",
+    "notes": null,
     "verified_at": "2026-09-16"
   },
   {
