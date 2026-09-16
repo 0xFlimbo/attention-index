@@ -175,9 +175,9 @@
     "featured": false,
     "logo": null,
     "archive_url": null,
-    "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "notes": "Verified on 2026-09-17 by the maintainer: the article cites an @LayoffAI post. The site blocks automated requests.",
+    "status": "verified",
+    "verified_at": "2026-09-17"
   },
   {
     "id": "media-the-source-2026-08-25",
@@ -283,9 +283,9 @@
     "featured": false,
     "logo": null,
     "archive_url": null,
-    "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "notes": "Verified on 2026-09-17 by the maintainer: the article displays the layoffhedge tool. The site blocks automated requests.",
+    "status": "verified",
+    "verified_at": "2026-09-17"
   },
   {
     "id": "media-the-national-pulse-2026-08-13",
@@ -420,7 +420,7 @@
     "reference_type": "article",
     "published_at": "2026-07-28",
     "url": "https://www.ibtimes.co.uk/visa-job-cuts-ai-restructuring-1811159",
-    "author": "Aiza Mora&ntilde;a",
+    "author": "Aiza Moraña",
     "country": null,
     "context": "Fourteenth IBTimes UK citation. Embeds the @LayoffAI post breaking Visa's 7% workforce cut: 2,600 jobs, with technology and product teams hit hardest.",
     "related_post_id": null,
@@ -517,9 +517,9 @@
     "featured": false,
     "logo": null,
     "archive_url": null,
-    "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "notes": "Verified on 2026-09-17 by the maintainer: the article cites an @LayoffAI post. The site blocks automated requests.",
+    "status": "verified",
+    "verified_at": "2026-09-17"
   },
   {
     "id": "media-ibtimes-uk-2026-07-15",
@@ -848,7 +848,7 @@
   {
     "id": "media-ibtimes-uk-2026-06-09",
     "publication": "IBTimes UK",
-    "title": "One Altman Company Files for IPO, Another Cuts Staff &mdash; Leaked Memo Reveals Layoffs at $2.5 Billion Orb Startup",
+    "title": "One Altman Company Files for IPO, Another Cuts Staff — Leaked Memo Reveals Layoffs at $2.5 Billion Orb Startup",
     "reference_type": "article",
     "published_at": "2026-06-09",
     "url": "https://www.ibtimes.co.uk/sam-altman-openai-ipo-tools-humanity-layoffs-1801636",
@@ -877,9 +877,9 @@
     "featured": false,
     "logo": null,
     "archive_url": null,
-    "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "notes": "Verified on 2026-09-17: the maintainer watched the clip and confirms the segment used the layoffhedge tool and named the site on screen. The evidence URL is a clip of the broadcast posted by a third-party journalist, not a Fox News page.",
+    "status": "verified",
+    "verified_at": "2026-09-17"
   },
   {
     "id": "media-alex-jones-live-2026-06-05",
@@ -1046,7 +1046,7 @@
   {
     "id": "media-ibtimes-uk-2026-05-27",
     "publication": "IBTimes UK",
-    "title": "Groupon Cuts 25% Workforce Globally &mdash; AI Voice Agents Replacing Human Sales Workers Will Save Up To $25M",
+    "title": "Groupon Cuts 25% Workforce Globally — AI Voice Agents Replacing Human Sales Workers Will Save Up To $25M",
     "reference_type": "article",
     "published_at": "2026-05-27",
     "url": "https://www.ibtimes.co.uk/groupon-ai-restructuring-job-cuts-1799091",
@@ -1064,7 +1064,7 @@
   {
     "id": "media-inkl-2026-05-27",
     "publication": "Inkl (via IBTimes UK)",
-    "title": "Groupon Cuts 25% Workforce Globally &mdash; AI Voice Agents Replacing Human Sales Workers Will Save Up To $25M",
+    "title": "Groupon Cuts 25% Workforce Globally — AI Voice Agents Replacing Human Sales Workers Will Save Up To $25M",
     "reference_type": "article",
     "published_at": "2026-05-27",
     "url": "https://www.inkl.com/news/groupon-cuts-25-workforce-globally-ai-voice-agents-replacing-human-sales-workers-will-save-up-to-25m",
@@ -1082,7 +1082,7 @@
   {
     "id": "media-glass-almanac-2026-05-23",
     "publication": "Glass Almanac",
-    "title": "\"Many Leaders Will Announce Org Changes\" Sparks Staff Revolt in 2026 &mdash; What Happens Next",
+    "title": "\"Many Leaders Will Announce Org Changes\" Sparks Staff Revolt in 2026 — What Happens Next",
     "reference_type": "article",
     "published_at": "2026-05-23",
     "url": "https://glassalmanac.com/many-leaders-will-announce-org-changes-sparks-staff-revolt-in-2026-what-happens-next/",
@@ -1118,7 +1118,7 @@
   {
     "id": "media-people-and-computers-israel-2026-05-20",
     "publication": "People & Computers (Israel)",
-    "title": "Meta Laid Off 8,000 Worldwide and Dozens in Israel &mdash; Because of AI",
+    "title": "Meta Laid Off 8,000 Worldwide and Dozens in Israel — Because of AI",
     "reference_type": "article",
     "published_at": "2026-05-20",
     "url": "https://www.pc.co.il/news/%D7%91%D7%99%D7%A0%D7%94-%D7%9E%D7%9C%D7%90%D7%9B%D7%95%D7%AA%D7%99%D7%AA/451594/",
@@ -1262,7 +1262,7 @@
   {
     "id": "media-beincrypto-spanish-edition-2026-05-19",
     "publication": "BeInCrypto (Spanish edition)",
-    "title": "Standard Chartered se une a la ola de despidos por IA y planea recortar m&aacute;s de 7,000 empleos",
+    "title": "Standard Chartered se une a la ola de despidos por IA y planea recortar más de 7,000 empleos",
     "reference_type": "article",
     "published_at": "2026-05-19",
     "url": "https://es.beincrypto.com/despidos-ia-standard-chartered-7800-empleos/",
@@ -1406,7 +1406,7 @@
   {
     "id": "media-glass-almanac-2026-05-08",
     "publication": "Glass Almanac",
-    "title": "Meta Reveals 10% Cut On May 20, 2026 &mdash; Why Reality Labs Strategy Shifts Now",
+    "title": "Meta Reveals 10% Cut On May 20, 2026 — Why Reality Labs Strategy Shifts Now",
     "reference_type": "article",
     "published_at": "2026-05-08",
     "url": "https://glassalmanac.com/meta-reveals-10-cut-on-may-20-2026-why-reality-labs-strategy-shifts-now/",
@@ -1514,7 +1514,7 @@
   {
     "id": "media-forbes-digital-assets-2026-04-24",
     "publication": "Forbes (Digital Assets)",
-    "title": "'Up To 15,800'&mdash;Polymarket Warning Meta AI Layoffs Target $135B Capex",
+    "title": "'Up To 15,800'—Polymarket Warning Meta AI Layoffs Target $135B Capex",
     "reference_type": "article",
     "published_at": "2026-04-24",
     "url": "https://www.forbes.com/sites/boazsobrado/2026/04/24/up-to-15800-polymarket-warning-meta-ai-layoffs-target-135b-capex/",
@@ -1525,9 +1525,9 @@
     "featured": false,
     "logo": null,
     "archive_url": null,
-    "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "notes": "Verified on 2026-09-17 from the article text, which names @LayoffAI twice as a layoff-tracker source, including the 15,800 two-wave projection and the May 20 date. The site blocks automated requests.",
+    "status": "verified",
+    "verified_at": "2026-09-17"
   },
   {
     "id": "media-tennessee-conservative-news-2026-04-22",

@@ -56,16 +56,24 @@ interface RawCard {
   context: string;
 }
 
-function decodeEntities(input: string): string {
+// Headlines carry em dashes, curly quotes and accented characters, so the decoder has to be
+// general: a hand-picked list silently leaves raw `&mdash;` inside published titles.
+const NAMED_ENTITIES: Record<string, string> = {
+  middot: "·", quot: '"', apos: "'", starf: "★", lt: "<", gt: ">",
+  mdash: "—", ndash: "–", nbsp: " ", hellip: "…", shy: "",
+  lsquo: "‘", rsquo: "’", ldquo: "“", rdquo: "”", sbquo: "‚", bdquo: "„",
+  aacute: "á", eacute: "é", iacute: "í", oacute: "ó", uacute: "ú", ntilde: "ñ", ccedil: "ç",
+  agrave: "à", egrave: "è", igrave: "ì", ograve: "ò", ugrave: "ù",
+  auml: "ä", ouml: "ö", uuml: "ü", euro: "€", pound: "£", deg: "°", trade: "™", reg: "®", copy: "©",
+};
+
+export function decodeEntities(input: string): string {
   return input
-    .replace(/&middot;/g, "·")
-    .replace(/&amp;/g, "&")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&starf;/g, "★")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
     .replace(/<[^>]+>/g, "") // strip any nested tags (e.g. the major-coverage badge line)
+    .replace(/&#x([0-9a-f]+);/gi, (_, hex: string) => String.fromCodePoint(parseInt(hex, 16)))
+    .replace(/&#(\d+);/g, (_, dec: string) => String.fromCodePoint(Number(dec)))
+    .replace(/&([a-z]+);/gi, (whole, name: string) => NAMED_ENTITIES[name.toLowerCase()] ?? whole)
+    .replace(/&amp;/g, "&") // last, so a decoded entity is never decoded twice
     .replace(/\s+/g, " ")
     .trim();
 }

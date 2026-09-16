@@ -28,8 +28,8 @@ describe("real dataset — derived metrics", () => {
     const media = getMediaMetrics(getMediaReferences());
     // 100 records were imported from the official press page; only the reviewed
     // subset is verified, so the rest must stay out of the public count.
-    expect(media.verifiedMediaReferenceCount).toBe(13);
-    expect(media.uniquePublicationCount).toBe(9);
+    expect(media.verifiedMediaReferenceCount).toBe(18);
+    expect(media.uniquePublicationCount).toBe(12);
     expect(getMediaReferences().length).toBe(100);
   });
 
