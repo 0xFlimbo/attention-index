@@ -28,13 +28,17 @@
     "platform": "x",
     "account": "@LayoffAI",
     "published_at": "2026-09-12",
-    "title": "LayoffAI post — Sep 12, 2026",
-    "subject": null,
-    "summary": null,
+    "title": "Trine University international enrollment records",
+    "subject": "Trine University",
+    "summary": "The post says Trine University's federal enrollment records list 9,123 graduate students, 98.3% of them foreign nationals, and describes payments to an overseas recruiting agency not reflected in the university's audited financial statements.",
     "url": "https://x.com/LayoffAI/status/2098762091423203710",
     "status": "verified",
     "featured": false,
-    "tags": [],
+    "tags": [
+      "higher education",
+      "international students",
+      "Trine University"
+    ],
     "metrics": {
       "views": 1200000,
       "likes": 10444,
@@ -44,7 +48,7 @@
       "observed_at": "2026-09-16"
     },
     "screenshot": null,
-    "notes": "Post content/title enrichment pending.",
+    "notes": null,
     "verified_at": "2026-09-16"
   },
   {
@@ -76,13 +80,17 @@
     "platform": "x",
     "account": "@LayoffAI",
     "published_at": "2026-08-11",
-    "title": "LayoffAI post — Aug 11, 2026",
-    "subject": null,
-    "summary": null,
+    "title": "Fastest-growing H-1B districts represented by Texas Republicans",
+    "subject": "H-1B visas by congressional district",
+    "summary": "The post says the eight U.S. congressional districts with the fastest-growing H-1B visa filings are all represented by Texas Republicans.",
     "url": "https://x.com/LayoffAI/status/2087170419027526094",
     "status": "verified",
     "featured": false,
-    "tags": [],
+    "tags": [
+      "H-1B",
+      "Texas",
+      "congressional districts"
+    ],
     "metrics": {
       "views": 1600000,
       "likes": 5257,
@@ -92,7 +100,7 @@
       "observed_at": "2026-09-16"
     },
     "screenshot": null,
-    "notes": "Post content/title enrichment pending.",
+    "notes": null,
     "verified_at": "2026-09-16"
   },
   {
@@ -148,13 +156,17 @@
     "platform": "x",
     "account": "@LayoffAI",
     "published_at": "2026-03-30",
-    "title": "LayoffAI post — Mar 30, 2026",
-    "subject": null,
-    "summary": null,
+    "title": "Meta ties promotions to AI adoption after layoffs",
+    "subject": "Meta layoffs and AI mandates",
+    "summary": "Following layoffs of about 700 employees and plans for 15,000 more, the post describes leaked internal Meta documents requiring large shares of code to be AI-assisted and factoring AI adoption into performance reviews.",
     "url": "https://x.com/LayoffAI/status/2038753137377325342",
     "status": "verified",
     "featured": false,
-    "tags": [],
+    "tags": [
+      "Meta",
+      "AI adoption",
+      "layoffs"
+    ],
     "metrics": {
       "views": 955000,
       "likes": 1505,
@@ -164,7 +176,7 @@
       "observed_at": "2026-09-16"
     },
     "screenshot": null,
-    "notes": "Post content/title enrichment pending.",
+    "notes": null,
     "verified_at": "2026-09-16"
   },
   {
@@ -196,13 +208,17 @@
     "platform": "x",
     "account": "@LayoffAI",
     "published_at": "2026-05-14",
-    "title": "LayoffAI post — May 14, 2026",
-    "subject": null,
-    "summary": null,
+    "title": "Meta 2026 layoff total revised to 22,000",
+    "subject": "Meta layoffs",
+    "summary": "The post says Meta's 2026 job cuts total roughly 22,000 once unannounced reductions and cancelled openings are included, citing Reuters reporting alongside Meta's H-1B and green-card filing activity.",
     "url": "https://x.com/LayoffAI/status/2055002525519294970",
     "status": "verified",
     "featured": false,
-    "tags": [],
+    "tags": [
+      "Meta",
+      "layoffs",
+      "H-1B"
+    ],
     "metrics": {
       "views": 1000000,
       "likes": 1168,
@@ -212,7 +228,7 @@
       "observed_at": "2026-09-16"
     },
     "screenshot": null,
-    "notes": "Post content/title enrichment pending.",
+    "notes": null,
     "verified_at": "2026-09-16"
   },
   {
@@ -220,13 +236,17 @@
     "platform": "x",
     "account": "@LayoffAI",
     "published_at": "2026-05-21",
-    "title": "LayoffAI post — May 21, 2026",
-    "subject": null,
-    "summary": null,
+    "title": "Cloudflare CEO explains AI-driven layoffs",
+    "subject": "Cloudflare layoffs",
+    "summary": "The post describes Cloudflare laying off 1,100 employees during a record-revenue quarter and cites the CEO's Wall Street Journal op-ed on using AI to replace certain roles.",
     "url": "https://x.com/LayoffAI/status/2057485600346005923",
     "status": "verified",
     "featured": false,
-    "tags": [],
+    "tags": [
+      "Cloudflare",
+      "AI",
+      "layoffs"
+    ],
     "metrics": {
       "views": 1000000,
       "likes": 595,
@@ -236,7 +256,7 @@
       "observed_at": "2026-09-16"
     },
     "screenshot": null,
-    "notes": "Post content/title enrichment pending.",
+    "notes": null,
     "verified_at": "2026-09-16"
   },
   {
@@ -244,13 +264,17 @@
     "platform": "x",
     "account": "@LayoffAI",
     "published_at": "2026-05-05",
-    "title": "LayoffAI post — May 5, 2026",
-    "subject": null,
-    "summary": null,
+    "title": "Cognizant layoff estimate revised to 15,000",
+    "subject": "Cognizant layoffs",
+    "summary": "The post says analysts revised Cognizant's layoff estimate from 4,000 to 15,000 employees, describing the company as a major H-1B employer.",
     "url": "https://x.com/LayoffAI/status/2051709389476946089",
     "status": "verified",
     "featured": false,
-    "tags": [],
+    "tags": [
+      "Cognizant",
+      "layoffs",
+      "H-1B"
+    ],
     "metrics": {
       "views": 1000000,
       "likes": 3849,
@@ -260,7 +284,7 @@
       "observed_at": "2026-09-16"
     },
     "screenshot": null,
-    "notes": "Post content/title enrichment pending.",
+    "notes": null,
     "verified_at": "2026-09-16"
   },
   {
@@ -268,13 +292,17 @@
     "platform": "x",
     "account": "@LayoffAI",
     "published_at": "2026-06-13",
-    "title": "LayoffAI post — Jun 13, 2026",
-    "subject": null,
-    "summary": null,
+    "title": "Wired report on internal turmoil at Meta",
+    "subject": "Meta AI restructuring",
+    "summary": "The post cites a Wired report describing internal turmoil at Meta following AI-related restructuring, including reassigned employees and a petition against workplace monitoring used to generate AI training data.",
     "url": "https://x.com/LayoffAI/status/2065598432652472605",
     "status": "verified",
     "featured": false,
-    "tags": [],
+    "tags": [
+      "Meta",
+      "AI",
+      "internal culture"
+    ],
     "metrics": {
       "views": 1200000,
       "likes": 6082,
@@ -284,7 +312,7 @@
       "observed_at": "2026-09-16"
     },
     "screenshot": null,
-    "notes": "Post content/title enrichment pending.",
+    "notes": null,
     "verified_at": "2026-09-16"
   },
   {
@@ -292,13 +320,17 @@
     "platform": "x",
     "account": "@LayoffAI",
     "published_at": "2026-03-31",
-    "title": "LayoffAI post — Mar 31, 2026",
-    "subject": null,
-    "summary": null,
+    "title": "Oracle layoffs amid Stargate data center buildout",
+    "subject": "Oracle layoffs",
+    "summary": "The post links Oracle's termination of about 30,000 employees to its data-center lease commitments and AI infrastructure spending tied to the Stargate project, contrasting the cuts with previously announced construction jobs.",
     "url": "https://x.com/LayoffAI/status/2039080883270156557",
     "status": "verified",
     "featured": false,
-    "tags": [],
+    "tags": [
+      "Oracle",
+      "Stargate",
+      "layoffs"
+    ],
     "metrics": {
       "views": 1200000,
       "likes": 1493,
@@ -308,7 +340,7 @@
       "observed_at": "2026-09-16"
     },
     "screenshot": null,
-    "notes": "Post content/title enrichment pending.",
+    "notes": null,
     "verified_at": "2026-09-16"
   },
   {
@@ -340,13 +372,17 @@
     "platform": "x",
     "account": "@LayoffAI",
     "published_at": "2026-04-23",
-    "title": "LayoffAI post — Apr 23, 2026",
-    "subject": null,
-    "summary": null,
+    "title": "LayoffHedge launches H-1B visa filing explorer",
+    "subject": "H-1B visa data tool",
+    "summary": "The post announces an interactive tool mapping H-1B visa filings by county across 11 fiscal years, cross-referenced against the account's layoff tracker.",
     "url": "https://x.com/LayoffAI/status/2047314552191119792",
     "status": "verified",
     "featured": false,
-    "tags": [],
+    "tags": [
+      "H-1B",
+      "data tool",
+      "immigration"
+    ],
     "metrics": {
       "views": 1300000,
       "likes": 10515,
@@ -356,7 +392,7 @@
       "observed_at": "2026-09-16"
     },
     "screenshot": null,
-    "notes": "Post content/title enrichment pending.",
+    "notes": null,
     "verified_at": "2026-09-16"
   },
   {
@@ -388,13 +424,17 @@
     "platform": "x",
     "account": "@LayoffAI",
     "published_at": "2026-05-19",
-    "title": "LayoffAI post — May 19, 2026",
-    "subject": null,
-    "summary": null,
+    "title": "Leaked audio on Meta employee monitoring for AI training",
+    "subject": "Meta AI training practices",
+    "summary": "The post describes leaked audio in which Meta's CEO reportedly discusses tracking employee device use to generate AI training data ahead of layoffs, saying employee-generated data outperforms outside contractors.",
     "url": "https://x.com/LayoffAI/status/2056858309618282743",
     "status": "verified",
     "featured": false,
-    "tags": [],
+    "tags": [
+      "Meta",
+      "AI training",
+      "employee monitoring"
+    ],
     "metrics": {
       "views": 2400000,
       "likes": 5043,
@@ -404,7 +444,7 @@
       "observed_at": "2026-09-16"
     },
     "screenshot": null,
-    "notes": "Post content/title enrichment pending.",
+    "notes": null,
     "verified_at": "2026-09-16"
   },
   {
@@ -436,13 +476,16 @@
     "platform": "x",
     "account": "@LayoffAI",
     "published_at": "2026-03-18",
-    "title": "Q1 2026 layoff recap",
-    "subject": "Layoffs",
-    "summary": null,
+    "title": "Dell confirms 11,000 job cuts",
+    "subject": "Dell layoffs",
+    "summary": "The post says Dell confirmed 11,000 job cuts in its annual filing and recorded $569M in severance costs.",
     "url": "https://x.com/LayoffAI/status/2034123649939079593",
     "status": "verified",
     "featured": false,
-    "tags": [],
+    "tags": [
+      "Dell",
+      "layoffs"
+    ],
     "metrics": {
       "views": 3900000,
       "likes": 9764,
