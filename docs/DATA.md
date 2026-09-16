@@ -41,6 +41,10 @@ Formatting belongs to the UI.
 Use `null` for unknown/unavailable — never `""`, `"N/A"`, `"unknown"`, or `0`
 (`0` only when zero was actually observed).
 
+An optional field may also be **omitted entirely** instead of written as `null`; the loaders
+normalize the two to the same thing, so application code only ever sees `value | null`, never
+`undefined`. Explicit `null` is preferred for readability in hand-edited records.
+
 ### IDs
 
 Format `category-descriptor-date` (or `-tweetid`), lowercase, hyphenated, stable after publication.
@@ -202,6 +206,10 @@ One record per article. Publication totals (`FORBES — 3 references`) are **der
 }
 ```
 
+Required: `id, date, title, category, status`. `description`, `evidence_url`, `related_post_id`
+and `verified_at` are nullable — a milestone can be derived from records the site already holds,
+so it does not always carry its own evidence URL.
+
 Editorial records, not primary metrics.
 
 ---
@@ -291,6 +299,7 @@ milestones      date ascending
   - post → `url`, `metrics.views`, `metrics.observed_at`
   - amplification → `evidence_url`
   - media → `url`
+- every `verified` record carries `verified_at` (nullable only for `needs_review` / `archived`)
 - `follower_count` never present without `follower_count_observed_at`
 - placeholder records reported
 

@@ -8,3 +8,7 @@ out/
 dist/
 .DS_Store
 *.log
+*.tsbuildinfo
+next-env.d.ts
+.vercel
+coverage/

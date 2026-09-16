@@ -98,7 +98,8 @@ not superiority.
 ## 4. Numbers and dates
 
 ```text
-1.2K · 184K · 1.0M · 18.7M · 137.4M      max one decimal; no false precision (18.734829M)
+1.2K · 184K · 1M · 18.7M · 137.4M         max one decimal, trailing .0 dropped;
+                                          no false precision (18.734829M)
 42 POSTS ABOVE 1M                         exact integers for record counts; avoid "42+"
 SEP 15 2026                               UI standard; long-form prose may use September 15, 2026
 2026-09-15                                canonical JSON only
