@@ -60,6 +60,7 @@ run `pnpm validate:data` → open a pull request. Contributions without a public
 |---|---|
 | `CLAUDE.md` | operating rules and precedence for coding agents |
 | `docs/WORKPLAN.md` | batch plan and current status |
+| `docs/HISTORY.md` | what each session actually did |
 | `docs/PRODUCT.md` | thesis, scope, audience, routes, success criteria |
 | `docs/DESIGN.md` | tokens, typography, components, motion, accessibility |
 | `docs/HOMEPAGE.md` | homepage sections and approved copy |

@@ -52,7 +52,7 @@ it must never gate main metrics, archive rows, source URLs, the disclaimer or me
 ```text
 /
 ├── CLAUDE.md  AGENTS.md  README.md
-├── docs/            PRODUCT DESIGN HOMEPAGE DATA ENGINEERING EDITORIAL WORKPLAN + archive/
+├── docs/            PRODUCT DESIGN HOMEPAGE DATA ENGINEERING EDITORIAL WORKPLAN HISTORY + archive/
 ├── data/            posts.json amplifications.json media.json milestones.json project.json
 ├── public/
 │   ├── images/      posts/ people/ media/
