@@ -187,9 +187,13 @@ external embeds).
   "validate:data": "tsx scripts/validate-data.ts",
   "check:production-data": "tsx scripts/check-production-data.ts",
   "enrich:twitter": "tsx scripts/enrich-twitter-posts.ts",
-  "import:press": "tsx scripts/import-layoffhedge-press.ts"
+  "import:press": "tsx scripts/import-layoffhedge-press.ts",
+  "check:visual": "node scripts/visual-check.mjs"
 }
 ```
+
+`check:visual` is the browser review pass — see §16. It is never part of the pre-deploy pipeline
+below, because it must not run alongside a build.
 
 Pre-deploy pipeline:
 
@@ -310,3 +314,50 @@ data contract stable so future ingestion writes the same records.
 - [ ] No unnecessary client-side data fetching
 - [ ] typecheck, lint, tests, data validation and build all pass
 - [ ] Preview deployment visually reviewed at 390 / 768 / 1440
+
+---
+
+## 16. Maintenance tool — `pnpm check:visual`
+
+The browser review pass for any batch that renders UI. A maintenance tool, never production
+runtime. Requires the maintainer's consent for the session first (`docs/WORKPLAN.md`, rule 3).
+
+**Why it is a script and not an ad-hoc run.** This machine has 8 GB of RAM and, until
+2026-09-17, a 1.44 GB pagefile. An ad-hoc review that ran `pnpm build`, `pnpm start` and five
+browser contexts at once — taking full-page screenshots at `deviceScaleFactor: 2` of a
+~7,460 px page, roughly 86 MB per raster — bugchecked the VPS with
+`0x000000EF CRITICAL_PROCESS_DIED`. The sequence below is the fix, and the script enforces it
+so it cannot be improvised again.
+
+**One thing at a time:**
+
+```text
+1. debug    code checks finish FIRST, as separate commands:
+            pnpm typecheck && pnpm lint && pnpm test && pnpm validate:data
+            && pnpm check:production-data && pnpm build
+2. server   started alone; nothing else runs while it is up
+3. screens  one browser, one context, deviceScaleFactor 1, viewport-sized captures
+4. close    browser first, then the server, then verify the port is free
+```
+
+The script refuses to start if under 3 GB of RAM is free, if no `.next` build exists (it never
+builds — that is step 1's job, already finished), or if something is already serving port 3000.
+
+**What it asserts,** at 390 / 768 / 1440 plus a reduced-motion and a no-JavaScript pass:
+no horizontal overflow, and no element left below full opacity once the reveals have settled —
+content that needs motion to become readable would violate `docs/DESIGN.md §8`.
+
+```bash
+pnpm check:visual                    # 390 / 768 / 1440, output in .visual-check/
+pnpm check:visual --widths 390,1440
+pnpm check:visual --path /archive
+pnpm check:visual --out ./review-shots
+```
+
+Screenshots land in `.visual-check/` (gitignored) and are for a human to look at — the script
+checks what is measurable, not whether the page looks good. Reading them is still the reviewer's
+job.
+
+**Never:** `fullPage` on a tall page, `deviceScaleFactor: 2`, more than one browser context, or
+a build/test run while the browser is open. MSYS `pgrep`/`pkill` enumerate nothing on this
+machine — use PowerShell `Get-Process` / `Stop-Process` for cleanup.

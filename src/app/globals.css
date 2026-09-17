@@ -37,6 +37,66 @@
 }
 
 /*
+ * Contrast note (docs/DESIGN.md §11), measured against --color-bg (#F2EFE9):
+ *   --color-ink        15.62:1   --color-ink-soft    5.87:1
+ *   --color-ink-muted   3.98:1   --color-accent      3.41:1
+ * Only `ink` and `ink-soft` clear WCAG AA for normal text (4.5:1). `ink-muted`
+ * and `accent` clear the large-text bar (3:1) only, so neither may carry
+ * `.text-metadata` (12px) or any other small copy — use `ink-soft` there.
+ */
+
+/*
+ * B2 scope: typography scale (docs/DESIGN.md §4) and spacing/radius scale
+ * (docs/DESIGN.md §5), as literal values — same style as the color block
+ * above, no self-referential entries. `--text-*` and `--radius-*` are
+ * Tailwind v4's recognized namespaces, so this also (re)generates the
+ * matching utilities (text-xs…text-5xl, rounded-none/sm/md/lg) with this
+ * system's exact values instead of Tailwind's defaults. `--space-*` has no
+ * Tailwind-recognized namespace of its own; it exists so component CSS can
+ * reference `var(--space-9)` instead of a bare pixel value.
+ */
+@theme {
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-base: 18px;
+  --text-lg: 24px;
+  --text-xl: 32px;
+  --text-2xl: 48px;
+  --text-3xl: 72px;
+  --text-4xl: 96px;
+  --text-5xl: 128px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --space-10: 128px;
+  --space-11: 160px;
+
+  --radius-none: 0px;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+}
+
+/*
+ * Motion timing (docs/DESIGN.md §8). Plain `:root` custom properties, not
+ * `@theme` — these don't back a Tailwind utility namespace, they're just
+ * shared values for the hand-written keyframes/transitions below.
+ */
+:root {
+  --motion-fast: 180ms;
+  --motion-base: 320ms;
+  --motion-slow: 600ms;
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/*
  * Font stacks reference the next/font variables set in layout.tsx, so they use
  * `inline` (docs/DESIGN.md §4). Both are declared with their full fallback stack
  * so `var(--font-sans)` / `var(--font-mono)` are safe to use in raw CSS too.
@@ -62,4 +122,165 @@ body {
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 3px;
+}
+
+/*
+ * docs/DESIGN.md §4 — the three clamp() display scales, mobile-first (the
+ * mobile clamp is the default; desktop overrides at 768px, matching the
+ * spec's separate mobile vs. desktop formulas rather than one continuous
+ * clamp across all widths). `.text-stat` is used for the single dominant
+ * derived number (Primary Attention Metric); `.text-stat-cell` is the
+ * distinct, smaller formula §6 defines specifically for Stat Grid cells.
+ */
+.text-hero {
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  font-size: clamp(52px, 15vw, 88px);
+}
+@media (min-width: 768px) {
+  .text-hero {
+    line-height: 0.88;
+    font-size: clamp(64px, 10vw, 160px);
+  }
+}
+
+.text-stat {
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+  font-size: clamp(48px, 13vw, 72px);
+}
+@media (min-width: 768px) {
+  .text-stat {
+    font-size: clamp(56px, 7vw, 112px);
+  }
+}
+
+.text-stat-cell {
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  font-size: clamp(48px, 6vw, 96px);
+}
+
+.text-body {
+  line-height: 1.35;
+  font-size: 18px;
+}
+@media (min-width: 768px) {
+  .text-body {
+    font-size: clamp(18px, 1.5vw, 24px);
+  }
+}
+
+.text-metadata {
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* docs/DESIGN.md §5 — container and section vertical rhythm. */
+.container-editorial {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: 20px;
+}
+@media (min-width: 768px) {
+  .container-editorial {
+    padding-inline: 32px;
+  }
+}
+
+.section-padding {
+  padding-block: 72px;
+}
+@media (min-width: 768px) {
+  .section-padding {
+    padding-block: 120px;
+  }
+}
+
+/* Large narrative sections (Narrative Break) get more air per §5. */
+.section-padding-lg {
+  padding-block: 72px;
+}
+@media (min-width: 768px) {
+  .section-padding-lg {
+    padding-block: 160px;
+  }
+}
+
+/*
+ * Motion budget (docs/DESIGN.md §8) — exactly four effects across the whole
+ * batch: hero line reveal, one-time number count (JS, in
+ * primary-attention-metric.tsx), a subtle section reveal, and the mobile
+ * nav panel transition (in navigation.tsx). Nothing else animates.
+ */
+@keyframes hero-line-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(0.4em);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-lines > span {
+  display: block;
+  animation: hero-line-reveal var(--motion-slow) var(--motion-ease) both;
+}
+.hero-lines > span:nth-child(1) {
+  animation-delay: 0ms;
+}
+.hero-lines > span:nth-child(2) {
+  animation-delay: 120ms;
+}
+.hero-lines > span:nth-child(3) {
+  animation-delay: 240ms;
+}
+
+.hero-supporting {
+  animation: hero-line-reveal var(--motion-slow) var(--motion-ease) both;
+  animation-delay: 420ms;
+}
+
+@keyframes section-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal-on-mount {
+  animation: section-reveal var(--motion-slow) var(--motion-ease) both;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+
+/*
+ * docs/DESIGN.md §8 — reduced motion: content stays fully visible, counts
+ * become static, scroll reveals and line travel are disabled. Checked here
+ * for CSS-driven motion; the number count-up additionally checks
+ * `prefers-reduced-motion` at runtime in JS before it ever starts.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .hero-lines > span,
+  .hero-supporting,
+  .reveal-on-mount {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .mobile-menu-panel {
+    transition: none !important;
+  }
 }

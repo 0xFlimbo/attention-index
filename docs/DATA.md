@@ -253,6 +253,29 @@ totalObservedViews    sum of views   → label "OBSERVED VIEWS ACROSS TRACKED PO
 Thresholds are inclusive (`>=`). `totalObservedViews` is a sum of post-level counters: it is not
 unique people, and the same person may appear in several posts. Methodology must state this.
 
+### Attention Grid cell selection (`src/lib/metrics/attention-grid.ts`)
+
+`selectAttentionGridCells(metrics: AttentionMetrics): AttentionGridCell[]` — a pure function over
+`AttentionMetrics`, consumed by `StatGrid` (docs/HOMEPAGE.md §6). Priority order, skipping any
+threshold cell whose count is `0`:
+
+```text
+1. POSTS ABOVE 1M            (if count > 0)
+2. POSTS ABOVE 5M            (if count > 0)
+3. POSTS ABOVE 10M           (if count > 0)
+4. TRACKED POSTS             (always available)
+5. MOST VIEWED TRACKED POST  (always available)
+6. OBSERVED VIEWS ACROSS TRACKED POSTS (always available)
+```
+
+Returns the first four candidates. Only `MOST VIEWED TRACKED POST` is tied to one specific
+record — it is the only cell carrying `sourceUrl` / `sourcePlatformLabel` / `observedAt`; the
+count and sum cells derive from many records with different observation dates and carry none of
+those fields. If no threshold cell qualifies, fewer than four cells are returned — the function
+never fabricates a fourth cell to pad the grid; `StatGrid` renders whatever it receives. With
+today's dataset (21 posts, `postsOver1M` 17, max 4.5M, sum 37.1M) this resolves to
+`POSTS ABOVE 1M · TRACKED POSTS · MOST VIEWED TRACKED POST · OBSERVED VIEWS ACROSS TRACKED POSTS`.
+
 ### Amplification (`amplifications.json`)
 
 ```text

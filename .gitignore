@@ -12,3 +12,6 @@ dist/
 next-env.d.ts
 .vercel
 coverage/
+
+# screenshots from `pnpm check:visual` — never committed
+.visual-check/

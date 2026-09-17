@@ -348,6 +348,22 @@ text must say so too.
 
 Never remove outlines without a replacement. Accessibility is not traded for minimalism.
 
+**Measured contrast against `--color-bg` (#F2EFE9):** `--color-ink` 15.62:1 · `--color-ink-soft`
+5.87:1 · `--color-ink-muted` 3.98:1 · `--color-accent` 3.41:1 (and cream on accent, 3.41:1).
+
+Only `ink` and `ink-soft` clear AA for normal text (4.5:1). `ink-muted` and `accent` clear the
+large-text bar (3:1) only, so neither may carry metadata-scale (12px) or other small copy — use
+`ink-soft`. Inside the red narrative block, every string stays at large-text size (≥24px, or
+≥18.66px bold).
+
+**Known exception, accepted for V1:** §6 specifies the section eyebrow as 13px/700 in
+`--color-accent`, which is below AA for text that size; `--color-accent-dark` (3.97:1) does not
+fix it either, so clearing it would mean tuning the red token (§3 allows this — tune the token,
+never the component; #C0322D is 4.90:1 at the same hue). Reviewed at the B2 visual checkpoint and
+kept deliberately: the palette is the identity, and the eyebrow is a label whose meaning is
+carried by its text, not its color. Re-examined in B9's accessibility pass — do not silently
+change the red before then.
+
 ---
 
 ## 12. Component library policy
