@@ -1,8 +1,13 @@
 import type { AttentionMetrics } from "./attention";
 import { formatCompactNumber, formatCount } from "@/lib/format/number";
 
-/** docs/DATA.md §2 — platform enum values, rendered as short human-readable source labels. */
-const PLATFORM_LABELS: Record<string, string> = {
+/**
+ * docs/DATA.md §2 — platform enum values, rendered as short human-readable source
+ * labels. Exported so other views tied to one specific post record (the archive rows
+ * in src/components/archive-row.tsx) can reuse the same mapping rather than
+ * redeclaring it.
+ */
+export const PLATFORM_LABELS: Record<string, string> = {
   x: "X",
   website: "Website",
   youtube: "YouTube",

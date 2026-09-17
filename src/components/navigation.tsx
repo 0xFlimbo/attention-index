@@ -22,8 +22,11 @@ interface NavItem {
 }
 
 const NAV_ITEMS: readonly NavItem[] = [
-  { label: "ATTENTION", href: "#attention" },
-  { label: "CROSSOVER", href: "#crossover", comingInBatch: "B4" },
+  // Root-relative, not a bare `#attention`: the section lives on the homepage,
+  // so from `/archive` (or any other route) a bare fragment would resolve
+  // against the current page and the link would simply do nothing.
+  { label: "ATTENTION", href: "/#attention" },
+  { label: "CROSSOVER", href: "/#crossover", comingInBatch: "B4" },
   { label: "ARCHIVE", href: "/archive" },
   { label: "SOURCES", href: "/evidence" },
 ];

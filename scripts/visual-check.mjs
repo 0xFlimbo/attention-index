@@ -26,6 +26,7 @@
  *   pnpm check:visual --widths 390,1440
  *   pnpm check:visual --out ./review-shots
  *   pnpm check:visual --path /archive
+ *   pnpm check:visual --anchor archive    # a section below the fold
  */
 import { chromium } from "playwright-core";
 import { spawn } from "node:child_process";
@@ -117,6 +118,17 @@ const outDir = arg("out", join(process.cwd(), ".visual-check"));
 mkdirSync(outDir, { recursive: true });
 const widths = arg("widths", DEFAULT_WIDTHS.join(",")).split(",").map(Number);
 const routePath = arg("path", "/");
+// Every capture is prefixed with the route's slug: reviewing two routes in one
+// session (B3 reviews `/` and `/archive`) otherwise has the second run silently
+// overwrite the first run's reduced-motion and no-JS screenshots.
+const baseSlug = routePath === "/" ? "home" : routePath.replace(/\W+/g, "-").replace(/^-|-$/g, "");
+// `--anchor attention` reviews a section that sits below the fold. It is a URL
+// fragment, not a scripted scroll: the browser does the scrolling natively, so
+// the same capture works in the no-JavaScript pass, where `page.evaluate` cannot
+// run at all. Captures stay viewport-sized — never `fullPage` on a tall page.
+const anchor = arg("anchor", null);
+const target = ORIGIN + routePath + (anchor === null ? "" : `#${anchor}`);
+const slug = anchor === null ? baseSlug : `${baseSlug}-${anchor}`;
 
 // --------------------------------------------------------------- 2. server --
 console.log("\nstarting server (alone)…");
@@ -147,7 +159,7 @@ try {
 
   for (const width of widths) {
     await page.setViewportSize({ width, height: width < 768 ? 844 : 900 });
-    await page.goto(ORIGIN + routePath, { waitUntil: "load" });
+    await page.goto(target, { waitUntil: "load" });
     // Let mount animations finish, then force a fresh composited frame —
     // a headless capture can otherwise show an element mid-reveal.
     await page.waitForTimeout(2500);
@@ -155,7 +167,6 @@ try {
       () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))),
     );
 
-    const slug = routePath === "/" ? "home" : routePath.replace(/\W+/g, "-").replace(/^-|-$/g, "");
     await page.screenshot({ path: join(outDir, `${slug}-${width}-top.png`) });
 
     const overflow = await page.evaluate(() => ({
@@ -188,15 +199,23 @@ try {
       javaScriptEnabled: variant !== "no-js",
     });
     const p = await ctx.newPage();
-    await p.goto(ORIGIN + routePath, { waitUntil: "load" });
+    await p.goto(target, { waitUntil: "load" });
     await p.waitForTimeout(1500);
-    await p.screenshot({ path: join(outDir, `${variant}.png`) });
-    const hidden = await p.evaluate(
-      () =>
-        [...document.querySelectorAll(".hero-lines > span, .hero-supporting, .reveal-on-mount")]
-          .filter((el) => parseFloat(getComputedStyle(el).opacity) < 1).length,
+    await p.screenshot({ path: join(outDir, `${slug}-${variant}.png`) });
+    // Report *which* element, not just how many: a bare count cannot be acted on,
+    // and chasing one down otherwise means an improvised second browser run.
+    const hidden = await p.evaluate(() =>
+      [...document.querySelectorAll(".hero-lines > span, .hero-supporting, .reveal-on-mount")]
+        .filter((el) => parseFloat(getComputedStyle(el).opacity) < 1)
+        .map((el) => ({
+          tag: el.tagName.toLowerCase(),
+          id: el.id || null,
+          className: el.className,
+          opacity: getComputedStyle(el).opacity,
+          animationName: getComputedStyle(el).animationName,
+        })),
     );
-    note("screens", { variant, elementsBelowFullOpacity: hidden });
+    note("screens", { variant, elementsBelowFullOpacity: hidden.length, below: hidden });
     await ctx.close();
   }
 } catch (error) {

@@ -6,16 +6,18 @@ import { HeroStatement } from "@/components/hero-statement";
 import { PrimaryAttentionMetric } from "@/components/primary-attention-metric";
 import { StatGrid } from "@/components/stat-grid";
 import { NarrativeBreak } from "@/components/narrative-break";
+import { ViralArchive } from "@/components/viral-archive";
 
 /**
- * docs/HOMEPAGE.md §1 — sections 00–04 only (B2 scope). Thin composition:
- * data loading + metrics calls, no layout logic, no inline metric math.
- * Sections 05+ (Crossover, Amplified By, Viral Archive, Public References,
- * Evidence, Footer) ship in later batches.
+ * docs/HOMEPAGE.md §1 — sections 00–04 (B2) plus Viral Archive (07, B3).
+ * Thin composition: data loading + metrics calls, no layout logic, no
+ * inline metric math. Sections 05, 06, 08, 09, 11 (Crossover, Amplified By,
+ * Public References, Evidence, Footer) ship in later batches.
  */
 export default function Home() {
   const project = getProjectMetadata();
-  const attention = getAttentionMetrics(getPosts());
+  const posts = getPosts();
+  const attention = getAttentionMetrics(posts);
   const gridCells = selectAttentionGridCells(attention);
 
   return (
@@ -32,6 +34,7 @@ export default function Home() {
         />
         <StatGrid cells={gridCells} />
         <NarrativeBreak />
+        <ViralArchive posts={posts} />
       </main>
     </div>
   );

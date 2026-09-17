@@ -276,6 +276,28 @@ never fabricates a fourth cell to pad the grid; `StatGrid` renders whatever it r
 today's dataset (21 posts, `postsOver1M` 17, max 4.5M, sum 37.1M) this resolves to
 `POSTS ABOVE 1M · TRACKED POSTS · MOST VIEWED TRACKED POST · OBSERVED VIEWS ACROSS TRACKED POSTS`.
 
+### Archive selectors (`src/lib/metrics/archive.ts`)
+
+`compareArchiveOrder(a, b)` — the one shared comparator for "the archive order": highest views →
+earliest `published_at` → smallest `id` (lexicographic). `getAttentionMetrics`'s `topPost` uses
+this exact function for its tie-break (it used to keep a private, duplicate copy — extracted in
+B3 so the top-post pick and the archive sort can never silently diverge).
+
+`selectArchivePosts(posts: Post[]): { post: Post; rank: number }[]` — eligible posts (same rule as
+above), sorted by `compareArchiveOrder`, each carrying its **stable, 1-based rank** in the full
+sorted list. Rank is assigned once, before any threshold filter — filtering a rendered list must
+only hide rows, never renumber them, so archive row `01` always means "most viewed tracked post."
+
+`HOMEPAGE_ARCHIVE_ROW_COUNT = 6` — the homepage Viral Archive section (docs/HOMEPAGE.md §10) shows
+the first N of `selectArchivePosts`'s result. If the dataset has fewer than N eligible posts, the
+section shows what exists rather than padding.
+
+`selectArchiveThresholds(posts: Post[]): { id, label, minViews, count }[]` — the `/archive` filter
+set. `ALL` (`minViews: null`) is always included, even for zero eligible posts. Every other
+threshold (`>1M`, `>5M`, `>10M`, inclusive `>=`, matching the Attention thresholds above) is
+included only when at least one eligible post meets it — a threshold with zero records is never
+offered. With today's dataset (max views 4.5M) this resolves to `ALL` and `>1M` only.
+
 ### Amplification (`amplifications.json`)
 
 ```text

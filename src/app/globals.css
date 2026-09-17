@@ -284,3 +284,47 @@ body {
     transition: none !important;
   }
 }
+
+/*
+ * docs/DESIGN.md §6 — Archive row uses native <summary> for its zero-JS
+ * expand affordance (src/components/archive-row.tsx). Suppress the
+ * browser-default disclosure triangle/marker (list-style alone doesn't
+ * remove it in WebKit) so the row keeps the flat, editorial look rather
+ * than a stray default bullet — no new visual element added, just the
+ * unstyled default removed.
+ */
+.archive-row summary {
+  list-style: none;
+}
+.archive-row summary::-webkit-details-marker {
+  display: none;
+}
+
+/*
+ * The expand affordance for an archive row. The native disclosure marker is
+ * suppressed above, so without this the row would be silently expandable:
+ * nothing on screen would say that tapping it reveals the observation date
+ * and engagement metrics — and on mobile the `<details>` panel is the *only*
+ * path to them (docs/HOMEPAGE.md §10, §15). Rendered through `content` on an
+ * `aria-hidden` span because `<summary>` already announces its own
+ * expanded/collapsed state to assistive technology; this is the visual
+ * equivalent, not a second announcement.
+ */
+.archive-row-toggle::before {
+  content: "+";
+}
+.archive-row details[open] .archive-row-toggle::before {
+  content: "−";
+}
+
+/*
+ * The navigation is sticky (~64–72px, docs/DESIGN.md §6), so an anchored
+ * section — `#attention`, `#archive` — otherwise lands flush with the top of
+ * the viewport and its eyebrow and headline sit *underneath* the bar. CSS
+ * scroll-margin keeps the section's own heading the first thing visible, and
+ * unlike a scripted offset it works with JavaScript disabled and with the
+ * anchor pasted straight into the address bar.
+ */
+section[id] {
+  scroll-margin-top: 88px;
+}

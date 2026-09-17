@@ -351,8 +351,29 @@ content that needs motion to become readable would violate `docs/DESIGN.md §8`.
 pnpm check:visual                    # 390 / 768 / 1440, output in .visual-check/
 pnpm check:visual --widths 390,1440
 pnpm check:visual --path /archive
+pnpm check:visual --anchor archive   # a section below the fold
 pnpm check:visual --out ./review-shots
 ```
+
+`--anchor <id>` appends a URL **fragment** rather than scripting a scroll, so the same capture
+works in the no-JavaScript pass, where `page.evaluate` cannot run at all. It is what makes a
+below-the-fold section reviewable: every capture stays viewport-sized, and `fullPage` on a tall
+page is what took the machine down in the first place. Anchored sections carry
+`scroll-margin-top` (`globals.css`) so the sticky nav does not cover the section heading.
+
+Every screenshot is prefixed with the route (and anchor) it came from —
+`home-1440-top.png`, `archive-390-top.png`, `home-archive-no-js.png`. Reviewing two routes in one
+session otherwise had the second run silently overwrite the first run's reduced-motion and no-JS
+captures.
+
+**Run it from PowerShell, not Git Bash.** MSYS rewrites a `--path /archive` argument into a
+Windows path (`C:/Program Files/Git/archive`) before the script ever sees it, and
+`MSYS_NO_PATHCONV=1` then breaks the pnpm shim's own module resolution instead.
+
+The opacity assertion reports *which* elements are below full opacity (tag, id, class, computed
+opacity, animation name), not just how many — a bare count cannot be acted on, and chasing one
+down otherwise means an improvised second browser run, which is the thing this script exists to
+prevent.
 
 Screenshots land in `.visual-check/` (gitignored) and are for a human to look at — the script
 checks what is measurable, not whether the page looks good. Reading them is still the reviewer's
