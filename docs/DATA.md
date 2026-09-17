@@ -336,9 +336,41 @@ amplifications) this resolves to `GOVERNMENT 2 · POLITICS 6 · TECH 1 · PUBLIC
 verifiedMediaReferenceCount · uniquePublicationCount · referencesByPublication · referencesByType
 ```
 
+### Media selectors (`src/lib/metrics/media.ts`)
+
+`compareMediaOrder(a, b)` — media ordering for `/evidence` (B5): newest `published_at` first, tie-
+broken by smallest `id` (lexicographic) — the same reasoning as `compareArchiveOrder` and
+`compareAmplifierOrder`.
+
+`selectMediaReferences(mediaReferences: MediaReference[]): MediaReference[]` — the verified,
+sorted media list `/evidence`'s media section renders directly. No filters, no pagination. With
+today's dataset (100 raw records, 18 verified) this resolves to 18 rows.
+
 ### Crossover
 Descriptive counts and real examples only. **Never invent** Crossover Score, Influence Score,
 Attention Quality Score or similar pseudo-precision.
+
+### Dataset summary selector (`src/lib/metrics/dataset.ts`)
+
+`selectDatasetSummary(input: { posts, amplifications, mediaReferences, milestones }):
+DatasetSummaryRow[]` — the four-row summary the homepage Evidence section (docs/HOMEPAGE.md §12)
+and `EvidenceBlock` render directly. Each row is `{ key, label, count, href }`:
+
+```text
+posts           POST DATA
+amplifications  AMPLIFICATIONS
+media           MEDIA
+milestones      MILESTONES
+```
+
+`count` reuses the shared `isVerifiedRecord` rule against the record set passed in — never
+`array.length`, never a stored summary. Row order is fixed (posts, amplifications, media,
+milestones) regardless of which datasets have records. A zero-count row still renders — it is an
+honest statement about the dataset — but its `href` is `null` instead of `/evidence#<key>`, so
+`EvidenceBlock` never links to an `/evidence` anchor with nothing under it. With today's dataset
+this resolves to `POST DATA 21 · AMPLIFICATIONS 10 · MEDIA 18 · MILESTONES 0` (`docs/HOMEPAGE.md
+§12`'s printed sample values, `20 / 9 / 0 / 0`, are stale — written before B7's import work; derive,
+don't match).
 
 ---
 

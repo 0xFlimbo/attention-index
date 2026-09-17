@@ -3,6 +3,7 @@ import { getPosts, getProjectMetadata } from "@/lib/data";
 import { selectArchivePosts, selectArchiveThresholds } from "@/lib/metrics/archive";
 import { toArchiveRowData } from "@/components/archive-row";
 import { Navigation } from "@/components/navigation";
+import { Footer } from "@/components/footer";
 import { ArchiveExplorer } from "@/components/archive-explorer";
 
 /** docs/ENGINEERING.md §6 — route metadata, same title style as the B2 placeholder it replaces. */
@@ -38,6 +39,7 @@ export default function ArchivePage() {
           <ArchiveExplorer rows={rows} thresholds={thresholds} />
         </div>
       </main>
+      <Footer project={project} />
     </div>
   );
 }

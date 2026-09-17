@@ -350,7 +350,7 @@ LAYOFFHEDGE ATTENTION INDEX
 Independent community project built from public data.
 Not affiliated with, operated by, or endorsed by LayoffHedge.
 
-DATA   METHODOLOGY   GITHUB   SOURCES   OFFICIAL LAYOFFHEDGE ↗
+DATA   METHODOLOGY   GITHUB   SOURCES   ABOUT   OFFICIAL LAYOFFHEDGE ↗
 
 LAST DATA UPDATE
 SEP 16 2026
@@ -358,6 +358,12 @@ SEP 16 2026
 
 Cream or soft cream, thin top divider, optional red bottom rule, compact. No newsletter signup.
 `LAST DATA UPDATE` reads `project.json.data_last_updated`.
+
+`ABOUT` was added to this list at the B5 sign-off: §3 fixes the navigation at
+`ATTENTION / CROSSOVER / ARCHIVE / SOURCES / GITHUB ↗`, so without it `/about` is a route with no
+inbound link anywhere on the site. `GITHUB ↗` renders only while `project.json.repository_url` is
+non-null, and `DATA` points at `/archive` until a repository exists — see `docs/WORKPLAN.md`,
+"Decisions already made".
 
 ---
 

@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { getProjectMetadata } from "@/lib/data";
 import { Navigation } from "@/components/navigation";
+import { Footer } from "@/components/footer";
 
 /**
  * B2 scope: honest placeholder only — the real About route ships in B6
  * (docs/WORKPLAN.md). No design time spent beyond inheriting the base
- * look, per this batch's briefing.
+ * look, per this batch's briefing. B5 adds only the `Footer`; nothing else
+ * on this page changes.
  */
 export const metadata: Metadata = {
   title: "About — LayoffHedge Attention Index",
@@ -28,6 +30,7 @@ export default function AboutPage() {
         </p>
         <p className="text-metadata mt-12 text-ink-soft">{project.disclaimer}</p>
       </main>
+      <Footer project={project} />
     </div>
   );
 }

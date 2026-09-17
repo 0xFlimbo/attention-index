@@ -102,7 +102,15 @@ font-family: "Manrope", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI"
 /* large stat */  font-size: clamp(56px, 7vw, 112px);  line-height: .9;  font-weight: 700; letter-spacing: -.04em;
 /* body */        font-size: clamp(18px, 1.5vw, 24px); line-height: 1.35;
 /* metadata */    font-size: 12px; line-height: 1.4; letter-spacing: .06em; text-transform: uppercase;
+/* record id */   font-size: 12px; line-height: 1.4; letter-spacing: .06em;   /* metadata, NOT uppercased */
 ```
+
+`record id` (`.text-record-id`, added in B5) is the metadata scale with the uppercasing removed,
+paired with the mono stack wherever a record's `id` is printed verbatim — today `/evidence`.
+`docs/DATA.md §2` defines ids as lowercase, and an id transformed on screen is one a reader cannot
+copy into `data/*.json` and find. It is a separate class rather than `.text-metadata` plus a
+`normal-case` utility because the component classes in `globals.css` sit outside Tailwind's cascade
+layers and therefore outrank every utility in `@layer utilities`.
 
 ### Mobile
 

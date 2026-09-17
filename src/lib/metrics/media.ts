@@ -42,3 +42,26 @@ export function getMediaMetrics(mediaReferences: MediaReference[]): MediaMetrics
     referencesByType,
   };
 }
+
+/**
+ * Deterministic media ordering for `/evidence` (B5): newest `published_at`
+ * first, tie-broken by smallest `id` (lexicographic) — same reasoning as
+ * `compareArchiveOrder` (src/lib/metrics/archive.ts) and
+ * `compareAmplifierOrder` (src/lib/metrics/amplification.ts): nothing here
+ * relies on JS's sort stability, so a genuine same-day tie still sorts the
+ * same way on every build.
+ */
+export function compareMediaOrder(a: MediaReference, b: MediaReference): number {
+  if (a.published_at !== b.published_at) return a.published_at > b.published_at ? -1 : 1;
+  if (a.id === b.id) return 0;
+  return a.id < b.id ? -1 : 1;
+}
+
+/**
+ * docs/ENGINEERING.md §6 — the verified, sorted media list `/evidence`
+ * renders directly. No filters, no pagination — the whole eligible set,
+ * ordered by `compareMediaOrder`.
+ */
+export function selectMediaReferences(mediaReferences: MediaReference[]): MediaReference[] {
+  return mediaReferences.filter(isVerifiedRecord).slice().sort(compareMediaOrder);
+}

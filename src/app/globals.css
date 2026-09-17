@@ -204,6 +204,23 @@ body {
   text-transform: uppercase;
 }
 
+/*
+ * The metadata scale without the uppercasing, for a record id printed verbatim
+ * (`/evidence`, src/components/evidence-record-row.tsx). docs/DATA.md §2 defines
+ * ids as lowercase and that page exists to show the real id — one transformed on
+ * screen cannot be copied into `data/*.json` and found. It needs its own class
+ * rather than `.text-metadata normal-case`: these component classes are written
+ * outside Tailwind's cascade layers, so they outrank every utility in
+ * `@layer utilities`, and the `normal-case` utility silently lost. Caught in the
+ * B5 visual review, after a markup-only check had confirmed the class was
+ * emitted — which says nothing about which rule wins.
+ */
+.text-record-id {
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+}
+
 /* docs/DESIGN.md §5 — container and section vertical rhythm. */
 .container-editorial {
   width: 100%;

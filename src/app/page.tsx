@@ -1,4 +1,4 @@
-import { getPosts, getAmplifications, getProjectMetadata } from "@/lib/data";
+import { getPosts, getAmplifications, getMediaReferences, getMilestones, getProjectMetadata } from "@/lib/data";
 import { getAttentionMetrics } from "@/lib/metrics/attention";
 import { selectAttentionGridCells } from "@/lib/metrics/attention-grid";
 import { Navigation } from "@/components/navigation";
@@ -9,17 +9,22 @@ import { NarrativeBreak } from "@/components/narrative-break";
 import { CrossoverMap } from "@/components/crossover-map";
 import { AmplifiedBy } from "@/components/amplified-by";
 import { ViralArchive } from "@/components/viral-archive";
+import { EvidenceBlock } from "@/components/evidence-block";
+import { Footer } from "@/components/footer";
 
 /**
  * docs/HOMEPAGE.md §1 — sections 00–04 (B2), Crossover + Amplified By
- * (05–06, B4), Viral Archive (07, B3). Thin composition: data loading +
- * metrics calls, no layout logic, no inline metric math. Sections 08, 09, 11
- * (Public References, Evidence, Footer) ship in later batches.
+ * (05–06, B4), Viral Archive (07, B3), Evidence + Footer (09, 11, B5). Thin
+ * composition: data loading + metrics calls, no layout logic, no inline
+ * metric math. Public References (08) ships once media data is verified
+ * enough to build B8's section (docs/WORKPLAN.md).
  */
 export default function Home() {
   const project = getProjectMetadata();
   const posts = getPosts();
   const amplifications = getAmplifications();
+  const mediaReferences = getMediaReferences();
+  const milestones = getMilestones();
   const attention = getAttentionMetrics(posts);
   const gridCells = selectAttentionGridCells(attention);
 
@@ -44,7 +49,15 @@ export default function Home() {
           officialXAccount={project.official_x_account}
         />
         <ViralArchive posts={posts} />
+        <EvidenceBlock
+          posts={posts}
+          amplifications={amplifications}
+          mediaReferences={mediaReferences}
+          milestones={milestones}
+          repositoryUrl={project.repository_url}
+        />
       </main>
+      <Footer project={project} />
     </div>
   );
 }
