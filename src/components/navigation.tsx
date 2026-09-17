@@ -12,13 +12,6 @@ import type { AnchorHTMLAttributes, ReactNode } from "react";
 interface NavItem {
   label: string;
   href: string;
-  /**
-   * Set when the target section doesn't exist yet. Filtered out of every
-   * rendered list below rather than shipping a dead anchor. CROSSOVER's
-   * `#crossover` section ships in B4 — remove this field from that item
-   * once it does.
-   */
-  comingInBatch?: string;
 }
 
 const NAV_ITEMS: readonly NavItem[] = [
@@ -26,7 +19,7 @@ const NAV_ITEMS: readonly NavItem[] = [
   // so from `/archive` (or any other route) a bare fragment would resolve
   // against the current page and the link would simply do nothing.
   { label: "ATTENTION", href: "/#attention" },
-  { label: "CROSSOVER", href: "/#crossover", comingInBatch: "B4" },
+  { label: "CROSSOVER", href: "/#crossover" },
   { label: "ARCHIVE", href: "/archive" },
   { label: "SOURCES", href: "/evidence" },
 ];
@@ -64,8 +57,6 @@ export function Navigation({ repositoryUrl }: NavigationProps) {
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
-
-  const visibleItems = NAV_ITEMS.filter((item) => item.comingInBatch === undefined);
 
   useEffect(() => {
     if (!isMenuOpen) return;
@@ -122,7 +113,7 @@ export function Navigation({ repositoryUrl }: NavigationProps) {
 
         {/* Desktop links */}
         <ul className="hidden items-center gap-8 md:flex">
-          {visibleItems.map((item) => (
+          {NAV_ITEMS.map((item) => (
             <li key={item.label}>
               <NavLink
                 href={item.href}
@@ -185,7 +176,7 @@ export function Navigation({ repositoryUrl }: NavigationProps) {
         </div>
 
         <ul className="container-editorial mt-8 flex flex-col gap-2">
-          {visibleItems.map((item) => (
+          {NAV_ITEMS.map((item) => (
             <li key={item.label} className="border-b border-line">
               <NavLink
                 href={item.href}

@@ -164,6 +164,29 @@ body {
   font-size: clamp(48px, 6vw, 96px);
 }
 
+/*
+ * docs/DESIGN.md §1 — the Crossover category count is a headline number only
+ * while its block is the whole story. Below `md` the diagram is not rendered,
+ * so the block carries the section alone and the count is sized like a stat
+ * cell. From `md` up the diagram above prints the same four numbers, so the
+ * text-equivalent block steps down to the next size on the §4 scale and lets
+ * the example names be its payload — the page keeps one dominant number, the
+ * Primary Attention Metric, instead of three tiers of large numerals
+ * competing. Both sizes are scale tokens, never magic values.
+ */
+.text-crossover-count {
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+  font-size: var(--text-2xl);
+}
+@media (min-width: 768px) {
+  .text-crossover-count {
+    font-size: var(--text-xl);
+    letter-spacing: -0.02em;
+  }
+}
+
 .text-body {
   line-height: 1.35;
   font-size: 18px;
@@ -283,6 +306,11 @@ body {
   .mobile-menu-panel {
     transition: none !important;
   }
+
+  .crossover-connector {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
+  }
 }
 
 /*
@@ -315,6 +343,56 @@ body {
 }
 .archive-row details[open] .archive-row-toggle::before {
   content: "−";
+}
+
+/*
+ * docs/HOMEPAGE.md §8 / docs/DESIGN.md §7 — Crossover diagram
+ * (src/components/crossover-map.tsx). Colors reference tokens only, never a
+ * hardcoded hex value. `pathLength="1"` on each connector normalizes
+ * dasharray/dashoffset to 0–1 regardless of the line's real on-screen
+ * length, so one line-draw rule works for every connector without per-line
+ * geometry math. Hover/focus highlighting is plain CSS `:hover`/
+ * `:focus-within` on the node group — no JS, no "use client" — per this
+ * batch's brief; the reduced-motion override for the draw animation lives in
+ * the shared `@media (prefers-reduced-motion: reduce)` block above.
+ */
+.crossover-connector {
+  stroke: var(--color-line-strong);
+  stroke-width: 1.5;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: crossover-line-draw var(--motion-slow) var(--motion-ease) both;
+  transition: stroke var(--motion-fast) var(--motion-ease);
+}
+@keyframes crossover-line-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.crossover-node:hover .crossover-connector,
+.crossover-node:focus-within .crossover-connector {
+  stroke: var(--color-accent);
+}
+
+.crossover-node-dot {
+  fill: var(--color-ink);
+  transition: fill var(--motion-fast) var(--motion-ease);
+}
+.crossover-node:hover .crossover-node-dot,
+.crossover-node:focus-within .crossover-node-dot {
+  fill: var(--color-accent);
+}
+
+.crossover-node-label,
+.crossover-node-count {
+  fill: var(--color-ink);
+}
+
+.crossover-hub-circle {
+  fill: var(--color-ink);
+}
+.crossover-hub-text {
+  fill: var(--color-bg);
 }
 
 /*

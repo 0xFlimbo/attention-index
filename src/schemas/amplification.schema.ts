@@ -94,3 +94,4 @@ export const amplificationsFileSchema = z.array(amplificationSchema).superRefine
 
 export type Amplification = z.infer<typeof amplificationSchema>;
 export type AmplificationCategory = z.infer<typeof amplificationCategoryEnum>;
+export type AmplificationAction = z.infer<typeof amplificationActionEnum>;

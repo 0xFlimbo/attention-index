@@ -307,6 +307,29 @@ verifiedAmplificationCount · uniqueAmplifiers · countsByCategory
 
 Count unique entities by stable identity; never count one amplification twice.
 
+### Amplifier and Crossover selectors (`src/lib/metrics/amplification.ts`)
+
+`AMPLIFICATION_CATEGORY_LABELS` / `AMPLIFICATION_ACTION_LABELS` — the fixed, neutral labels from
+docs/EDITORIAL.md §5 and §9, each typed `Record<Enum, string>` (not a partial map) so a future
+enum addition that omits its label fails to compile instead of rendering a raw key.
+
+`compareAmplifierOrder(a, b)` — docs/DATA.md §11's amplification order: featured first, then date
+descending, with a deterministic tie-break on smallest `id` (lexicographic) — the same reasoning
+as `compareArchiveOrder` in `src/lib/metrics/archive.ts`.
+
+`selectAmplifiers(amplifications: Amplification[]): Amplification[]` — the verified, sorted
+amplifier list the Amplified By grid (docs/HOMEPAGE.md §9) renders directly. No filters, no
+pagination.
+
+`selectCrossoverCategories(amplifications: Amplification[]): { category, label, count, examples }[]`
+— Crossover categories (docs/HOMEPAGE.md §8) that have at least one verified record, in the
+schema's fixed enum order (`government, politics, journalism, media, business, tech, public_figure,
+other`) so node position in `CrossoverMap` is a pure function of this array's order, never
+hand-positioned. Categories with a count of `0` are omitted entirely. `examples` holds up to 3 real
+entity names per category, in `compareAmplifierOrder`. With today's dataset (10 verified
+amplifications) this resolves to `GOVERNMENT 2 · POLITICS 6 · TECH 1 · PUBLIC FIGURES 1`;
+`JOURNALISM`, `MEDIA`, `BUSINESS` and `OTHER` are absent (zero records).
+
 ### Media (`media.json`)
 
 ```text
