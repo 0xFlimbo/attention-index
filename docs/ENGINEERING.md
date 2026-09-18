@@ -153,7 +153,10 @@ Inclusion in the archive documents public reach; it does not verify every claim 
 ```
 
 Anchors are native; smooth scrolling optional and reduced-motion aware.
-Sitemap covers the five routes; robots indexes public routes only.
+Sitemap covers the five routes; robots indexes public routes only. **Neither is built yet** —
+both need an absolute canonical URL, so they moved to B9 with the Open Graph image at the
+2026-09-18 maintainer decision (`docs/WORKPLAN.md`). The five routes each carry their own
+`metadata` (title, description, OG/Twitter text fields) as of B6.
 
 ---
 
