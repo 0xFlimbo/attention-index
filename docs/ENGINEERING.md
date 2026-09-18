@@ -243,17 +243,36 @@ install → validate:data → check:production-data → typecheck → lint → t
 
 A PR with invalid production data must fail. No git hooks in V1 — CI is enough.
 
+`.github/workflows/ci.yml`, one `verify` job on `ubuntu-latest` with pinned actions. pnpm comes
+from the `packageManager` field in `package.json`, so the version is declared once. First green
+run: 2026-09-18, all six steps executed.
+
 ---
 
 ## 11. Deployment
 
-Vercel (GitHub integration, preview deployments per PR). Stay portable — do not design around the
-provider. Cloudflare remains a later option.
+Vercel, connected to `https://github.com/0xFlimbo/attention-index` through its GitHub integration.
+Production is `main`; the canonical URL is `https://attention-index-theta.vercel.app` (Vercel
+appended the suffix because the plain subdomain was taken). Stay portable — do not design around
+the provider. Cloudflare remains a later option.
+
+A custom domain is a one-variable change, deliberately not a prerequisite: set
+`NEXT_PUBLIC_SITE_URL` and add a redirect. `src/lib/site-url.ts` is the single source of truth that
+`metadataBase`, `sitemap.ts` and `robots.ts` all read; nothing else hardcodes the URL.
+
+**A push does not mean a deploy.** GitHub Actions starts within seconds of a push, and Vercel can
+lag far behind it — on 2026-09-18 the CI run finished green while no deployment existed at all,
+and the site still served the previous build thirteen minutes later. Vercel registers a deployment
+on GitHub only once the build actually starts, so during that window the GitHub API reports
+nothing rather than "queued", and absence there is not evidence of a lost webhook. The Vercel
+dashboard is the only reliable source in that window. Verify the live site after a push instead of
+assuming it followed.
 
 Preview review checklist: 1440 / 768 / 390, motion, source links, no placeholder production data.
 
-Env vars: aim for none in V1 (`NEXT_PUBLIC_SITE_URL` at most). Public content belongs in
-`project.json`, never in env vars. Analytics optional, privacy-respecting, never blocking.
+Env vars: `NEXT_PUBLIC_SITE_URL` only, and optional — it overrides the fallback in
+`src/lib/site-url.ts`. Public content belongs in `project.json`, never in env vars. Analytics
+optional, privacy-respecting, never blocking.
 
 Browser support: current Chrome, Edge, Firefox, Safari, Mobile Safari, Chrome Android.
 
