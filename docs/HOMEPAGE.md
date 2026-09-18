@@ -329,6 +329,8 @@ MILESTONES            0 records        VIEW ↗
 ```
 
 CTAs: `VIEW DATA ↗ · VIEW SOURCES ↗ · VIEW METHODOLOGY ↗ · GITHUB ↗`.
+`VIEW DATA ↗` resolves to `${repository_url}/tree/main/data` and `GITHUB ↗` to the repository
+root; `VIEW SOURCES` and `VIEW METHODOLOGY` are internal and render with `→`.
 Treatment: **dark panel inside a cream section** (`--color-panel-dark`) — contrast without a dark site.
 
 ---
@@ -372,8 +374,9 @@ Cream or soft cream, thin top divider, optional red bottom rule, compact. No new
 `ABOUT` was added to this list at the B5 sign-off: §3 fixes the navigation at
 `ATTENTION / CROSSOVER / ARCHIVE / SOURCES / GITHUB ↗`, so without it `/about` is a route with no
 inbound link anywhere on the site. `GITHUB ↗` renders only while `project.json.repository_url` is
-non-null, and `DATA` points at `/archive` until a repository exists — see `docs/WORKPLAN.md`,
-"Decisions already made".
+non-null. `DATA` is external and resolves to `${repository_url}/tree/main/data`, the raw records
+themselves; it falls back to `/archive` only if `repository_url` is ever `null` again, which is
+where it stood in from the B5 sign-off until the repository was published on 2026-09-18.
 
 ---
 

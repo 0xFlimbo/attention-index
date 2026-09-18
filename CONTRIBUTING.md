@@ -5,13 +5,11 @@ and never stored as summaries — see `CLAUDE.md`'s canonical data rule: **store
 derive the number, show the source.** Contributing means adding or correcting a record, not
 adding a number.
 
-## Status before you start
+## Where to open a pull request
 
-`data/project.json`'s `repository_url` is currently `null` — **this project's public repository
-is not published yet.** The workflow below is the intended one once it is, and it is also exactly
-how the maintainer works locally today. Until a repository exists there is no public pull-request
-target to open; treat this file as the contract that will apply the moment there is one, not as a
-live process you can join today. `docs/WORKPLAN.md` open question 5 tracks this.
+The repository is <https://github.com/0xFlimbo/attention-index>. Fork it, branch from `main`,
+and open a pull request against `main`. The workflow below is live, not aspirational — it is also
+exactly how the maintainer works locally.
 
 ## Which file to edit
 
@@ -103,6 +101,13 @@ Evidence:  a public link supporting the new value
 Git history is the audit trail for every correction — prefer `status: "archived"` over deleting a
 record when its history matters (for example, a value that was once believed correct and later
 corrected); delete only when a record was erroneous, a duplicate, or never valid.
+
+## Licensing of contributions
+
+By opening a pull request you agree that your contribution is licensed under the same terms as
+the part of the repository it touches: **MIT** for code, configuration, scripts and documentation
+(`LICENSE`), **CC BY 4.0** for the records in `data/` (`data/LICENSE`). Neither license extends to
+the third-party material a record links to — that stays with whoever published it.
 
 This project is independent of, and not affiliated with or endorsed by, LayoffHedge. See
 `docs/EDITORIAL.md` for voice and neutrality rules that apply to any new description, label or

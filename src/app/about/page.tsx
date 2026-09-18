@@ -35,9 +35,9 @@ export const metadata: Metadata = {
  * not replaced with invented biography. There is no named maintainer
  * anywhere in this repo, so this page never names, implies, or describes one
  * beyond "the maintainer" / "an independent community project" (batch brief).
- * `repository_url` is `null`, so the GitHub link stays conditional, matching
- * the exact pattern `Footer`/`Navigation` already use — no new pattern
- * invented for one page.
+ * The GitHub link stays conditional on `repository_url`, matching the exact
+ * pattern `Footer`/`Navigation` already use — no new pattern invented for one
+ * page.
  */
 export default function AboutPage() {
   const project = getProjectMetadata();

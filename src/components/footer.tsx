@@ -10,11 +10,12 @@ import { formatDate } from "@/lib/format/date";
  * (docs/DESIGN.md §5 fixes borders at 1px; a prior batch's review had to
  * strip a heavier one here). No newsletter, no social icons, no CTA block.
  *
- * Deviation from spec, recorded per the batch briefing and confirmed by the
- * maintainer at the B5 sign-off: `DATA` links to `/archive`, not a raw-data
- * destination. With `repository_url` still `null` there is no GitHub repo to
- * point at, and pointing both `DATA` and `SOURCES` at `/evidence` would be
- * two footer links to one page.
+ * `DATA` links to the repository’s `data/` directory — the raw-data
+ * destination docs/HOMEPAGE.md §14 always intended. It stood in at `/archive`
+ * only while `repository_url` was `null` (B5 sign-off, explicitly temporary);
+ * that stand-in expired when the repository was published. The `/archive`
+ * branch is kept for the null case so the footer never renders a broken link
+ * against a dataset without a repository.
  *
  * `id="site-footer"` exists so `pnpm check:visual --anchor site-footer` can
  * reach it: docs/ENGINEERING.md §16 makes a URL fragment the only way to
@@ -57,9 +58,20 @@ export function Footer({ project }: FooterProps) {
             aria-label="Footer"
             className="text-metadata mt-8 flex flex-wrap gap-x-6 gap-y-2 font-bold"
           >
-            <Link href="/archive" className="text-ink underline-offset-2 hover:underline">
-              DATA
-            </Link>
+            {project.repository_url !== null ? (
+              <a
+                href={`${project.repository_url}/tree/main/data`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-ink underline-offset-2 hover:underline"
+              >
+                DATA ↗<span className="sr-only"> (opens in a new tab)</span>
+              </a>
+            ) : (
+              <Link href="/archive" className="text-ink underline-offset-2 hover:underline">
+                DATA
+              </Link>
+            )}
             <Link href="/methodology" className="text-ink underline-offset-2 hover:underline">
               METHODOLOGY
             </Link>

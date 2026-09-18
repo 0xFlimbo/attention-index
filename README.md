@@ -55,6 +55,16 @@ Find a missing or incorrect record → edit the right JSON file → attach publi
 run `pnpm validate:data` → open a pull request. Contributions without a public source are not merged.
 See `CONTRIBUTING.md` for the full workflow, evidence requirements and id conventions.
 
+## License
+
+| Part | License |
+|---|---|
+| Code, configuration, scripts, documentation | MIT — `LICENSE` |
+| The dataset in `data/` | CC BY 4.0 — `data/LICENSE` |
+
+Neither license covers the third-party material the records link to. Attribution for the dataset:
+`LayoffHedge Attention Index — https://github.com/0xFlimbo/attention-index — CC BY 4.0`.
+
 ## Documentation
 
 | File | Contents |

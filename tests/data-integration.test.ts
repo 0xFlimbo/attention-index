@@ -36,6 +36,6 @@ describe("real dataset — derived metrics", () => {
   it("loads project metadata with the required disclaimer", () => {
     const project = getProjectMetadata();
     expect(project.disclaimer).toMatch(/independent/i);
-    expect(project.repository_url).toBeNull();
+    expect(project.repository_url).toBe("https://github.com/0xFlimbo/attention-index");
   });
 });

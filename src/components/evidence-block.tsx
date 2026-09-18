@@ -128,12 +128,30 @@ export function EvidenceBlock({
             </table>
 
             <div className="text-metadata mt-10 flex flex-wrap gap-x-8 gap-y-3 font-bold md:mt-14">
-              <Link
-                href="/archive"
-                className="text-panel-dark-text underline-offset-2 hover:underline"
-              >
-                VIEW DATA →
-              </Link>
+              {/*
+                docs/HOMEPAGE.md §12 lists this CTA as `VIEW DATA ↗` — external
+                all along. It rendered as an internal `→` to `/archive` only
+                while `repository_url` was `null`; with a repository published
+                it points at the raw records, and `GITHUB ↗` beside it still
+                points at the repository root.
+              */}
+              {repositoryUrl !== null ? (
+                <a
+                  href={`${repositoryUrl}/tree/main/data`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-panel-dark-text underline-offset-2 hover:underline"
+                >
+                  VIEW DATA ↗<span className="sr-only"> (opens in a new tab)</span>
+                </a>
+              ) : (
+                <Link
+                  href="/archive"
+                  className="text-panel-dark-text underline-offset-2 hover:underline"
+                >
+                  VIEW DATA →
+                </Link>
+              )}
               <Link
                 href="/evidence"
                 className="text-panel-dark-text underline-offset-2 hover:underline"
