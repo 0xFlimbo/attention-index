@@ -45,7 +45,7 @@ A section must be able to disappear when the evidence is thin.
 
 | Section | Renders when |
 |---|---|
-| Public References | ≥1 verified media record (**currently 0 → section hidden**) |
+| Public References | ≥1 verified media record (**shipped in B8; 18 verified across 12 publications as of 2026-09-18 — the section renders and grows with the dataset**) |
 | Amplified By | enough verified amplifications for a real grid; otherwise fold examples into Crossover |
 | Crossover | ≥1 verified amplification; categories only shown if they have records |
 | Token | explicitly enabled; omitted in V1 |
@@ -271,7 +271,7 @@ The homepage shows the strongest rows; `/archive` shows all verified posts.
 
 ---
 
-## 11. Public References (08) — hidden until media data exists
+## 11. Public References (08) — shipped in B8
 
 ```text
 05 / PUBLIC REFERENCES
@@ -283,15 +283,25 @@ Documented references across publications, journalism,
 broadcasts, research, and other public sources.
 ```
 
-Preferred rows, with counts derived per publication:
+One flat row per publication (`MediaReferenceRow`), with the reference count derived, never
+asserted:
 
 ```text
-FORBES                    3 references                  ↗
-NEWSWEEK                  2 references                  ↗
+FORBES                    3 references
+NEWSWEEK                  2 references
 ```
 
-Click may expand article title, date, URL and context. Never a wall of logos as the only content.
-At most one slow marquee of real publication names, and only if enough recognizable ones exist.
+Each row is a native `<details>/<summary>` — keyboard-accessible, works without JavaScript, and
+never hover-only on mobile. Expanding it lists every eligible reference for that publication with
+its title, reference-type label, `published_at`, author when present, context when present, and
+its own `VIEW SOURCE ↗` link. **No row-level `↗`**: a publication with more than one reference has
+no single correct destination, so the link lives on each reference inside the panel instead of on
+the summary line (a deviation from this section's original sketch above, made deliberately at B8 —
+see `docs/WORKPLAN.md` "Decisions already made"). Never a wall of logos as the only content.
+
+**No marquee.** The homepage's motion budget (`globals.css`) is deliberately exactly four effects,
+and `CLAUDE.md` requires restrained motion; the marquee this section's spec originally allowed is
+left to B9, which owns the motion audit, rather than added ad hoc here.
 
 ---
 

@@ -65,3 +65,68 @@ export function compareMediaOrder(a: MediaReference, b: MediaReference): number 
 export function selectMediaReferences(mediaReferences: MediaReference[]): MediaReference[] {
   return mediaReferences.filter(isVerifiedRecord).slice().sort(compareMediaOrder);
 }
+
+/** One publication's eligible references, already sorted for display. */
+export interface PublicationReferences {
+  publication: string;
+  references: MediaReference[];
+}
+
+/**
+ * docs/HOMEPAGE.md §11 — Public References groups eligible media by
+ * `publication` (grouped, not counted, in `getMediaMetrics`, which this
+ * deliberately does not reuse or duplicate — that function stays the single
+ * source for `/evidence`'s and the Evidence panel's aggregate counts; this
+ * one carries the actual records each row needs to expand). Publication
+ * names are grouped verbatim — docs/EDITORIAL.md §5: "Publication and
+ * company names use their standard public form" — never normalized,
+ * uppercased or rewritten here.
+ *
+ * Group order is deterministic, same tie-break philosophy as
+ * `compareArchiveOrder` / `compareMediaOrder` / `compareAmplifierOrder`
+ * (never relying on JS sort stability or object key order):
+ *   1. reference count, descending (the publication with the most eligible
+ *      references leads);
+ *   2. most recent `published_at` among the group's own references,
+ *      descending (a tied publication with fresher coverage leads);
+ *   3. `publication`, ascending, lexicographic (final deterministic
+ *      tie-break when both of the above are equal).
+ * Each group's own references are sorted with the existing
+ * `compareMediaOrder`, so the newest reference is also what "most recent
+ * published_at" reads from step 2.
+ */
+export function selectPublicationReferences(mediaReferences: MediaReference[]): PublicationReferences[] {
+  const eligible = mediaReferences.filter(isVerifiedRecord);
+
+  const byPublication = new Map<string, MediaReference[]>();
+  for (const reference of eligible) {
+    const group = byPublication.get(reference.publication);
+    if (group === undefined) {
+      byPublication.set(reference.publication, [reference]);
+    } else {
+      group.push(reference);
+    }
+  }
+
+  const groups: PublicationReferences[] = Array.from(byPublication.entries()).map(
+    ([publication, references]) => ({
+      publication,
+      references: references.slice().sort(compareMediaOrder),
+    }),
+  );
+
+  groups.sort((a, b) => {
+    if (a.references.length !== b.references.length) return b.references.length - a.references.length;
+
+    // `references` is already sorted newest-first (compareMediaOrder), so
+    // index 0 is each group's most recent `published_at`.
+    const aMostRecent = a.references[0]!.published_at;
+    const bMostRecent = b.references[0]!.published_at;
+    if (aMostRecent !== bMostRecent) return aMostRecent > bMostRecent ? -1 : 1;
+
+    if (a.publication === b.publication) return 0;
+    return a.publication < b.publication ? -1 : 1;
+  });
+
+  return groups;
+}

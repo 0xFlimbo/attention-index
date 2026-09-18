@@ -435,3 +435,15 @@ body {
 section[id] {
   scroll-margin-top: 88px;
 }
+
+/*
+ * A single reference inside an expanded Public References row is its own link
+ * target (`/#media-newsweek-2026-08-12`,
+ * src/components/media-reference-row.tsx), so it needs the same sticky-nav
+ * offset the rule above gives a section. Navigating to one also expands the
+ * `<details>` around it in current Chromium, which is how the expanded panel
+ * is reachable from a URL at all.
+ */
+.media-reference-entry {
+  scroll-margin-top: 88px;
+}

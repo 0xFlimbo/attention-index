@@ -364,6 +364,13 @@ below-the-fold section reviewable: every capture stays viewport-sized, and `full
 page is what took the machine down in the first place. Anchored sections carry
 `scroll-margin-top` (`globals.css`) so the sticky nav does not cover the section heading.
 
+`--anchor` also reaches **inside a closed `<details>`**: current Chromium expands one when it
+navigates to a fragment within it, so `--anchor media-ibtimes-uk-2026-08-25` captures that
+publication row already open. This is the only way an expansion panel is reviewable at all — the
+script never clicks. It needs the element to have an id: the Public References references carry
+their record id for this reason among others (`docs/DESIGN.md §6`). Verified at B8, including in
+the no-JavaScript pass, where the expansion is native and the auto-expand still applies.
+
 Every screenshot is prefixed with the route (and anchor) it came from —
 `home-1440-top.png`, `archive-390-top.png`, `home-archive-no-js.png`. Reviewing two routes in one
 session otherwise had the second run silently overwrite the first run's reduced-motion and no-JS

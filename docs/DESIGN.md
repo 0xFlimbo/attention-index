@@ -229,6 +229,21 @@ Light (`--color-bg-soft` + line), red-bordered (`--color-bg` + accent border), o
 Full-width lines, generous row height, strong typography, visible source link, no card per row.
 Optional desktop hover preview; mobile taps to expand inline.
 
+### Media reference row
+
+One row per publication (`MediaReferenceRow`, added B8), same flat/full-width/`border-b
+border-line`/no-card contract as the archive row above. Summary line: publication name plus its
+derived reference count (`N references` / `1 reference`). A native `<details>` expansion lists
+each eligible reference with its title, reference-type label, `published_at`, author and context
+when present, and its own `VIEW SOURCE ↗` link — deliberately no link on the summary line itself,
+since a publication with several references has no single correct destination for a row-level
+glyph. Reuses `ArchiveRow`'s `.archive-row` / `.archive-row-toggle` CSS.
+
+Each reference inside the panel carries its record id as its element id, so a single reference is
+linkable on its own (`/#media-newsweek-2026-08-12`) — the same id `/evidence` prints verbatim.
+`.media-reference-entry` gives those targets the sticky-nav scroll offset `section[id]` already
+gets.
+
 ### Source footer
 
 ```text

@@ -9,15 +9,15 @@ import { NarrativeBreak } from "@/components/narrative-break";
 import { CrossoverMap } from "@/components/crossover-map";
 import { AmplifiedBy } from "@/components/amplified-by";
 import { ViralArchive } from "@/components/viral-archive";
+import { PublicReferences } from "@/components/public-references";
 import { EvidenceBlock } from "@/components/evidence-block";
 import { Footer } from "@/components/footer";
 
 /**
  * docs/HOMEPAGE.md §1 — sections 00–04 (B2), Crossover + Amplified By
- * (05–06, B4), Viral Archive (07, B3), Evidence + Footer (09, 11, B5). Thin
- * composition: data loading + metrics calls, no layout logic, no inline
- * metric math. Public References (08) ships once media data is verified
- * enough to build B8's section (docs/WORKPLAN.md).
+ * (05–06, B4), Viral Archive (07, B3), Public References (08, B8),
+ * Evidence + Footer (09, 11, B5). Thin composition: data loading + metrics
+ * calls, no layout logic, no inline metric math.
  */
 export default function Home() {
   const project = getProjectMetadata();
@@ -49,6 +49,7 @@ export default function Home() {
           officialXAccount={project.official_x_account}
         />
         <ViralArchive posts={posts} />
+        <PublicReferences mediaReferences={mediaReferences} />
         <EvidenceBlock
           posts={posts}
           amplifications={amplifications}

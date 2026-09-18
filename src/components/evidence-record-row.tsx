@@ -81,8 +81,13 @@ export function toMediaEvidenceRow(reference: MediaReference): EvidenceRecordRow
   };
 }
 
-/** Neutral, capitalized display labels for `MediaReferenceType` — docs/EDITORIAL.md §9. */
-const REFERENCE_TYPE_LABELS: Record<MediaReference["reference_type"], string> = {
+/**
+ * Neutral, capitalized display labels for `MediaReferenceType` —
+ * docs/EDITORIAL.md §9. Exported (not module-private) because
+ * `MediaReferenceRow` (B8) needs the same labels for its expanded panel —
+ * one definition, not a second copy.
+ */
+export const REFERENCE_TYPE_LABELS: Record<MediaReference["reference_type"], string> = {
   article: "Article",
   newsletter: "Newsletter",
   podcast: "Podcast",
