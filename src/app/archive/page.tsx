@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ogImageDescriptor, twitterImageDescriptor } from "@/lib/og-image-meta";
 import { getPosts, getProjectMetadata } from "@/lib/data";
 import { selectArchivePosts, selectArchiveThresholds } from "@/lib/metrics/archive";
 import { toArchiveRowData } from "@/components/archive-row";
@@ -10,8 +11,21 @@ import { ArchiveExplorer } from "@/components/archive-explorer";
  * docs/ENGINEERING.md §6, docs/WORKPLAN.md B6 — route metadata. `title` is
  * short: `src/app/layout.tsx`'s `template` appends " — LayoffHedge Attention
  * Index", reproducing the exact string this route shipped before B6. OG/
- * Twitter carry their own full-string title (templates don't apply there) —
- * text fields only, no image (deferred to B9 with the OG image itself).
+ * Twitter carry their own full-string title (templates don't apply there).
+ *
+ * `images` is explicit here (B9), not left to inherit from the root
+ * `opengraph-image.tsx` / `twitter-image.tsx` file convention: Next only
+ * auto-applies a file-convention image to a segment's `openGraph`/`twitter`
+ * metadata when that exact segment declares no `images` key of its own — and
+ * critically, that check is per segment, not inherited down the tree. This
+ * route declares its own `openGraph`/`twitter` objects (for its title/
+ * description), which replaces the root's already-resolved image rather than
+ * extending it. Verified in the built HTML: without this, `/archive`,
+ * `/evidence`, `/methodology` and `/about` rendered no `og:image`/
+ * `twitter:image` at all, while `/` (which sets no page-level `openGraph`)
+ * kept the root's. Pointing at the route path directly (resolved against
+ * `metadataBase`) is equivalent to the framework's own generated URL, just
+ * without its cache-busting query hash.
  */
 const TITLE = "Viral Archive";
 const DESCRIPTION =
@@ -25,11 +39,13 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     type: "website",
     siteName: "LayoffHedge Attention Index",
+    images: [ogImageDescriptor],
   },
   twitter: {
     card: "summary_large_image",
     title: `${TITLE} — LayoffHedge Attention Index`,
     description: DESCRIPTION,
+    images: [twitterImageDescriptor],
   },
 };
 

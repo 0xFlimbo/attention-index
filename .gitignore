@@ -15,3 +15,12 @@ coverage/
 
 # screenshots from `pnpm check:visual` — never committed
 .visual-check/
+
+# Planning and working-process notes — kept local, never published.
+# The product specifications in docs/ that a contributor needs stay tracked;
+# these describe how the work is run, not what the site is.
+/CLAUDE.md
+/AGENTS.md
+/docs/WORKPLAN.md
+/docs/HISTORY.md
+/docs/archive/

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Project } from "@/schemas/project.schema";
 import { formatDate } from "@/lib/format/date";
+import { ExternalArrow } from "./external-arrow";
 
 /**
  * docs/HOMEPAGE.md §14, docs/EDITORIAL.md §8 — the site footer (section 11).
@@ -65,7 +66,7 @@ export function Footer({ project }: FooterProps) {
                 rel="noopener noreferrer"
                 className="text-ink underline-offset-2 hover:underline"
               >
-                DATA ↗<span className="sr-only"> (opens in a new tab)</span>
+                DATA <ExternalArrow /><span className="sr-only"> (opens in a new tab)</span>
               </a>
             ) : (
               <Link href="/archive" className="text-ink underline-offset-2 hover:underline">
@@ -82,7 +83,7 @@ export function Footer({ project }: FooterProps) {
                 rel="noopener noreferrer"
                 className="text-ink underline-offset-2 hover:underline"
               >
-                GITHUB ↗<span className="sr-only"> (opens in a new tab)</span>
+                GITHUB <ExternalArrow /><span className="sr-only"> (opens in a new tab)</span>
               </a>
             )}
             <Link href="/evidence" className="text-ink underline-offset-2 hover:underline">
@@ -104,7 +105,7 @@ export function Footer({ project }: FooterProps) {
               rel="noopener noreferrer"
               className="text-ink underline-offset-2 hover:underline"
             >
-              OFFICIAL LAYOFFHEDGE ↗<span className="sr-only"> (opens in a new tab)</span>
+              OFFICIAL LAYOFFHEDGE <ExternalArrow /><span className="sr-only"> (opens in a new tab)</span>
             </a>
           </nav>
         </div>

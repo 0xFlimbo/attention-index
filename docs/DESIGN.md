@@ -49,8 +49,7 @@ reproduce branded assets misleadingly.
   --color-ink-muted: #7A756F;
 
   --color-accent: #E34B46;
-  --color-accent-dark: #D63E39;
-  --color-accent-soft: #F4D9D6;
+  --color-accent-ink: #C0322D;
 
   --color-line: #DDD7CF;
   --color-line-strong: #CFC8BE;
@@ -69,7 +68,9 @@ Values are an initial approximation and may be tuned — **tune the token, never
 - **Cream** — page background, large sections, data grids, archives, editorial blocks. Avoid pure white.
 - **Near-black** — headlines, body, labels, numbers unless highlighted. Avoid as default page background.
 - **Red** — key numbers, one highlighted phrase per headline, eyebrows, thin rules, selected chart
-  values, section transitions. Used sparingly.
+  values, section transitions. Used sparingly. Two tokens, split by role: `--color-accent` for
+  display-size text, the red narrative background, rules and the focus outline; `--color-accent-ink`
+  for red at small text sizes on cream only — see §11.
 - **Blue** — *only* a second comparison series in data viz. Never navigation, brand, button or decoration.
 
 Target balance ≈ **75% cream / 20% near-black / 5% red**. Red must never become background noise.
@@ -350,6 +351,19 @@ fast: 180ms;  base: 320ms;  slow: 600ms;
 easing: cubic-bezier(0.22, 1, 0.36, 1);
 ```
 
+**Visible base state.** No element may sit at `opacity: 0`, `stroke-dashoffset: 1` or any other
+hidden base state waiting for an animation to reveal it. Animate `transform` instead, so the
+content is legible from the first frame and stays legible if the animation never runs. This is the
+same rule as "comprehension must never depend on motion", applied to the CSS rather than to the
+reduced-motion query (maintainer decision, 2026-09-18).
+
+**Count what the visitor can see.** A mount-triggered animation on a section below the first
+viewport has finished before anyone scrolls to it: it costs a hidden base state and returns
+nothing. Either give it a real scroll trigger or remove it. At B9 the section reveal and the
+Crossover line draw were removed on exactly this ground, taking the homepage motion budget from
+five effects to three: the staggered hero line reveal, the one-time number count, and the mobile
+nav panel transition.
+
 **Number ticker** — runs once on viewport entry, 1.2–1.8s, no rerun, no casino rolling,
 final value static.
 **Marquee** — at most one per page, slow, minimal, only for real publication/amplifier names.
@@ -396,20 +410,31 @@ text must say so too.
 Never remove outlines without a replacement. Accessibility is not traded for minimalism.
 
 **Measured contrast against `--color-bg` (#F2EFE9):** `--color-ink` 15.62:1 · `--color-ink-soft`
-5.87:1 · `--color-ink-muted` 3.98:1 · `--color-accent` 3.41:1 (and cream on accent, 3.41:1).
+5.87:1 · `--color-ink-muted` 3.98:1 · `--color-accent` 3.41:1 (and cream on accent, 3.41:1) ·
+`--color-accent-ink` 4.90:1.
 
-Only `ink` and `ink-soft` clear AA for normal text (4.5:1). `ink-muted` and `accent` clear the
-large-text bar (3:1) only, so neither may carry metadata-scale (12px) or other small copy — use
-`ink-soft`. Inside the red narrative block, every string stays at large-text size (≥24px, or
-≥18.66px bold).
+Only `ink`, `ink-soft` and `accent-ink` clear AA for normal text (4.5:1). `ink-muted` and `accent`
+clear the large-text bar (3:1) only, so neither may carry metadata-scale (12px) or other small
+copy — use `ink-soft`, or `accent-ink` when that small copy has to be red. Inside the red
+narrative block, every string stays at large-text size (≥24px, or ≥18.66px bold).
 
-**Known exception, accepted for V1:** §6 specifies the section eyebrow as 13px/700 in
-`--color-accent`, which is below AA for text that size; `--color-accent-dark` (3.97:1) does not
-fix it either, so clearing it would mean tuning the red token (§3 allows this — tune the token,
-never the component; #C0322D is 4.90:1 at the same hue). Reviewed at the B2 visual checkpoint and
-kept deliberately: the palette is the identity, and the eyebrow is a label whose meaning is
-carried by its text, not its color. Re-examined in B9's accessibility pass — do not silently
-change the red before then.
+**Resolved at B9 (maintainer decision, 2026-09-18): two reds, split by role.** The B2 checkpoint
+had accepted the section eyebrow (§6: 13px/700 in `--color-accent`, 3.41:1) as a deliberate
+exception. The B9 audit found the same failure a second time, undocumented, on the navigation's
+`hover:text-accent` at `.text-metadata` size (12px), and found that the single-token fix this
+section used to propose does not work: **#C0322D measures 4.90:1 on cream but only 2.97:1 on
+`--color-panel-dark` (#1E1E1E)**, where `--color-accent` currently sits at 4.26:1 and carries
+`VERIFY THEM.`. The two surfaces pull opposite ways — cream wants a darker red, the dark panel a
+lighter one — and a scan at constant hue and saturation leaves a feasible window only two points
+of lightness wide (#CC241F–#D02520), with under 3% margin on either side. Too tight to ship.
+
+So the red is split rather than moved. `--color-accent` (#E34B46) keeps every use that needs 3:1
+rather than 4.5:1 — display-size text, the red narrative background, thin rules, the focus outline
+— including the one use on the dark panel. `--color-accent-ink` (#C0322D, 4.90:1) carries red at
+small text sizes on cream: the section eyebrow and the navigation hover, and nothing else. It must
+never be used on `--color-panel-dark`. `--color-accent-dark` and `--color-accent-soft` were dead
+tokens, never referenced by any component; the first became `--color-accent-ink`, the second was
+deleted.
 
 ---
 

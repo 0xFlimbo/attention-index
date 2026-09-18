@@ -24,8 +24,7 @@
   --color-ink-muted: #7a756f;
 
   --color-accent: #e34b46;
-  --color-accent-dark: #d63e39;
-  --color-accent-soft: #f4d9d6;
+  --color-accent-ink: #c0322d;
 
   --color-line: #ddd7cf;
   --color-line-strong: #cfc8be;
@@ -40,9 +39,21 @@
  * Contrast note (docs/DESIGN.md §11), measured against --color-bg (#F2EFE9):
  *   --color-ink        15.62:1   --color-ink-soft    5.87:1
  *   --color-ink-muted   3.98:1   --color-accent      3.41:1
- * Only `ink` and `ink-soft` clear WCAG AA for normal text (4.5:1). `ink-muted`
- * and `accent` clear the large-text bar (3:1) only, so neither may carry
- * `.text-metadata` (12px) or any other small copy — use `ink-soft` there.
+ *   --color-accent-ink  4.90:1
+ * Only `ink`, `ink-soft` and `accent-ink` clear WCAG AA for normal text
+ * (4.5:1). `ink-muted` and `accent` clear the large-text bar (3:1) only, so
+ * neither may carry `.text-metadata` (12px) or any other small copy — use
+ * `ink-soft` there, or `accent-ink` when the small copy has to be red.
+ *
+ * Two reds, split by role (maintainer decision, 2026-09-18). `--color-accent`
+ * stays #E34B46 for display-size text, the red narrative background, rules and
+ * the focus outline — all of which need 3:1, not 4.5:1, and which also have to
+ * clear 3:1 against --color-panel-dark (#1E1E1E), where accent measures 4.26:1.
+ * A single token cannot serve both surfaces: darkening it far enough for 13px
+ * text on cream drops it below 3:1 on the dark panel (#C0322D measures 2.97:1
+ * there). So `--color-accent-ink` (#C0322D) exists for red at small text sizes
+ * on cream only — the section eyebrow and the navigation hover. Never use it on
+ * --color-panel-dark.
  */
 
 /*
@@ -266,18 +277,26 @@ body {
 }
 
 /*
- * Motion budget (docs/DESIGN.md §8) — exactly four effects across the whole
- * batch: hero line reveal, one-time number count (JS, in
- * primary-attention-metric.tsx), a subtle section reveal, and the mobile
- * nav panel transition (in navigation.tsx). Nothing else animates.
+ * Motion budget (docs/DESIGN.md §8) — exactly three effects, each of which a
+ * visitor can actually see: the staggered hero line reveal, the one-time
+ * number count (JS, in primary-attention-metric.tsx) and the mobile nav panel
+ * transition (in navigation.tsx). Nothing else animates.
+ *
+ * Two effects were removed at B9 (maintainer decision, 2026-09-18). The
+ * section reveal and the Crossover line draw both fired at mount with no
+ * scroll trigger, so on every section below the first viewport they had
+ * finished before the visitor could reach them — invisible motion whose base
+ * state (`opacity: 0`, `stroke-dashoffset: 1`) nonetheless hid real content if
+ * the animation never ran, which docs/DESIGN.md §8 forbids: comprehension must
+ * never depend on motion. The hero reveal survives because it is above the
+ * fold and always plays, and it now animates `transform` only, so its content
+ * is legible from the first frame.
  */
 @keyframes hero-line-reveal {
   from {
-    opacity: 0;
     transform: translateY(0.4em);
   }
   to {
-    opacity: 1;
     transform: translateY(0);
   }
 }
@@ -301,22 +320,6 @@ body {
   animation-delay: 420ms;
 }
 
-@keyframes section-reveal {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.reveal-on-mount {
-  animation: section-reveal var(--motion-slow) var(--motion-ease) both;
-  animation-delay: var(--reveal-delay, 0ms);
-}
-
 /*
  * docs/DESIGN.md §8 — reduced motion: content stays fully visible, counts
  * become static, scroll reveals and line travel are disabled. Checked here
@@ -325,20 +328,13 @@ body {
  */
 @media (prefers-reduced-motion: reduce) {
   .hero-lines > span,
-  .hero-supporting,
-  .reveal-on-mount {
+  .hero-supporting {
     animation: none !important;
-    opacity: 1 !important;
     transform: none !important;
   }
 
   .mobile-menu-panel {
     transition: none !important;
-  }
-
-  .crossover-connector {
-    animation: none !important;
-    stroke-dashoffset: 0 !important;
   }
 }
 
@@ -377,26 +373,17 @@ body {
 /*
  * docs/HOMEPAGE.md §8 / docs/DESIGN.md §7 — Crossover diagram
  * (src/components/crossover-map.tsx). Colors reference tokens only, never a
- * hardcoded hex value. `pathLength="1"` on each connector normalizes
- * dasharray/dashoffset to 0–1 regardless of the line's real on-screen
- * length, so one line-draw rule works for every connector without per-line
- * geometry math. Hover/focus highlighting is plain CSS `:hover`/
- * `:focus-within` on the node group — no JS, no "use client" — per this
- * batch's brief; the reduced-motion override for the draw animation lives in
- * the shared `@media (prefers-reduced-motion: reduce)` block above.
+ * hardcoded hex value. Connectors are drawn in their final state: the
+ * line-draw animation was removed at B9 for the reason given in the motion
+ * budget note above. Hover/focus highlighting is plain CSS `:hover`/
+ * `:focus-within` on the node group — no JS, no "use client" — and needs no
+ * reduced-motion override, since a color transition on hover is not scroll or
+ * mount motion.
  */
 .crossover-connector {
   stroke: var(--color-line-strong);
   stroke-width: 1.5;
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  animation: crossover-line-draw var(--motion-slow) var(--motion-ease) both;
   transition: stroke var(--motion-fast) var(--motion-ease);
-}
-@keyframes crossover-line-draw {
-  to {
-    stroke-dashoffset: 0;
-  }
 }
 .crossover-node:hover .crossover-connector,
 .crossover-node:focus-within .crossover-connector {

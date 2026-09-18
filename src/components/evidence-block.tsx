@@ -6,6 +6,7 @@ import type { Milestone } from "@/schemas/milestone.schema";
 import { selectDatasetSummary } from "@/lib/metrics/dataset";
 import { formatCount } from "@/lib/format/number";
 import { SectionEyebrow } from "./section-eyebrow";
+import { ExternalArrow } from "./external-arrow";
 
 /**
  * docs/HOMEPAGE.md §12 — Evidence / Sources (section 09, thematic eyebrow
@@ -43,7 +44,7 @@ export function EvidenceBlock({
   const rows = selectDatasetSummary({ posts, amplifications, mediaReferences, milestones });
 
   return (
-    <section id="evidence" className="container-editorial section-padding reveal-on-mount">
+    <section id="evidence" className="container-editorial section-padding">
       <SectionEyebrow index="06" label="EVIDENCE" />
 
       <div className="bg-panel-dark text-panel-dark-text mt-6 px-6 py-12 md:px-12 md:py-16">
@@ -142,7 +143,7 @@ export function EvidenceBlock({
                   rel="noopener noreferrer"
                   className="text-panel-dark-text underline-offset-2 hover:underline"
                 >
-                  VIEW DATA ↗<span className="sr-only"> (opens in a new tab)</span>
+                  VIEW DATA <ExternalArrow /><span className="sr-only"> (opens in a new tab)</span>
                 </a>
               ) : (
                 <Link
@@ -171,7 +172,7 @@ export function EvidenceBlock({
                   rel="noopener noreferrer"
                   className="text-panel-dark-text underline-offset-2 hover:underline"
                 >
-                  GITHUB ↗<span className="sr-only"> (opens in a new tab)</span>
+                  GITHUB <ExternalArrow /><span className="sr-only"> (opens in a new tab)</span>
                 </a>
               )}
             </div>

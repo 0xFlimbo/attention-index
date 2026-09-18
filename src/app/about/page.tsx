@@ -1,14 +1,21 @@
 import type { Metadata } from "next";
+import { ogImageDescriptor, twitterImageDescriptor } from "@/lib/og-image-meta";
 import Link from "next/link";
 import { getProjectMetadata } from "@/lib/data";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
 import { ProseSection } from "@/components/prose-section";
+import { ExternalArrow } from "@/components/external-arrow";
 
 /**
  * docs/WORKPLAN.md B6 — real content, replacing the B2 placeholder. Title
  * stays short; `src/app/layout.tsx`'s template appends the site suffix,
  * reproducing the exact string this route shipped before B6.
+ *
+ * `images` explicit (B9) — see `src/app/archive/page.tsx`'s comment: a route
+ * that declares its own `openGraph`/`twitter` object replaces the root's
+ * already-resolved image rather than extending it, so every such route
+ * repeats the pointer.
  */
 const TITLE = "About";
 const DESCRIPTION =
@@ -22,11 +29,13 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     type: "website",
     siteName: "LayoffHedge Attention Index",
+    images: [ogImageDescriptor],
   },
   twitter: {
     card: "summary_large_image",
     title: `${TITLE} — LayoffHedge Attention Index`,
     description: DESCRIPTION,
+    images: [twitterImageDescriptor],
   },
 };
 
@@ -87,9 +96,9 @@ export default function AboutPage() {
 
         <ProseSection id="open-source" heading="Open source">
           <p className="text-body mt-6 max-w-prose text-ink-soft">
-            The dataset and the code that renders it are meant to be open and inspectable, not a
-            black box. The project&apos;s public repository is not published yet — until it is,
-            the raw records behind every metric on this site are still browsable directly at{" "}
+            The dataset and the code that renders it are open and inspectable, not a black box.
+            Every record behind every metric on this site is a file in the public repository, and
+            the same records are also browsable directly at{" "}
             <Link href="/evidence" className="font-bold text-ink underline-offset-2 hover:underline">
               Evidence &amp; Sources
             </Link>{" "}
@@ -107,7 +116,7 @@ export default function AboutPage() {
                 rel="noopener noreferrer"
                 className="font-bold text-ink underline-offset-2 hover:underline"
               >
-                VIEW ON GITHUB ↗<span className="sr-only"> (opens in a new tab)</span>
+                VIEW ON GITHUB <ExternalArrow /><span className="sr-only"> (opens in a new tab)</span>
               </a>
             </p>
           )}
@@ -126,7 +135,7 @@ export default function AboutPage() {
                 rel="noopener noreferrer"
                 className="text-ink underline-offset-2 hover:underline"
               >
-                OFFICIAL LAYOFFHEDGE ↗<span className="sr-only"> (opens in a new tab)</span>
+                OFFICIAL LAYOFFHEDGE <ExternalArrow /><span className="sr-only"> (opens in a new tab)</span>
               </a>
             </li>
             {/*

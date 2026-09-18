@@ -20,7 +20,7 @@ export function CrossoverMap({ amplifications }: CrossoverMapProps) {
   if (categories.length === 0) return null;
 
   return (
-    <section id="crossover" className="container-editorial section-padding reveal-on-mount">
+    <section id="crossover" className="container-editorial section-padding">
       <SectionEyebrow index="02" label="CROSSOVER" />
       {/*
         From `lg` up the headline and the diagram share one 12-column row
@@ -150,7 +150,6 @@ function CrossoverDiagram({ categories }: { categories: CrossoverCategoryData[] 
               y1={CENTER_Y}
               x2={node.x}
               y2={node.y}
-              pathLength={1}
               className="crossover-connector"
             />
             <circle cx={node.x} cy={node.y} r={NODE_DOT_RADIUS} className="crossover-node-dot" />

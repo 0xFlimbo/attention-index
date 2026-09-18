@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ogImageDescriptor, twitterImageDescriptor } from "@/lib/og-image-meta";
 import Link from "next/link";
 import { getPosts, getAmplifications, getMediaReferences, getProjectMetadata } from "@/lib/data";
 import { getAttentionMetrics } from "@/lib/metrics/attention";
@@ -14,6 +15,11 @@ import { ProseSection } from "@/components/prose-section";
  * docs/WORKPLAN.md B6 — real content, replacing the B2 placeholder. Title
  * stays short; `src/app/layout.tsx`'s template appends the site suffix,
  * reproducing the exact string this route shipped before B6.
+ *
+ * `images` explicit (B9) — see `src/app/archive/page.tsx`'s comment: a route
+ * that declares its own `openGraph`/`twitter` object replaces the root's
+ * already-resolved image rather than extending it, so every such route
+ * repeats the pointer.
  */
 const TITLE = "Methodology";
 const DESCRIPTION =
@@ -27,11 +33,13 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     type: "article",
     siteName: "LayoffHedge Attention Index",
+    images: [ogImageDescriptor],
   },
   twitter: {
     card: "summary_large_image",
     title: `${TITLE} — LayoffHedge Attention Index`,
     description: DESCRIPTION,
+    images: [twitterImageDescriptor],
   },
 };
 

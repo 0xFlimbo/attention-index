@@ -19,7 +19,7 @@ export function ViralArchive({ posts }: ViralArchiveProps) {
   const rows = selectArchivePosts(posts).slice(0, HOMEPAGE_ARCHIVE_ROW_COUNT);
 
   return (
-    <section id="archive" className="container-editorial section-padding reveal-on-mount">
+    <section id="archive" className="container-editorial section-padding">
       <SectionEyebrow index="04" label="VIRAL ARCHIVE" />
       <h2 className="text-2xl md:text-3xl mt-4 font-bold tracking-tight text-ink">
         THE POSTS

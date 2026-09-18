@@ -3,6 +3,7 @@ import type { Post } from "@/schemas/post.schema";
 import { AMPLIFICATION_ACTION_LABELS } from "@/lib/metrics/amplification";
 import { formatCount } from "@/lib/format/number";
 import { formatDate } from "@/lib/format/date";
+import { ExternalArrow } from "./external-arrow";
 
 /**
  * docs/DESIGN.md §6 "Person / amplifier card" — one amplifier's data, already
@@ -105,7 +106,7 @@ export function AmplifierCard({ data }: AmplifierCardProps) {
         rel="noopener noreferrer"
         className="text-metadata mt-5 inline-block font-bold text-ink underline-offset-2 hover:underline"
       >
-        VIEW EVIDENCE ↗<span className="sr-only"> for {data.entityName}</span>
+        VIEW EVIDENCE <ExternalArrow /><span className="sr-only"> for {data.entityName}</span>
       </a>
     </div>
   );

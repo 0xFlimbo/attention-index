@@ -102,13 +102,21 @@ ACROSS TRACKED POSTS
 
 Across [N] publicly tracked posts
 
-LAST UPDATED [DATE]        SOURCE DATA ↗        METHODOLOGY ↗
+LAST UPDATED [DATE]        SOURCE DATA →        METHODOLOGY →
 ```
 
 Mostly empty section built around one very large derived number (`totalObservedViews`) and
 `trackedPostCount`. Values come from the metrics layer — never hardcoded in JSX.
 
 Label is exactly `OBSERVED VIEWS` / `OBSERVED VIEWS ACROSS TRACKED POSTS`. Never "impressions" or "reach".
+
+**`SOURCE DATA` / `METHODOLOGY` glyph, corrected at B9.** This section originally shipped both
+with `↗`, copied verbatim from the sketch above before `docs/DESIGN.md §6` hardened into a
+sitewide rule — established by `EvidenceBlock`, `ViralArchive` and `PublicReferences` — that `↗`
+marks a genuinely external destination and `→` marks an internal route. `METHODOLOGY` always
+resolves to `/methodology`, on this site, so it is `→`. `SOURCE DATA` follows `EvidenceBlock`'s
+`VIEW DATA` exactly: `↗` to `${repository_url}/tree/main/data` once the repository is public,
+falling back to an internal `→` to `/evidence` only while `repository_url` is `null`.
 
 Motion: one count-up on viewport entry, 1.2–1.8s, once, static afterwards, disabled under
 reduced motion. The static layout must look complete with animation off.
@@ -299,7 +307,7 @@ no single correct destination, so the link lives on each reference inside the pa
 the summary line (a deviation from this section's original sketch above, made deliberately at B8 —
 see `docs/WORKPLAN.md` "Decisions already made"). Never a wall of logos as the only content.
 
-**No marquee.** The homepage's motion budget (`globals.css`) is deliberately exactly four effects,
+**No marquee.** The homepage's motion budget (`globals.css`) is deliberately exactly three effects,
 and `CLAUDE.md` requires restrained motion; the marquee this section's spec originally allowed is
 left to B9, which owns the motion audit, rather than added ad hoc here.
 

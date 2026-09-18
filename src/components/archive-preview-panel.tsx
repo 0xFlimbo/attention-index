@@ -2,6 +2,7 @@ import type { ArchiveRowData } from "./archive-row";
 import { formatCompactNumber, formatCount } from "@/lib/format/number";
 import { formatDate } from "@/lib/format/date";
 import { SourceFooter } from "./source-footer";
+import { ExternalArrow } from "./external-arrow";
 
 interface ArchivePreviewPanelProps {
   row: ArchiveRowData;
@@ -14,6 +15,13 @@ interface ArchivePreviewPanelProps {
  * (`archive-row.tsx`), so this preview is additive, never the only path to
  * the data (docs/DESIGN.md §10 — desktop hover must always have a mobile /
  * no-JS equivalent).
+ *
+ * `row.subject` is an `<h2>`, not `<h3>` (fixed at B9's accessibility pass):
+ * `/archive`'s only other heading is the route's own `<h1>`
+ * (`src/app/archive/page.tsx`) — `ArchiveExplorer` and `ArchiveRow` render no
+ * heading of their own — so an `<h3>` here skipped a level. Visual size stays
+ * `text-lg` regardless of the tag; heading level and display size are
+ * independent (docs/DESIGN.md §4).
  */
 export function ArchivePreviewPanel({ row }: ArchivePreviewPanelProps) {
   const index = String(row.rank).padStart(2, "0");
@@ -22,7 +30,7 @@ export function ArchivePreviewPanel({ row }: ArchivePreviewPanelProps) {
     <div className="border border-line p-6">
       <p className="font-mono text-metadata text-ink-soft">{index}</p>
       <p className="text-stat-cell mt-2 tabular-nums text-ink">{formatCompactNumber(row.views)}</p>
-      <h3 className="text-lg mt-3 font-bold text-ink">{row.subject}</h3>
+      <h2 className="text-lg mt-3 font-bold text-ink">{row.subject}</h2>
       <p className="text-metadata mt-2 text-ink-soft">{formatDate(row.publishedAt)}</p>
 
       {row.summary !== null && <p className="text-body mt-4 text-ink-soft">{row.summary}</p>}
@@ -56,7 +64,7 @@ export function ArchivePreviewPanel({ row }: ArchivePreviewPanelProps) {
         rel="noopener noreferrer"
         className="text-metadata mt-5 inline-block font-bold text-ink underline-offset-2 hover:underline"
       >
-        VIEW SOURCE ↗<span className="sr-only"> for {row.subject}</span>
+        VIEW SOURCE <ExternalArrow /><span className="sr-only"> for {row.subject}</span>
       </a>
       <SourceFooter sources={[row.platformLabel]} observedAt={row.observedAt} className="mt-4" />
     </div>

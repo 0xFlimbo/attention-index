@@ -37,8 +37,7 @@ export default function Home() {
           totalObservedViews={attention.totalObservedViews}
           trackedPostCount={attention.trackedPostCount}
           lastUpdated={project.data_last_updated}
-          sourceDataHref="/evidence"
-          methodologyHref="/methodology"
+          repositoryUrl={project.repository_url}
         />
         <StatGrid cells={gridCells} />
         <NarrativeBreak />

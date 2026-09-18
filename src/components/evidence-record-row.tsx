@@ -4,6 +4,7 @@ import type { MediaReference } from "@/schemas/media.schema";
 import { AMPLIFICATION_ACTION_LABELS, AMPLIFICATION_CATEGORY_LABELS } from "@/lib/metrics/amplification";
 import { formatCompactNumber } from "@/lib/format/number";
 import { formatDate } from "@/lib/format/date";
+import { ExternalArrow } from "./external-arrow";
 
 /**
  * docs/ENGINEERING.md §6 — `/evidence` is record-oriented: every row shows
@@ -20,7 +21,12 @@ export interface EvidenceRecordRowData {
   /** Short fields joined with " · "; already formatted, already filtered of nulls. */
   meta: string[];
   href: string;
-  /** "VIEW SOURCE ↗" | "VIEW EVIDENCE ↗" — docs/EDITORIAL.md §9 approved CTA vocabulary. */
+  /**
+   * "VIEW SOURCE" | "VIEW EVIDENCE" — docs/EDITORIAL.md §9 approved CTA
+   * vocabulary. The label carries no glyph: the row appends `<ExternalArrow />`
+   * itself, so the `↗` is aria-hidden rather than baked into a string a screen
+   * reader would read out as a character (B9 accessibility pass).
+   */
   linkLabel: string;
 }
 
@@ -37,7 +43,7 @@ export function toPostEvidenceRow(post: Post): EvidenceRecordRowData {
       `${formatCompactNumber(post.metrics.views)} views observed ${formatDate(post.metrics.observed_at)}`,
     ],
     href: post.url,
-    linkLabel: "VIEW SOURCE ↗",
+    linkLabel: "VIEW SOURCE",
   };
 }
 
@@ -56,7 +62,7 @@ export function toAmplificationEvidenceRow(amplification: Amplification): Eviden
       formatDate(amplification.date),
     ],
     href: amplification.evidence_url,
-    linkLabel: "VIEW EVIDENCE ↗",
+    linkLabel: "VIEW EVIDENCE",
   };
 }
 
@@ -77,7 +83,7 @@ export function toMediaEvidenceRow(reference: MediaReference): EvidenceRecordRow
       ...(reference.author !== null ? [`By ${reference.author}`] : []),
     ],
     href: reference.url,
-    linkLabel: "VIEW SOURCE ↗",
+    linkLabel: "VIEW SOURCE",
   };
 }
 
@@ -123,7 +129,7 @@ export function EvidenceRecordRow({ data }: EvidenceRecordRowProps) {
         rel="noopener noreferrer"
         className="text-metadata shrink-0 font-bold text-ink underline-offset-2 hover:underline md:pt-1"
       >
-        {data.linkLabel}
+        {data.linkLabel} <ExternalArrow />
         <span className="sr-only"> for {data.title}</span>
       </a>
     </li>

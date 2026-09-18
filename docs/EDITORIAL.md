@@ -235,6 +235,15 @@ banned:   JOIN NOW · BUY NOW · DON'T MISS OUT · GET IN EARLY · BECOME PART O
 avoid:    PROOF ↗   (prefer SOURCE / EVIDENCE)
 ```
 
+**The glyph is not part of the label.** The list above fixes the *wording*; the arrow is chosen by
+the destination, not by the phrase. `↗` marks a link that genuinely leaves the site and opens in a
+new tab, and carries an `(opens in a new tab)` note for screen readers; an internal route takes `→`.
+So `VIEW SOURCE`, `VIEW ORIGINAL`, `GITHUB`, `CONTRIBUTE DATA` and `SUBMIT A CORRECTION` are `↗`,
+while `METHODOLOGY` and `OPEN ARCHIVE` are `→`, and a label like `SOURCE DATA` or `VIEW DATA` takes
+whichever matches where it actually points that day — external once `project.json.repository_url`
+is set, internal while it is `null`. Clarified at B9, where four labels had been shipped with `↗`
+against internal routes because this list was read as prescribing the glyph.
+
 Source labels: `Original X post`, `Public repost`, `Forbes article`, `Official LayoffHedge page`,
 `YouTube interview`, `Public newsletter`. Never `Definitive proof`, `Verified truth`,
 `Official confirmation` unless literally accurate.

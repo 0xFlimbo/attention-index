@@ -14,7 +14,7 @@
  */
 export function NarrativeBreak() {
   return (
-    <section className="reveal-on-mount">
+    <section>
       <div className="container-editorial section-padding-lg">
         <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-ink">
           VIEWS ARE

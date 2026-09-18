@@ -11,7 +11,7 @@ interface SectionEyebrowProps {
 
 export function SectionEyebrow({ index, label }: SectionEyebrowProps) {
   return (
-    <p className="text-[13px] font-bold tracking-[0.14em] text-accent uppercase">
+    <p className="text-[13px] font-bold tracking-[0.14em] text-accent-ink uppercase">
       {index} / {label}
     </p>
   );

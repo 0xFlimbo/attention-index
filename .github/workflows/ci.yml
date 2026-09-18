@@ -1,0 +1,53 @@
+name: CI
+
+# docs/ENGINEERING.md §10 — "install → validate:data → check:production-data
+# → typecheck → lint → test → build" on `pull_request` and `push: main`. A
+# PR with invalid production data must fail (docs/PRODUCT.md §12's launch
+# gate: "no placeholder metrics in production").
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    name: Verify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Reads `packageManager` in package.json (pnpm@9.15.9) — one source of
+      # truth for the pnpm version, matching how this repo is run locally
+      # (docs/WORKPLAN.md: "pnpm via corepack enable pnpm").
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate data
+        run: pnpm validate:data
+
+      - name: Check production data
+        run: pnpm check:production-data
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build

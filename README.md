@@ -71,15 +71,16 @@ Attribution for the dataset:
 
 ## Documentation
 
+These are the specifications the site is built to — the product contract, in the order a
+newcomer would read them. Planning and working-process notes are kept out of this repository, so
+a cross-reference to a file you cannot find here is one of those; nothing a contributor needs is
+missing.
+
 | File | Contents |
 |---|---|
-| `CLAUDE.md` | operating rules and precedence for coding agents |
-| `docs/WORKPLAN.md` | batch plan and current status |
-| `docs/HISTORY.md` | what each session actually did |
 | `docs/PRODUCT.md` | thesis, scope, audience, routes, success criteria |
 | `docs/DESIGN.md` | tokens, typography, components, motion, accessibility |
 | `docs/HOMEPAGE.md` | homepage sections and approved copy |
 | `docs/DATA.md` | JSON contract, validation rules, derived metrics |
 | `docs/ENGINEERING.md` | architecture, scripts, testing, CI, deployment |
 | `docs/EDITORIAL.md` | voice, metric labels, neutrality rules |
-| `docs/archive/` | original pre-consolidation specifications (reference only) |

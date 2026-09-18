@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ogImageDescriptor, twitterImageDescriptor } from "@/lib/og-image-meta";
 import {
   getPosts,
   getAmplifications,
@@ -13,6 +14,7 @@ import { selectMediaReferences } from "@/lib/metrics/media";
 import { formatCount } from "@/lib/format/number";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
+import { ExternalArrow } from "@/components/external-arrow";
 import {
   EvidenceRecordRow,
   toAmplificationEvidenceRow,
@@ -23,7 +25,12 @@ import {
 /**
  * docs/WORKPLAN.md B6 — same title/OG treatment as `/archive`: a short
  * `title` that reproduces the pre-B6 string through the root layout's
- * `template`, plus text-only OG/Twitter fields (no image; deferred to B9).
+ * `template`, plus OG/Twitter fields.
+ *
+ * `images` explicit (B9) — see `src/app/archive/page.tsx`'s comment: a route
+ * that declares its own `openGraph`/`twitter` object replaces the root's
+ * already-resolved image rather than extending it, so every such route
+ * repeats the pointer.
  */
 const TITLE = "Evidence & Sources";
 const DESCRIPTION =
@@ -37,11 +44,13 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     type: "website",
     siteName: "LayoffHedge Attention Index",
+    images: [ogImageDescriptor],
   },
   twitter: {
     card: "summary_large_image",
     title: `${TITLE} — LayoffHedge Attention Index`,
     description: DESCRIPTION,
+    images: [twitterImageDescriptor],
   },
 };
 
@@ -156,6 +165,80 @@ export default function EvidencePage() {
             </ul>
           )}
         </section>
+
+        {/*
+          docs/EDITORIAL.md §9's approved CTA vocabulary, buildable since the
+          repository went public. Placed here rather than on /about (maintainer
+          decision, 2026-09-18): this is the page where the intention forms —
+          someone reading a record notices a wrong date or a missing source and
+          the action is directly below it. On /about the same links reach a
+          reader still working out what the project is, who has nothing to
+          correct yet. Deliberately not in the footer: that list is site
+          navigation at six entries already, and these are actions with a
+          context, not destinations.
+
+          CONTRIBUTE DATA points at CONTRIBUTING.md — which file to edit,
+          evidence requirements, id conventions. SUBMIT A CORRECTION opens a new
+          issue instead: a correction is a report about an existing record, not
+          a pull request the reporter is expected to write, and CONTRIBUTING.md's
+          own "Pull request expectations" lists exactly the fields (record,
+          reason, old value, new value, evidence) an issue can carry.
+        */}
+        {project.repository_url !== null && (
+          <section
+            id="contribute"
+            className="mt-16 border-t border-line pt-10 md:mt-20 lg:grid lg:grid-cols-12 lg:gap-x-10"
+          >
+            {/*
+              Side-head at `lg`, the same 4 / 7 split and gap as `ProseSection`
+              (src/components/prose-section.tsx). At 1440 this block sat in a
+              `max-w-prose` column with the right half of its row empty, while
+              the record lists and the rule above it span all twelve columns —
+              the "narrow column beside a void" docs/DESIGN.md §5 rules out, and
+              the same defect already corrected at the B2 hero, the B4 Crossover
+              diagram, the B5 Evidence panel and the B6 prose pages. The grid is
+              inline rather than `ProseSection` itself because this section keeps
+              a top rule separating it from the records, and widening that
+              component API for one caller buys less than two class strings.
+              Below `lg` the markup is unchanged: heading stacked above body,
+              which is the shape the 390 review approved.
+            */}
+            <h2 className="text-lg font-bold tracking-tight text-ink lg:col-span-4">
+              Found something wrong?
+            </h2>
+            <div className="lg:col-span-7 lg:[&>*:first-child]:mt-0">
+              <p className="text-body mt-4 max-w-prose text-ink-soft">
+                Every record above is a file in the public repository. A missing record, a wrong
+                date or a broken source link can be corrected by anyone — a public source is
+                required for every new or changed fact.
+              </p>
+              <ul className="text-metadata mt-6 flex flex-wrap gap-x-8 gap-y-3 font-bold">
+                <li>
+                  <a
+                    href={`${project.repository_url}/blob/main/CONTRIBUTING.md`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-ink underline-offset-2 hover:underline"
+                  >
+                    CONTRIBUTE DATA <ExternalArrow />
+                    <span className="sr-only"> (opens in a new tab)</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={`${project.repository_url}/issues/new`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-ink underline-offset-2 hover:underline"
+                  >
+                    SUBMIT A CORRECTION <ExternalArrow />
+                    <span className="sr-only"> (opens in a new tab)</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </section>
+        )}
       </main>
       <Footer project={project} />
     </div>

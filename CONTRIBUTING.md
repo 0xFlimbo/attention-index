@@ -1,7 +1,7 @@
 # Contributing
 
 This project's headline numbers are calculated from records in `data/*.json`, never hardcoded
-and never stored as summaries — see `CLAUDE.md`'s canonical data rule: **store the evidence,
+and never stored as summaries. The rule the whole project is built on: **store the evidence,
 derive the number, show the source.** Contributing means adding or correcting a record, not
 adding a number.
 

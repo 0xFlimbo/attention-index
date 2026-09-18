@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { AnchorHTMLAttributes, ReactNode } from "react";
+import { ExternalArrow } from "./external-arrow";
 
 /**
  * docs/HOMEPAGE.md §3, docs/DESIGN.md §6 — sticky top nav. `"use client"`
@@ -117,7 +118,7 @@ export function Navigation({ repositoryUrl }: NavigationProps) {
             <li key={item.label}>
               <NavLink
                 href={item.href}
-                className="text-metadata font-bold text-ink hover:text-accent"
+                className="text-metadata font-bold text-ink hover:text-accent-ink"
               >
                 {item.label}
               </NavLink>
@@ -129,9 +130,9 @@ export function Navigation({ repositoryUrl }: NavigationProps) {
                 href={repositoryUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-metadata font-bold text-ink hover:text-accent"
+                className="text-metadata font-bold text-ink hover:text-accent-ink"
               >
-                GITHUB ↗<span className="sr-only"> (opens in a new tab)</span>
+                GITHUB <ExternalArrow /><span className="sr-only"> (opens in a new tab)</span>
               </a>
             </li>
           )}
@@ -198,7 +199,7 @@ export function Navigation({ repositoryUrl }: NavigationProps) {
                 tabIndex={isMenuOpen ? 0 : -1}
                 className="block min-h-11 py-4 text-2xl font-bold text-ink"
               >
-                GITHUB ↗<span className="sr-only"> (opens in a new tab)</span>
+                GITHUB <ExternalArrow /><span className="sr-only"> (opens in a new tab)</span>
               </a>
             </li>
           )}

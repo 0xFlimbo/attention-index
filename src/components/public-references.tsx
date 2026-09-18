@@ -16,7 +16,7 @@ import { SectionEyebrow } from "./section-eyebrow";
  *
  * Planner decision (B8 brief): no marquee. docs/HOMEPAGE.md §11 allows "at
  * most one slow marquee… only if enough recognizable [publications] exist",
- * but `globals.css` documents the homepage's motion budget as exactly four
+ * but `globals.css` documents the homepage's motion budget as exactly three
  * effects and `CLAUDE.md` requires restrained motion; a fifth is deferred to
  * B9, which owns the motion audit, not decided ad hoc here.
  */
@@ -29,7 +29,7 @@ export function PublicReferences({ mediaReferences }: PublicReferencesProps) {
   if (publications.length === 0) return null;
 
   return (
-    <section id="references" className="container-editorial section-padding reveal-on-mount">
+    <section id="references" className="container-editorial section-padding">
       <SectionEyebrow index="05" label="PUBLIC REFERENCES" />
       <h2 className="text-2xl md:text-3xl mt-4 font-bold tracking-tight text-ink">
         IT DIDN&apos;T

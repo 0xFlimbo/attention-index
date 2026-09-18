@@ -15,7 +15,7 @@ interface StatGridProps {
 
 export function StatGrid({ cells }: StatGridProps) {
   return (
-    <section id="attention" className="container-editorial section-padding reveal-on-mount">
+    <section id="attention" className="container-editorial section-padding">
       <SectionEyebrow index="01" label="ATTENTION" />
       <h2 className="text-2xl md:text-3xl mt-4 font-bold tracking-tight text-ink">
         HOW MUCH

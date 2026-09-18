@@ -37,7 +37,7 @@ export function AmplifiedBy({ amplifications, posts, officialXAccount }: Amplifi
   const verifiedPostsById = new Map(posts.filter(isVerifiedRecord).map((post) => [post.id, post]));
 
   return (
-    <section id="amplified" className="container-editorial section-padding reveal-on-mount">
+    <section id="amplified" className="container-editorial section-padding">
       <SectionEyebrow index="03" label="AMPLIFIED" />
       <h2 className="text-2xl md:text-3xl mt-4 font-bold tracking-tight text-ink">
         WHO CARRIED

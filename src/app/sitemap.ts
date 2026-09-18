@@ -1,0 +1,37 @@
+import type { MetadataRoute } from "next";
+import { getProjectMetadata } from "@/lib/data";
+import { SITE_URL } from "@/lib/site-url";
+
+/**
+ * docs/ENGINEERING.md §6 — "Sitemap covers the five routes." Deferred from B6
+ * to B9 because it needs an absolute canonical URL (`SITE_URL`), which did not
+ * exist until the Vercel deployment target was confirmed. No invented routes:
+ * exactly the five real ones this site ships (`docs/ENGINEERING.md §6`'s own
+ * route table) — no `/methodology#anchor`-style entries, no route that
+ * doesn't exist.
+ *
+ * `lastModified` uses `project.json.data_last_updated` for every route: it is
+ * the one dated fact this project keeps about "when the content changed",
+ * and every route's content (headline metrics, archive, evidence, even the
+ * static prose pages, which quote live-derived numbers in `/methodology`)
+ * depends on the dataset that date describes.
+ */
+export default function sitemap(): MetadataRoute.Sitemap {
+  const project = getProjectMetadata();
+  const lastModified = new Date(project.data_last_updated);
+
+  const routes: Array<{ path: string; priority: number }> = [
+    { path: "/", priority: 1 },
+    { path: "/archive", priority: 0.8 },
+    { path: "/evidence", priority: 0.8 },
+    { path: "/methodology", priority: 0.5 },
+    { path: "/about", priority: 0.5 },
+  ];
+
+  return routes.map(({ path, priority }) => ({
+    url: `${SITE_URL}${path}`,
+    lastModified,
+    changeFrequency: "weekly",
+    priority,
+  }));
+}

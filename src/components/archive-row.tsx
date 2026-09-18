@@ -3,6 +3,7 @@ import { PLATFORM_LABELS } from "@/lib/metrics/attention-grid";
 import { formatCompactNumber, formatCount } from "@/lib/format/number";
 import { formatDate } from "@/lib/format/date";
 import { SourceFooter } from "./source-footer";
+import { ExternalArrow } from "./external-arrow";
 
 /**
  * docs/DESIGN.md §6 / docs/HOMEPAGE.md §10 — one archive row's data, already
@@ -156,7 +157,7 @@ export function ArchiveRow({ row, onPreview }: ArchiveRowProps) {
         rel="noopener noreferrer"
         className="text-metadata shrink-0 self-start pt-1 font-bold text-ink underline-offset-2 hover:underline"
       >
-        VIEW SOURCE ↗<span className="sr-only"> for {row.subject}</span>
+        VIEW SOURCE <ExternalArrow /><span className="sr-only"> for {row.subject}</span>
       </a>
     </div>
   );

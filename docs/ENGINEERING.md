@@ -153,10 +153,18 @@ Inclusion in the archive documents public reach; it does not verify every claim 
 ```
 
 Anchors are native; smooth scrolling optional and reduced-motion aware.
-Sitemap covers the five routes; robots indexes public routes only. **Neither is built yet** —
-both need an absolute canonical URL, so they moved to B9 with the Open Graph image at the
-2026-09-18 maintainer decision (`docs/WORKPLAN.md`). The five routes each carry their own
-`metadata` (title, description, OG/Twitter text fields) as of B6.
+Sitemap covers the five routes; robots indexes public routes only (built at B9, `src/app/
+sitemap.ts`, `src/app/robots.ts` — both need an absolute canonical URL, which is why they moved
+here from B6 at the 2026-09-18 maintainer decision, `docs/WORKPLAN.md`). Both read `SITE_URL`
+(`src/lib/site-url.ts`), the single source of truth for that URL — `NEXT_PUBLIC_SITE_URL` if set,
+else the canonical Vercel deployment. The five routes each carry their own `metadata` (title,
+description, OG/Twitter text fields, as of B6, plus the OG/Twitter image as of B9 — every route
+that declares its own `openGraph`/`twitter` object repeats an explicit `images` pointer at the
+root `opengraph-image.tsx` / `twitter-image.tsx` route, rather than relying on inheritance: Next
+only auto-applies a file-convention image to a segment that declares no `images` key of its own,
+and that check does not cascade past a child segment that redeclares the object — verified in the
+built HTML, where omitting this left `/archive`, `/evidence`, `/methodology` and `/about` with no
+`og:image`/`twitter:image` at all while `/` kept the root's).
 
 ---
 

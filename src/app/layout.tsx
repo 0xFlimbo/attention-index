@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope, IBM_Plex_Mono } from "next/font/google";
+import { SITE_URL } from "@/lib/site-url";
 import "./globals.css";
 
 // Manrope: 700 for headlines, 400/500 for body — docs/DESIGN.md §4.
@@ -23,9 +24,10 @@ const plexMono = IBM_Plex_Mono({
  * only applies to a route that sets its own (short) `title`, letting every
  * other route (`/archive`, `/evidence`, `/methodology`, `/about`) keep the
  * same "<Page> — LayoffHedge Attention Index" shape without repeating the
- * suffix in five places. No `metadataBase` and no OG image here: both need an
- * absolute canonical URL that does not exist yet (docs/WORKPLAN.md B6 scope,
- * deferred to B9 — open question 6, deployment target unconfirmed).
+ * suffix in five places. `metadataBase` (B9) resolves every route's relative
+ * OG/Twitter URLs — including the `opengraph-image.tsx` / `twitter-image.tsx`
+ * routes — against `SITE_URL`, the single source of truth for the canonical
+ * deployment URL (`src/lib/site-url.ts`).
  */
 const SITE_NAME = "LayoffHedge Attention Index";
 const HOMEPAGE_TITLE = `${SITE_NAME} — Independent Public Record`;
@@ -33,6 +35,7 @@ const HOMEPAGE_DESCRIPTION =
   "An independent, open-source record of LayoffHedge's public reach, viral posts, media references, and real-world amplification.";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
     default: HOMEPAGE_TITLE,
     template: `%s — ${SITE_NAME}`,

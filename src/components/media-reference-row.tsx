@@ -2,6 +2,7 @@ import type { PublicationReferences } from "@/lib/metrics/media";
 import { REFERENCE_TYPE_LABELS } from "./evidence-record-row";
 import { formatCount } from "@/lib/format/number";
 import { formatDate } from "@/lib/format/date";
+import { ExternalArrow } from "./external-arrow";
 
 /** One reference inside an expanded publication row, already field-selected for display. */
 export interface MediaReferenceEntryData {
@@ -127,7 +128,7 @@ export function MediaReferenceRow({ row }: MediaReferenceRowProps) {
                 rel="noopener noreferrer"
                 className="text-metadata shrink-0 font-bold text-ink underline-offset-2 hover:underline md:pt-1"
               >
-                VIEW SOURCE ↗<span className="sr-only"> for {reference.title}</span>
+                VIEW SOURCE <ExternalArrow /><span className="sr-only"> for {reference.title}</span>
               </a>
             </li>
           ))}
