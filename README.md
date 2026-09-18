@@ -62,7 +62,11 @@ See `CONTRIBUTING.md` for the full workflow, evidence requirements and id conven
 | Code, configuration, scripts, documentation | MIT — `LICENSE` |
 | The dataset in `data/` | CC BY 4.0 — `data/LICENSE` |
 
-Neither license covers the third-party material the records link to. Attribution for the dataset:
+Neither license covers the third-party material the records link to, and neither extends to any
+third-party name, trademark, logo or content referenced or linked by this repository. This is an
+independent community project, not affiliated with or endorsed by LayoffHedge.
+
+Attribution for the dataset:
 `LayoffHedge Attention Index — https://github.com/0xFlimbo/attention-index — CC BY 4.0`.
 
 ## Documentation

@@ -19,14 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-This license covers the source code, configuration, scripts and documentation
-in this repository. The dataset in `data/` is licensed separately under
-Creative Commons Attribution 4.0 International — see `data/LICENSE`.
-
-This is an independent community project. It is not affiliated with, endorsed
-by, or connected to LayoffHedge. The MIT grant above applies to this
-repository's own code and does not extend to any third-party name, trademark,
-logo or content referenced or linked by it.
