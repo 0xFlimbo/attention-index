@@ -107,6 +107,15 @@ font-family: "Manrope", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI"
 
 `record id` (`.text-record-id`, added in B5) is the metadata scale with the uppercasing removed,
 paired with the mono stack wherever a record's `id` is printed verbatim — today `/evidence`.
+It also carries any other metadata-scale value whose exact casing is part of the value: B6 uses it
+for `official_x_account` on `/about`, where the surrounding `.text-metadata` list would otherwise
+inherit `@LayoffAI` down to `@LAYOFFAI`, a handle that is not the account's name. That case is why
+the class sets `text-transform: none` **explicitly** rather than just leaving it unset: on
+`/evidence` it replaces `.text-metadata` on the same element, so omission was enough, but as a
+child of a `.text-metadata` element an unset property inherits the ancestor's `uppercase`. Caught
+at the B6 visual review, after a first fix that applied the class and assumed that was sufficient.
+It is **not** an inline-code style: inside body prose (18–24px) its 12px would render a field name
+at half the size of the text around it, so `/methodology` uses the bare `font-mono` utility there.
 `docs/DATA.md §2` defines ids as lowercase, and an id transformed on screen is one a reader cannot
 copy into `data/*.json` and find. It is a separate class rather than `.text-metadata` plus a
 `normal-case` utility because the component classes in `globals.css` sit outside Tailwind's cascade
@@ -263,12 +272,27 @@ Sticky, ~64–72px, cream, thin bottom border. No floating navbar, no glass card
 no large logo, no competing CTA. Sticky state may add a very light `backdrop-filter: blur(8px)`.
 Mobile: `LH / ATTENTION INDEX     MENU` opening a simple drawer or full-screen panel.
 
+### Prose section
+
+The titled section of a long-form prose page (`/methodology`, `/about`) — `ProseSection`,
+added in B6. Below `lg` it is a heading stacked above its body. From `lg` up it becomes a
+side-head on the §5 twelve-column grid: heading in columns 1–4, body in 5–11, twelfth column
+left as trailing margin. Both pages had shipped their prose hard-left in a ~870px column
+against 1440, the "narrow column beside a void" §5 rules out and the same defect corrected at
+the B2 hero, the B4 Crossover diagram and the B5 Evidence panel and footer.
+
+The body takes seven columns rather than eight on purpose: at eight it is ~904px, wide enough
+that the children's `max-w-prose` stops binding (65 `ch`, and `ch` measures the wide `0`), and
+lines ran ~85 characters on a page whose only job is being read. Seven returns the measure to
+the mid-70s. The first child's top margin is zeroed at `lg` only, so the side-head and the first
+paragraph share a baseline there while the stacked layout keeps its heading-to-body gap.
+
 ### Required custom components
 
 ```text
 Navigation · HeroStatement · SectionEyebrow · PrimaryAttentionMetric · StatGrid · StatCell
 NarrativeBreak · PosterCallout · CrossoverMap · AmplifierCard · ViralArchive · ArchiveRow
-MediaReferenceRow · EvidenceBlock · SourceFooter · TokenSection · Footer
+MediaReferenceRow · EvidenceBlock · SourceFooter · TokenSection · Footer · ProseSection
 ```
 
 ---

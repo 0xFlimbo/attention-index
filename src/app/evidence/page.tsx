@@ -21,14 +21,28 @@ import {
 } from "@/components/evidence-record-row";
 
 /**
- * docs/ENGINEERING.md §6 — "browsable list of posts / amplifications /
- * media / milestones — a simple table is enough." Record-oriented, which is
- * what differentiates this route from `/archive`'s editorial view: every
- * row shows the record `id` alongside its human fields. Server Component,
- * zero client JS, no filters (that is `/archive`'s job).
+ * docs/WORKPLAN.md B6 — same title/OG treatment as `/archive`: a short
+ * `title` that reproduces the pre-B6 string through the root layout's
+ * `template`, plus text-only OG/Twitter fields (no image; deferred to B9).
  */
+const TITLE = "Evidence & Sources";
+const DESCRIPTION =
+  "Every verified record behind this project's derived metrics — posts, amplifications, media references and milestones — each linked to its public source.";
+
 export const metadata: Metadata = {
-  title: "Evidence & Sources — LayoffHedge Attention Index",
+  title: TITLE,
+  description: DESCRIPTION,
+  openGraph: {
+    title: `${TITLE} — LayoffHedge Attention Index`,
+    description: DESCRIPTION,
+    type: "website",
+    siteName: "LayoffHedge Attention Index",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${TITLE} — LayoffHedge Attention Index`,
+    description: DESCRIPTION,
+  },
 };
 
 /**
@@ -42,6 +56,13 @@ function sectionHeading(name: string, count: number): string {
   return `${name} — ${formatCount(count)} ${count === 1 ? "record" : "records"}`;
 }
 
+/**
+ * docs/ENGINEERING.md §6 — "browsable list of posts / amplifications /
+ * media / milestones — a simple table is enough." Record-oriented, which is
+ * what differentiates this route from `/archive`'s editorial view: every
+ * row shows the record `id` alongside its human fields. Server Component,
+ * zero client JS, no filters (that is `/archive`'s job).
+ */
 export default function EvidencePage() {
   const project = getProjectMetadata();
 

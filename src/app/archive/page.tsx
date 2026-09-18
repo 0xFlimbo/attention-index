@@ -6,9 +6,31 @@ import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
 import { ArchiveExplorer } from "@/components/archive-explorer";
 
-/** docs/ENGINEERING.md §6 — route metadata, same title style as the B2 placeholder it replaces. */
+/**
+ * docs/ENGINEERING.md §6, docs/WORKPLAN.md B6 — route metadata. `title` is
+ * short: `src/app/layout.tsx`'s `template` appends " — LayoffHedge Attention
+ * Index", reproducing the exact string this route shipped before B6. OG/
+ * Twitter carry their own full-string title (templates don't apply there) —
+ * text fields only, no image (deferred to B9 with the OG image itself).
+ */
+const TITLE = "Viral Archive";
+const DESCRIPTION =
+  "Every publicly verified LayoffHedge / @LayoffAI post this project tracks, ranked by observed views, with a link back to the original public post.";
+
 export const metadata: Metadata = {
-  title: "Viral Archive — LayoffHedge Attention Index",
+  title: TITLE,
+  description: DESCRIPTION,
+  openGraph: {
+    title: `${TITLE} — LayoffHedge Attention Index`,
+    description: DESCRIPTION,
+    type: "website",
+    siteName: "LayoffHedge Attention Index",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${TITLE} — LayoffHedge Attention Index`,
+    description: DESCRIPTION,
+  },
 };
 
 /**

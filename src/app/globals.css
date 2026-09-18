@@ -219,6 +219,18 @@ body {
   font-size: 12px;
   line-height: 1.4;
   letter-spacing: 0.06em;
+  /*
+   * Explicit, not merely omitted. On `/evidence` this class *replaces*
+   * `.text-metadata` on the same element, so leaving `text-transform` unset
+   * was enough. It is not enough when the class sits on a child of a
+   * `.text-metadata` element — `text-transform` inherits, and an unset
+   * property inherits the ancestor's `uppercase`. That is how `@LayoffAI`
+   * shipped to the B6 visual review as `@LAYOFFAI` on `/about`, inside the
+   * official-links list. The class's whole contract (docs/DESIGN.md §4) is
+   * "the metadata scale with the uppercasing removed", so it now enforces
+   * that rather than assuming nothing above it asked for uppercase.
+   */
+  text-transform: none;
 }
 
 /* docs/DESIGN.md §5 — container and section vertical rhythm. */

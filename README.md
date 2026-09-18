@@ -53,6 +53,7 @@ Optional maintenance tools (never part of the production runtime):
 
 Find a missing or incorrect record → edit the right JSON file → attach public evidence →
 run `pnpm validate:data` → open a pull request. Contributions without a public source are not merged.
+See `CONTRIBUTING.md` for the full workflow, evidence requirements and id conventions.
 
 ## Documentation
 

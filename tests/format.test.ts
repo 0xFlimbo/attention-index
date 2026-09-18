@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { formatCompactNumber, formatCount } from "../src/lib/format/number";
-import { formatDate } from "../src/lib/format/date";
+import { formatDate, formatDateLong } from "../src/lib/format/date";
 
 describe("formatCompactNumber", () => {
   it("formats millions with at most one decimal", () => {
@@ -41,5 +41,29 @@ describe("formatDate", () => {
 
   it("throws on a malformed date", () => {
     expect(() => formatDate("not-a-date")).toThrow();
+  });
+});
+
+// docs/EDITORIAL.md §4 — the long-form prose variant of the date label, used
+// only in the running text of /methodology and /about.
+describe("formatDateLong", () => {
+  it("spells the month out and comma-separates the year", () => {
+    expect(formatDateLong("2026-09-15")).toBe("September 15, 2026");
+  });
+
+  it("accepts a timestamp and uses only the date portion", () => {
+    expect(formatDateLong("2026-01-05T18:30:00Z")).toBe("January 5, 2026");
+  });
+
+  it("does not pad the day", () => {
+    expect(formatDateLong("2026-12-01")).toBe("December 1, 2026");
+  });
+
+  it("rejects a malformed date", () => {
+    expect(() => formatDateLong("not-a-date")).toThrow();
+  });
+
+  it("rejects an out-of-range month", () => {
+    expect(() => formatDateLong("2026-13-01")).toThrow();
   });
 });
