@@ -27,10 +27,10 @@ describe("real dataset — derived metrics", () => {
 
     const media = getMediaMetrics(getMediaReferences());
     // 100 records came in from the official press page and B14 added three the
-    // importer had skipped for month-only dates; the queue that B14 could not
-    // read stays out of the public count.
-    expect(media.verifiedMediaReferenceCount).toBe(85);
-    expect(media.uniquePublicationCount).toBe(45);
+    // importer had skipped for month-only dates. The review queue is empty: what
+    // is not verified is archived, with the reason stored on the record.
+    expect(media.verifiedMediaReferenceCount).toBe(94);
+    expect(media.uniquePublicationCount).toBe(51);
     expect(getMediaReferences().length).toBe(103);
   });
 

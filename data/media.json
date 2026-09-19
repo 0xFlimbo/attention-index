@@ -8,16 +8,16 @@
     "url": "https://www.newsbreak.com/news/4885662482992-trine-university-under-scrutiny-for-foreign-student-recruitment-practices",
     "author": null,
     "country": null,
-    "provenance": null,
-    "syndicated_from": null,
+    "provenance": "syndicated",
+    "syndicated_from": "The UNN",
     "context": "Staff Reporter. Syndication of The UNN piece, credits layoffhedge for the Trine investigation in prose and points to the @LayoffAI post that carried it. First NewsBreak citation.",
     "related_post_id": null,
     "featured": false,
     "logo": null,
     "archive_url": null,
-    "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "notes": "Verified by the maintainer in a browser, 2026-09-19. newsbreak.com serves only a teaser; the full piece is The UNN's, which credits layoffhedge in prose and is recorded separately as media-the-unn-2026-09-14. The mention is therefore established on the syndicated original, not on this page's served text.",
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-the-unn-2026-09-14",
@@ -448,7 +448,7 @@
     "url": "https://www.thehrdigest.com/servicenow-continues-its-series-of-layoffs-as-workers-share-their-frustration-online/",
     "author": "Anuradha Mukherjee",
     "country": null,
-    "provenance": null,
+    "provenance": "original",
     "syndicated_from": null,
     "context": "First citation from the HR trade publication. Embeds the @LayoffAI post breaking ServiceNow's cut of hundreds more staff as its AI business passed $1 billion in annual contract value.",
     "related_post_id": null,
@@ -456,8 +456,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-ibtimes-uk-2026-07-28",
@@ -1068,7 +1068,7 @@
     "url": "https://beincrypto.com/canada-ai-strategy-berkeley-classroom-cost/",
     "author": "Lockridge Okoth",
     "country": null,
-    "provenance": null,
+    "provenance": "original",
     "syndicated_from": null,
     "context": "The BeInCrypto original behind the Yahoo News syndication below, embedding the @LayoffAI post on the May data where 40% of all layoffs cited AI.",
     "related_post_id": null,
@@ -1076,8 +1076,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-yahoo-news-2026-06-04",
@@ -1095,8 +1095,8 @@
     "featured": false,
     "logo": null,
     "archive_url": null,
-    "notes": null,
-    "status": "needs_review",
+    "notes": "Archived at B14 close-out: the maintainer opened the page and there is no citation on it. The BeInCrypto original it syndicates does carry the embedded @LayoffAI post, but this republication dropped it, so the record asserts a reference the page does not contain.",
+    "status": "archived",
     "verified_at": null
   },
   {
@@ -1301,23 +1301,23 @@
   },
   {
     "id": "media-people-and-computers-israel-2026-05-20",
-    "publication": "People & Computers (Israel)",
+    "publication": "People & Computers",
     "title": "Meta Laid Off 8,000 Worldwide and Dozens in Israel — Because of AI",
     "reference_type": "article",
     "published_at": "2026-05-20",
     "url": "https://www.pc.co.il/news/%D7%91%D7%99%D7%A0%D7%94-%D7%9E%D7%9C%D7%90%D7%9B%D7%95%D7%AA%D7%99%D7%AA/451594/",
     "author": "Gali Fialkov",
-    "country": null,
-    "provenance": null,
+    "country": "IL",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Hebrew-language Israeli tech publication embedding the @LayoffAI leaked-audio post as corroborating evidence of Meta's AI-driven cuts.",
     "related_post_id": null,
     "featured": false,
     "logo": null,
     "archive_url": null,
-    "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "notes": "Verified by the maintainer in a browser, 2026-09-19: the @LayoffAI post is embedded and renders, which the fetched Hebrew text does not show. Country from the outlet's own .co.il domain.",
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-the-deep-dive-canada-2026-05-20",
@@ -1448,16 +1448,16 @@
     "url": "https://beincrypto.com/standard-chartered-ai-layoffs-7800-jobs/",
     "author": "Kamina Bashir",
     "country": null,
-    "provenance": null,
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Third BeInCrypto citation. Embeds the @LayoffAI tweet that broke the 7,800 back-office cut at Standard Chartered.",
     "related_post_id": null,
-    "featured": false,
+    "featured": true,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-beincrypto-spanish-edition-2026-05-19",
@@ -1468,16 +1468,16 @@
     "url": "https://es.beincrypto.com/despidos-ia-standard-chartered-7800-empleos/",
     "author": null,
     "country": null,
-    "provenance": null,
-    "syndicated_from": null,
+    "provenance": "syndicated",
+    "syndicated_from": "BeInCrypto",
     "context": "Spanish-language edition of the BeInCrypto report. Carries the same @LayoffAI post on the 7,800 back-office cut at Standard Chartered.",
     "related_post_id": null,
     "featured": false,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-free-press-journal-india-2026-05-18",
@@ -1528,16 +1528,16 @@
     "url": "https://beincrypto.com/gambling-layoffs-prediction-markets-ai-shakeout/",
     "author": "Lockridge Okoth",
     "country": null,
-    "provenance": null,
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Embeds the Official Layoff / @LayoffAI tweet that broke the Penn Entertainment 75+ and Gambling.com 25% cuts on prediction-market drainage.",
     "related_post_id": null,
-    "featured": false,
+    "featured": true,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-ibtimes-uk-2026-05-13",
@@ -1588,36 +1588,36 @@
     "url": "https://beincrypto.com/ai-restructuring-job-layoffs-2026/",
     "author": null,
     "country": null,
-    "provenance": null,
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Cites Official Layoff / @LayoffAI on the Ticketmaster 8% workforce reduction and the broader May 2026 AI-restructuring layoff wave (Cloudflare, Coinbase, PayPal, BILL, Upwork).",
     "related_post_id": null,
-    "featured": false,
+    "featured": true,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-el-ecosistema-startup-spain-2026-05-08",
-    "publication": "El Ecosistema Startup (Spain)",
+    "publication": "El Ecosistema Startup",
     "title": "Cloudflare elimina 1.100 empleos por IA: lecciones para founders",
     "reference_type": "article",
     "published_at": "2026-05-08",
     "url": "https://ecosistemastartup.com/cloudflare-elimina-1-100-empleos-por-ia-lecciones-para-founders/",
     "author": null,
-    "country": null,
-    "provenance": null,
+    "country": "ES",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Spanish-language coverage of Cloudflare's 1,100 AI-driven cuts. Cites layoffhedge.com/company/cloudflare in the formal sources section as the workforce data reference.",
     "related_post_id": null,
-    "featured": false,
+    "featured": true,
     "logo": null,
     "archive_url": null,
-    "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "notes": "Verified by the maintainer in a browser, 2026-09-19. Country ES rests on the country parenthetical the press page carried (docs/WORKPLAN.md open question 12), not on a statement by the outlet — the weakest country basis in this dataset, and the only one of its kind.",
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-glass-almanac-2026-05-08",
@@ -1955,8 +1955,8 @@
     "featured": false,
     "logo": null,
     "archive_url": null,
-    "notes": null,
-    "status": "needs_review",
+    "notes": "Archived at B14 close-out (maintainer's call): the page quotes an @LayoffAI reply among a round-up of reactions to an Elon Musk thread, rather than referencing the project's own data or reporting.",
+    "status": "archived",
     "verified_at": null
   },
   {
@@ -2035,8 +2035,8 @@
     "featured": false,
     "logo": null,
     "archive_url": null,
-    "notes": null,
-    "status": "needs_review",
+    "notes": "Archived at B14 close-out: the source URL returns page not found. A verified record requires a working source URL (docs/DATA.md §14), and no archive copy has been located.",
+    "status": "archived",
     "verified_at": null
   },
   {

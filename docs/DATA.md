@@ -24,10 +24,11 @@ data/project.json         project metadata (no metrics)
 Optional later only if genuinely needed: `people.json`, `organizations.json`, `snapshots/`.
 
 **Current state (2026-09-19, after B14):** 32 posts (all `verified`), 10 amplifications (all
-`verified`), 103 media references (85 `verified`, 12 `needs_review`, 6 `archived`), no
-placeholders. Of the 85 verified media records: 70 original, 15 republications, 29 featured,
-newsrooms in 5 countries (54 of the 70 originals carry a country; the rest are deliberately
-blank). A dated reading of the dataset, not a target — derive, never match.
+`verified`), 103 media references (94 `verified`, 9 `archived`, **no `needs_review` left** — the
+imported press queue has been worked through end to end). Of the 94 verified media records: 77
+original, 17 republications, 33 featured, newsrooms in 7 countries (56 of the 77 originals carry
+a country; the rest are deliberately blank). A dated reading of the dataset, not a target —
+derive, never match.
 
 ---
 
@@ -452,7 +453,7 @@ broken by smallest `id` (lexicographic) — the same reasoning as `compareArchiv
 
 `selectMediaReferences(mediaReferences: MediaReference[]): MediaReference[]` — the verified,
 sorted media list `/evidence`'s media section renders directly. No filters, no pagination. With
-today's dataset (103 raw records, 85 verified) this resolves to 85 rows. Provenance does not
+today's dataset (103 raw records, 94 verified) this resolves to 94 rows. Provenance does not
 filter this list: `/evidence` is the ledger where every verified record is auditable, and a
 republication is dropped from the derived coverage figures, never from the page that claims to
 list everything.
@@ -493,7 +494,7 @@ statement about the dataset — but its `href` is `null` instead of `/evidence#<
 `EvidenceBlock` never links to an `/evidence` anchor with nothing under it. This document owns the
 sample values; `docs/HOMEPAGE.md §12` draws the section's shape and deliberately prints no counter
 of its own, so the two cannot drift apart again. Read 2026-09-19:
-`POST DATA 32 · AMPLIFICATIONS 10 · MEDIA 85` — a dated reading, never a target to match.
+`POST DATA 32 · AMPLIFICATIONS 10 · MEDIA 94` — a dated reading, never a target to match.
 
 ---
 

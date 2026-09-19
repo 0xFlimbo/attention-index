@@ -361,12 +361,12 @@ describe("media contract — real dataset", () => {
     }
   });
 
-  it("matches today's reading: 85 verified — 70 original, 15 republications — across 5 countries", () => {
+  it("matches today's reading: 94 verified — 77 original, 17 republications — across 7 countries", () => {
     const metrics = getMediaMetrics(references);
-    expect(metrics.verifiedMediaReferenceCount).toBe(85);
-    expect(metrics.originalReferenceCount).toBe(70);
-    expect(metrics.syndicatedReferenceCount).toBe(15);
-    expect(metrics.featuredReferenceCount).toBe(29);
-    expect(metrics.countryCount).toBe(5);
+    expect(metrics.verifiedMediaReferenceCount).toBe(94);
+    expect(metrics.originalReferenceCount).toBe(77);
+    expect(metrics.syndicatedReferenceCount).toBe(17);
+    expect(metrics.featuredReferenceCount).toBe(33);
+    expect(metrics.countryCount).toBe(7);
   });
 });
