@@ -218,7 +218,7 @@ Stat value: `font-weight:700; letter-spacing:-.04em; font-size: clamp(48px, 6vw,
 
 ### Poster callout
 Light (`--color-bg-soft` + line), red-bordered (`--color-bg` + accent border), or dark
-(`--color-panel-dark`). For milestones, crossover statements, evidence blocks, big aggregates.
+(`--color-panel-dark`). For crossover statements, evidence blocks, big aggregates.
 
 ### Archive row
 

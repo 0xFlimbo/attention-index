@@ -18,14 +18,14 @@ neither in JSON, nor in constants, nor in components.
 data/posts.json           tracked LayoffHedge / @LayoffAI posts + observed metrics
 data/amplifications.json  public people/organizations that amplified the content
 data/media.json           external media and public references
-data/milestones.json      editorial milestones
 data/project.json         project metadata (no metrics)
 ```
 
 Optional later only if genuinely needed: `people.json`, `organizations.json`, `snapshots/`.
 
-**Current state (2026-09-16):** 20 posts (all `verified`), 9 amplifications (5 `verified`,
-4 `needs_review`), media `[]`, milestones `[]`, no placeholders.
+**Current state (2026-09-19):** 32 posts (all `verified`), 10 amplifications (all `verified`),
+100 media references (18 `verified`, 82 `needs_review`), no placeholders. A dated reading of the
+dataset, not a target — derive, never match.
 
 ---
 
@@ -53,7 +53,6 @@ Format `category-descriptor-date` (or `-tweetid`), lowercase, hyphenated, stable
 post-layoffai-2099180586858393814
 amp-harmeet-dhillon-2098925135302476136
 media-forbes-layoffhedge-2026-04-11
-milestone-first-10m-post-2026-06-02
 ```
 
 ### URLs
@@ -190,27 +189,11 @@ One record per article. Publication totals (`FORBES — 3 references`) are **der
 
 ---
 
-## 8. `milestones.json`
+## 8. *(section retired)*
 
-```jsonc
-{
-  "id": "milestone-first-10m-post-2026-06-02",
-  "date": "2026-06-02",
-  "title": "First tracked post above 10M views",
-  "category": "attention",   // attention|crossover|media|politics|project|community|other
-  "description": "A tracked @LayoffAI post crossed 10M observed views.",
-  "evidence_url": "https://x.com/…",
-  "related_post_id": "post-example-2026-06-02",
-  "status": "verified",
-  "verified_at": "2026-09-15"
-}
-```
-
-Required: `id, date, title, category, status`. `description`, `evidence_url`, `related_post_id`
-and `verified_at` are nullable — a milestone can be derived from records the site already holds,
-so it does not always carry its own evidence URL.
-
-Editorial records, not primary metrics.
+A fourth record type was removed on 2026-09-19 (`docs/WORKPLAN.md` B17) and its section with it.
+The number stays reserved and empty so every `docs/DATA.md §N` reference in the code and the other
+docs keeps resolving — do not renumber the sections below it.
 
 ---
 
@@ -352,25 +335,24 @@ Attention Quality Score or similar pseudo-precision.
 
 ### Dataset summary selector (`src/lib/metrics/dataset.ts`)
 
-`selectDatasetSummary(input: { posts, amplifications, mediaReferences, milestones }):
-DatasetSummaryRow[]` — the four-row summary the homepage Evidence section (docs/HOMEPAGE.md §12)
+`selectDatasetSummary(input: { posts, amplifications, mediaReferences }):
+DatasetSummaryRow[]` — the three-row summary the homepage Evidence section (docs/HOMEPAGE.md §12)
 and `EvidenceBlock` render directly. Each row is `{ key, label, count, href }`:
 
 ```text
 posts           POST DATA
 amplifications  AMPLIFICATIONS
 media           MEDIA
-milestones      MILESTONES
 ```
 
 `count` reuses the shared `isVerifiedRecord` rule against the record set passed in — never
-`array.length`, never a stored summary. Row order is fixed (posts, amplifications, media,
-milestones) regardless of which datasets have records. A zero-count row still renders — it is an
-honest statement about the dataset — but its `href` is `null` instead of `/evidence#<key>`, so
-`EvidenceBlock` never links to an `/evidence` anchor with nothing under it. With today's dataset
-this resolves to `POST DATA 21 · AMPLIFICATIONS 10 · MEDIA 18 · MILESTONES 0` (`docs/HOMEPAGE.md
-§12`'s printed sample values, `20 / 9 / 0 / 0`, are stale — written before B7's import work; derive,
-don't match).
+`array.length`, never a stored summary. Row order is fixed (posts, amplifications, media)
+regardless of which datasets have records. A zero-count row still renders — it is an honest
+statement about the dataset — but its `href` is `null` instead of `/evidence#<key>`, so
+`EvidenceBlock` never links to an `/evidence` anchor with nothing under it. This document owns the
+sample values; `docs/HOMEPAGE.md §12` draws the section's shape and deliberately prints no counter
+of its own, so the two cannot drift apart again. Read 2026-09-19:
+`POST DATA 32 · AMPLIFICATIONS 10 · MEDIA 18` — a dated reading, never a target to match.
 
 ---
 
@@ -380,7 +362,6 @@ don't match).
 archive         views descending (optionally date descending)
 amplifications  featured first, then date descending
 media           published_at descending
-milestones      date ascending
 ```
 
 ---

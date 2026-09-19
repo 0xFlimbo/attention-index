@@ -31,7 +31,7 @@ function readRaw(fileName: string): MinimalRecord[] {
   return JSON.parse(readFileSync(resolve(DATA_DIR, fileName), "utf-8")) as MinimalRecord[];
 }
 
-/** docs/DATA.md §17 — placeholder records must never ship visibly to production. */
+/** docs/DATA.md §3 — placeholder records must never ship visibly to production. */
 function checkNoVisiblePlaceholders(fileName: string): void {
   for (const record of findVisiblePlaceholders(readRaw(fileName))) {
     hasErrors = true;
@@ -46,7 +46,7 @@ function countEligible(fileName: string): number {
   ).length;
 }
 
-for (const file of ["posts.json", "amplifications.json", "media.json", "milestones.json"]) {
+for (const file of ["posts.json", "amplifications.json", "media.json"]) {
   checkNoVisiblePlaceholders(file);
 }
 

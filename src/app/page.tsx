@@ -1,4 +1,4 @@
-import { getPosts, getAmplifications, getMediaReferences, getMilestones, getProjectMetadata } from "@/lib/data";
+import { getPosts, getAmplifications, getMediaReferences, getProjectMetadata } from "@/lib/data";
 import { getAttentionMetrics } from "@/lib/metrics/attention";
 import { selectAttentionGridCells } from "@/lib/metrics/attention-grid";
 import { Navigation } from "@/components/navigation";
@@ -24,7 +24,6 @@ export default function Home() {
   const posts = getPosts();
   const amplifications = getAmplifications();
   const mediaReferences = getMediaReferences();
-  const milestones = getMilestones();
   const attention = getAttentionMetrics(posts);
   const gridCells = selectAttentionGridCells(attention);
 
@@ -53,7 +52,6 @@ export default function Home() {
           posts={posts}
           amplifications={amplifications}
           mediaReferences={mediaReferences}
-          milestones={milestones}
           repositoryUrl={project.repository_url}
         />
       </main>

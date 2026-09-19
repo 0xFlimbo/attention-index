@@ -4,7 +4,6 @@ import { compareMediaOrder, selectMediaReferences } from "../src/lib/metrics/med
 import { getPosts } from "../src/lib/data/posts";
 import { getAmplifications } from "../src/lib/data/amplifications";
 import { getMediaReferences } from "../src/lib/data/media";
-import { getMilestones } from "../src/lib/data/milestones";
 import type { MediaReference } from "../src/schemas/media.schema";
 
 /** Plain reimplementation of the shared eligibility rule — never calling `isVerifiedRecord` itself. */
@@ -39,7 +38,6 @@ describe("selectDatasetSummary — real dataset", () => {
     posts: getPosts(),
     amplifications: getAmplifications(),
     mediaReferences: getMediaReferences(),
-    milestones: getMilestones(),
   };
   const rows = selectDatasetSummary(input);
 
@@ -47,25 +45,15 @@ describe("selectDatasetSummary — real dataset", () => {
     const expectedPosts = input.posts.filter(isVerified).length;
     const expectedAmplifications = input.amplifications.filter(isVerified).length;
     const expectedMedia = input.mediaReferences.filter(isVerified).length;
-    const expectedMilestones = input.milestones.filter(isVerified).length;
 
     expect(rows.find((row) => row.key === "posts")?.count).toBe(expectedPosts);
     expect(rows.find((row) => row.key === "amplifications")?.count).toBe(expectedAmplifications);
     expect(rows.find((row) => row.key === "media")?.count).toBe(expectedMedia);
-    expect(rows.find((row) => row.key === "milestones")?.count).toBe(expectedMilestones);
   });
 
   it("excludes needs_review and _placeholder media records — 100 raw records, only 18 verified", () => {
     expect(input.mediaReferences.length).toBe(100);
     expect(rows.find((row) => row.key === "media")?.count).toBe(18);
-  });
-
-  it("gives the zero-count milestones row a row (not omitted) but a null href", () => {
-    expect(input.milestones.filter(isVerified).length).toBe(0);
-    const milestonesRow = rows.find((row) => row.key === "milestones");
-    expect(milestonesRow).toBeDefined();
-    expect(milestonesRow?.count).toBe(0);
-    expect(milestonesRow?.href).toBeNull();
   });
 
   it("gives every non-zero row a /evidence#<key> href", () => {
@@ -78,8 +66,8 @@ describe("selectDatasetSummary — real dataset", () => {
     }
   });
 
-  it("keeps a fixed row order: posts, amplifications, media, milestones", () => {
-    expect(rows.map((row) => row.key)).toEqual(["posts", "amplifications", "media", "milestones"]);
+  it("keeps a fixed row order: posts, amplifications, media", () => {
+    expect(rows.map((row) => row.key)).toEqual(["posts", "amplifications", "media"]);
   });
 });
 
@@ -88,12 +76,11 @@ describe("selectDatasetSummary — empty datasets", () => {
     posts: [],
     amplifications: [],
     mediaReferences: [],
-    milestones: [],
   };
   const rows = selectDatasetSummary(emptyInput);
 
-  it("still returns all four rows, each with count 0 and href null", () => {
-    expect(rows).toHaveLength(4);
+  it("still returns all three rows, each with count 0 and href null", () => {
+    expect(rows).toHaveLength(3);
     for (const row of rows) {
       expect(row.count).toBe(0);
       expect(row.href).toBeNull();
@@ -101,22 +88,40 @@ describe("selectDatasetSummary — empty datasets", () => {
   });
 
   it("keeps the fixed row order even when every count is zero", () => {
-    expect(rows.map((row) => row.key)).toEqual(["posts", "amplifications", "media", "milestones"]);
+    expect(rows.map((row) => row.key)).toEqual(["posts", "amplifications", "media"]);
   });
 });
 
 describe("selectDatasetSummary — row order is independent of which datasets have records", () => {
-  it("keeps posts/amplifications/media/milestones order when only media and milestones have records", () => {
+  it("keeps posts/amplifications/media order when only media has records", () => {
     const input: SelectDatasetSummaryInput = {
       posts: [],
       amplifications: [],
       mediaReferences: [makeMediaReference({ id: "media-a", published_at: "2026-01-01" })],
-      milestones: [],
     };
     const rows = selectDatasetSummary(input);
-    expect(rows.map((row) => row.key)).toEqual(["posts", "amplifications", "media", "milestones"]);
+    expect(rows.map((row) => row.key)).toEqual(["posts", "amplifications", "media"]);
     expect(rows.find((row) => row.key === "media")?.count).toBe(1);
     expect(rows.find((row) => row.key === "media")?.href).toBe("/evidence#media");
+  });
+
+  /**
+   * The zero-count rule alongside a populated row. Until B17 the milestones row
+   * was the only zero in the real dataset and carried this assertion; every
+   * dataset now has records, so the mixed case has to be constructed.
+   */
+  it("keeps a zero-count row rendered but unlinked while another row links", () => {
+    const rows = selectDatasetSummary({
+      posts: [],
+      amplifications: [],
+      mediaReferences: [makeMediaReference({ id: "media-a", published_at: "2026-01-01" })],
+    });
+    for (const key of ["posts", "amplifications"] as const) {
+      const row = rows.find((candidate) => candidate.key === key);
+      expect(row).toBeDefined();
+      expect(row?.count).toBe(0);
+      expect(row?.href).toBeNull();
+    }
   });
 });
 

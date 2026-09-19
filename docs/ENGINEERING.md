@@ -53,7 +53,7 @@ it must never gate main metrics, archive rows, source URLs, the disclaimer or me
 /
 ├── CLAUDE.md  AGENTS.md  README.md
 ├── docs/            PRODUCT DESIGN HOMEPAGE DATA ENGINEERING EDITORIAL WORKPLAN HISTORY + archive/
-├── data/            posts.json amplifications.json media.json milestones.json project.json
+├── data/            posts.json amplifications.json media.json project.json
 ├── public/
 │   ├── images/      posts/ people/ media/
 │   └── og/
@@ -63,8 +63,7 @@ it must never gate main metrics, archive rows, source URLs, the disclaimer or me
 │   ├── app/         layout.tsx page.tsx archive/ evidence/ methodology/ about/
 │   ├── components/  layout/ editorial/ data/ archive/ ui/
 │   ├── lib/         data/ metrics/ format/ utils/
-│   ├── schemas/     post.schema.ts amplification.schema.ts media.schema.ts
-│   │                milestone.schema.ts project.schema.ts
+│   ├── schemas/     post.schema.ts amplification.schema.ts media.schema.ts project.schema.ts
 │   ├── styles/
 │   └── types/
 ├── tests/
@@ -96,7 +95,8 @@ failures fail the build loudly.
 
 **`src/lib/data/`** — the only place that imports JSON:
 `getPosts, getVerifiedPosts, getAmplifications, getVerifiedAmplifications, getMediaReferences,
-getMilestones, getProjectMetadata`. Validation and filtering live here, not in components.
+getVerifiedMediaReferences, getProjectMetadata`. Validation and filtering live here, not in
+components.
 
 **`src/lib/metrics/`** — pure functions: `attention.ts`, `amplification.ts`, `media.ts` exposing
 `getAttentionMetrics(posts)`, `getAmplificationMetrics(amps)`, `getMediaMetrics(media)`.
@@ -136,7 +136,7 @@ external font requests).
 ```text
 /             homepage
 /archive      all verified posts, client-side filtering (dataset is small; no search backend)
-/evidence     browsable list of posts / amplifications / media / milestones — a simple table is enough
+/evidence     browsable list of posts / amplifications / media — a simple table is enough
 /methodology  statically authored prose (not generated from code)
 /about        purpose, independence, open source, official links, GitHub
 ```

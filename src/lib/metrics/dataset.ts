@@ -1,19 +1,18 @@
 import type { Post } from "@/schemas/post.schema";
 import type { Amplification } from "@/schemas/amplification.schema";
 import type { MediaReference } from "@/schemas/media.schema";
-import type { Milestone } from "@/schemas/milestone.schema";
 import { isVerifiedRecord } from "@/lib/data/eligibility";
 
 /**
  * docs/HOMEPAGE.md §12 — one row of the Evidence section's dataset summary.
  * `count` is always derived from the eligible records passed in, never a
  * stored or hardcoded number (docs/CLAUDE.md §3). A zero-count row still
- * renders — "MILESTONES · 0 RECORDS" is an honest statement about today's
- * dataset — but `href` is `null` so `EvidenceBlock` never links to an
- * `/evidence` anchor that has nothing under it.
+ * renders — it is an honest statement about the dataset — but `href` is
+ * `null` so `EvidenceBlock` never links to an `/evidence` anchor that has
+ * nothing under it.
  */
 export interface DatasetSummaryRow {
-  key: "posts" | "amplifications" | "media" | "milestones";
+  key: "posts" | "amplifications" | "media";
   label: string;
   count: number;
   href: string | null;
@@ -23,7 +22,6 @@ export interface SelectDatasetSummaryInput {
   posts: Post[];
   amplifications: Amplification[];
   mediaReferences: MediaReference[];
-  milestones: Milestone[];
 }
 
 /** Row order is fixed regardless of counts — docs/HOMEPAGE.md §12 lists them in this order. */
@@ -31,7 +29,6 @@ const ROW_DEFINITIONS: ReadonlyArray<{ key: DatasetSummaryRow["key"]; label: str
   { key: "posts", label: "POST DATA" },
   { key: "amplifications", label: "AMPLIFICATIONS" },
   { key: "media", label: "MEDIA" },
-  { key: "milestones", label: "MILESTONES" },
 ];
 
 /**
@@ -45,7 +42,6 @@ export function selectDatasetSummary(input: SelectDatasetSummaryInput): DatasetS
     posts: input.posts.filter(isVerifiedRecord).length,
     amplifications: input.amplifications.filter(isVerifiedRecord).length,
     media: input.mediaReferences.filter(isVerifiedRecord).length,
-    milestones: input.milestones.filter(isVerifiedRecord).length,
   };
 
   return ROW_DEFINITIONS.map(({ key, label }) => {

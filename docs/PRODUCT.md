@@ -67,7 +67,7 @@ Optimize for `visual impact + clarity + credibility + source transparency`.
 | Audience | What they need |
 |---|---|
 | First-time visitor | what happened, how large, why it's unusual, why it matters beyond crypto |
-| Existing followers | structured archive, evidence, milestones, a way to contribute |
+| Existing followers | structured archive, evidence, a way to contribute |
 | Media / researchers | inspectable posts, links, dates, references, citable dataset |
 | Crypto-native users | why external attention is the differentiator |
 | The LayoffHedge team | something they could reference, contribute to, or fork later |

@@ -18,7 +18,6 @@ exactly how the maintainer works locally.
 | A public post by @LayoffAI with a view count | `data/posts.json` | `post-` |
 | A repost, quote post, reply, mention, citation or interview by a named person or organization | `data/amplifications.json` | `amp-` |
 | An article, newsletter, podcast, broadcast or other external coverage | `data/media.json` | `media-` |
-| A dated, notable event in the project's public attention (not itself a post or article) | `data/milestones.json` | `milestone-` |
 | Project-wide metadata (official links, disclaimer, last-updated date) | `data/project.json` | — |
 
 Read `docs/DATA.md` for the full schema of the file you're editing before you add a field —
@@ -57,7 +56,6 @@ stable once published (`docs/DATA.md §2`). Real examples from this dataset:
 post-layoffai-2099180586858393814
 amp-harmeet-dhillon-2098925135302476136
 media-newsbreak-2026-09-14
-milestone-first-10m-post-2026-06-02
 ```
 
 Don't reuse or renumber an id once it exists — other records (`related_post_id`) and external

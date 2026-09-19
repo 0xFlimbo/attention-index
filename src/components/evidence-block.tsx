@@ -2,7 +2,6 @@ import Link from "next/link";
 import type { Post } from "@/schemas/post.schema";
 import type { Amplification } from "@/schemas/amplification.schema";
 import type { MediaReference } from "@/schemas/media.schema";
-import type { Milestone } from "@/schemas/milestone.schema";
 import { selectDatasetSummary } from "@/lib/metrics/dataset";
 import { formatCount } from "@/lib/format/number";
 import { SectionEyebrow } from "./section-eyebrow";
@@ -30,7 +29,6 @@ interface EvidenceBlockProps {
   posts: Post[];
   amplifications: Amplification[];
   mediaReferences: MediaReference[];
-  milestones: Milestone[];
   repositoryUrl: string | null;
 }
 
@@ -38,10 +36,9 @@ export function EvidenceBlock({
   posts,
   amplifications,
   mediaReferences,
-  milestones,
   repositoryUrl,
 }: EvidenceBlockProps) {
-  const rows = selectDatasetSummary({ posts, amplifications, mediaReferences, milestones });
+  const rows = selectDatasetSummary({ posts, amplifications, mediaReferences });
 
   return (
     <section id="evidence" className="container-editorial section-padding">
@@ -86,9 +83,9 @@ export function EvidenceBlock({
               it as a table), and a table aligns its columns natively. The
               earlier flex row could not — `justify-between` positions the
               middle child from the free space left by its siblings, so the
-              count drifted with each label's width and the four numbers read
-              ragged at every width. It also makes the zero-count row's empty
-              link cell just an empty cell, with no placeholder needed.
+              count drifted with each label's width and the numbers read ragged at
+              every width. It also makes a zero-count row's empty link cell
+              just an empty cell, with no placeholder needed.
             */}
             <table className="w-full">
               <caption className="sr-only">
@@ -116,7 +113,7 @@ export function EvidenceBlock({
                           VIEW →
                           {/*
                             docs/EDITORIAL.md §9 — "link text must make sense out of
-                            context". Four links all reading "VIEW →" do not; the
+                            context". Rows that all read "VIEW →" do not; the
                             label disambiguates them in a screen reader's link list.
                           */}
                           <span className="sr-only"> {row.label} records</span>

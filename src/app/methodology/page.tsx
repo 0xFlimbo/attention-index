@@ -84,7 +84,7 @@ export default function MethodologyPage() {
 
         <ProseSection id="sources" heading="What this project tracks">
           <p className="text-body mt-6 max-w-prose text-ink-soft">
-            The dataset behind this site is four record types, each in its own file:
+            The dataset behind this site is three record types, each in its own file:
           </p>
           <ul className="text-body mt-6 max-w-prose space-y-4 text-ink-soft">
             <li>
@@ -100,10 +100,6 @@ export default function MethodologyPage() {
               <strong className="text-ink">Media references</strong> — external articles,
               newsletters, podcasts, broadcasts and other public coverage that mentions LayoffHedge
               or @LayoffAI.
-            </li>
-            <li>
-              <strong className="text-ink">Milestones</strong> — editorial notes marking a
-              specific, dated event in the project&apos;s public attention.
             </li>
           </ul>
           <p className="text-body mt-6 max-w-prose text-ink-soft">

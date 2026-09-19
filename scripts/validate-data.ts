@@ -7,7 +7,7 @@
  * field for every problem found, and exits non-zero if any hard error exists.
  *
  * Placeholder records are reported but do not fail this script — that is
- * `check:production-data`'s job (docs/DATA.md §12, §17).
+ * `check:production-data`'s job (docs/DATA.md §3, §12).
  */
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
@@ -16,7 +16,6 @@ import type { ZodIssue } from "zod";
 import { postsFileSchema } from "../src/schemas/post.schema";
 import { amplificationsFileSchema } from "../src/schemas/amplification.schema";
 import { mediaFileSchema } from "../src/schemas/media.schema";
-import { milestonesFileSchema } from "../src/schemas/milestone.schema";
 import { projectSchema } from "../src/schemas/project.schema";
 import { findDanglingRelatedPostIds } from "../src/lib/validation/related-post-reference";
 
@@ -107,18 +106,6 @@ if (Array.isArray(rawMedia)) {
 } else if (rawMedia !== null) {
   hasErrors = true;
   console.error("[media.json] expected a JSON array");
-}
-
-// --- milestones.json -------------------------------------------------------
-const rawMilestones = readJson("milestones.json");
-if (Array.isArray(rawMilestones)) {
-  const result = milestonesFileSchema.safeParse(rawMilestones);
-  if (!result.success) reportArrayIssues("milestones.json", rawMilestones, result.error.issues);
-  collectPlaceholders("milestones.json", rawMilestones);
-  checkDanglingReferences("milestones.json", rawMilestones as ReferencingRecord[], postIds);
-} else if (rawMilestones !== null) {
-  hasErrors = true;
-  console.error("[milestones.json] expected a JSON array");
 }
 
 // --- project.json ------------------------------------------------------------

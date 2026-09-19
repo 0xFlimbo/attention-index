@@ -327,14 +327,19 @@ Every major claim on this website links back to
 publicly accessible evidence or source data.
 ```
 
-`VERIFY THEM.` in red. Dataset summary with derived counts:
+`VERIFY THEM.` in red. One row per dataset, each count derived at build time:
 
 ```text
-POST DATA            20 records        VIEW ↗
-AMPLIFICATIONS        9 records        VIEW ↗
-MEDIA                 0 records        VIEW ↗
-MILESTONES            0 records        VIEW ↗
+POST DATA            N records        VIEW →
+AMPLIFICATIONS       N records        VIEW →
+MEDIA                N records        VIEW →
 ```
+
+Three rows, fixed in that order. No sample figures are printed here on purpose — the counts are
+derived and `docs/DATA.md §10` owns both the selector contract and the one dated reading of it;
+two copies of the same numbers is exactly how this section went stale before. A zero-count row
+still renders, without its `VIEW` link (`docs/DATA.md §10`). `VIEW` is internal to
+`/evidence#<key>`, so it renders with `→`, not `↗`.
 
 CTAs: `VIEW DATA ↗ · VIEW SOURCES ↗ · VIEW METHODOLOGY ↗ · GITHUB ↗`.
 `VIEW DATA ↗` resolves to `${repository_url}/tree/main/data` and `GITHUB ↗` to the repository
