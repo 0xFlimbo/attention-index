@@ -24,8 +24,9 @@ data/project.json         project metadata (no metrics)
 Optional later only if genuinely needed: `people.json`, `organizations.json`, `snapshots/`.
 
 **Current state (2026-09-19):** 32 posts (all `verified`), 10 amplifications (all `verified`),
-100 media references (18 `verified`, 82 `needs_review`), no placeholders. A dated reading of the
-dataset, not a target — derive, never match.
+100 media references (18 `verified`, 82 `needs_review`), no placeholders. Of the 18 verified
+media records: 17 original, 1 republication, 8 featured, newsrooms in 4 countries. A dated
+reading of the dataset, not a target — derive, never match.
 
 ---
 
@@ -169,12 +170,15 @@ Follower counts are contextual metadata only, never evidence of impressions.
 ```jsonc
 {
   "id": "media-example-publication-2026-04-11",
-  "publication": "Example Publication",
+  "publication": "Example Publication",  // the outlet's standard public form, nothing else
   "title": "Example article title",
   "reference_type": "article",           // article|newsletter|podcast|broadcast|research|blog|other
   "published_at": "2026-04-11",
   "url": "https://example.com/article",
-  "author": null, "country": null,
+  "author": null,
+  "country": null,                       // ISO-2 of the publication's own newsroom
+  "provenance": "original",              // original | syndicated | null (= not determined yet)
+  "syndicated_from": null,               // the outlet this piece credits; required iff syndicated
   "context": "Cites LayoffHedge layoff data.",   // short, factual, never editorializing
   "related_post_id": null,
   "featured": false, "logo": null, "archive_url": null, "notes": null,
@@ -183,9 +187,43 @@ Follower counts are contextual metadata only, never evidence of impressions.
 }
 ```
 
-Required: `id, publication, title, reference_type, published_at, url, status, verified_at`.
+Required: `id, publication, title, reference_type, published_at, url, status, verified_at`,
+plus `provenance` on every `verified` record.
 
 One record per article. Publication totals (`FORBES — 3 references`) are **derived**, never stored.
+
+### The B13 record contract
+
+Three fields decide what a media record contributes to the derived figures. All three were
+defined in `docs/WORKPLAN.md` B13, before the verification sweep, so no record is visited twice.
+
+**`country`** — ISO 3166-1 alpha-2 for the country of **the publication's own newsroom**, never
+the country the story is about. `null` when it is not settled by a public, citable statement; a
+`null` is counted in no country, and is never filled with the likeliest answer.
+
+**`provenance`** — a fact about the piece, never a quality judgement: `"syndicated"` means the
+piece itself credits another outlet as the source of the reporting it carries, `"original"` means
+it does not. `null` means "not determined yet" and is allowed only while a record is
+`needs_review` or `archived` — determining it is part of reading the article. `syndicated_from`
+names the credited outlet, is required exactly when `provenance` is `"syndicated"`, forbidden
+otherwise, and must name a publication other than this record's own. It is a **name**, not a
+record id: the crediting is a fact about the article whether or not the original piece happens to
+be in this dataset.
+
+The `publication` field never carries provenance. `layoffhedge.com/press` labels republications
+as `Inkl (via IBTimes UK)`; the importer splits that suffix
+(`src/lib/validation/publication-name.ts`) so the name stays the outlet's standard public form
+(`docs/EDITORIAL.md §5`) and the second fact lands in `provenance` / `syndicated_from`.
+
+**`featured`** — declared curation over media records, published as a written criterion on
+`/methodology`, which owns its reader-facing wording. A reference is featured when the publication
+produced the piece itself **and** names LayoffHedge or @LayoffAI in its own text (or, for a
+broadcast, on air) as the source of data or findings it reports — not only embedding or linking a
+post alongside its own reporting. The schema enforces both halves: only a `verified` record with
+`provenance: "original"` may be `featured`. It is binary, there is no tier or score, and the flag's
+only effect is ordering (`§11`). Where a record's stored evidence does not already establish the
+criterion, `featured` stays `false` — `false` is the conservative default and is never a judgement
+about the publication.
 
 ---
 
@@ -207,7 +245,7 @@ docs keeps resolving — do not renumber the sections below it.
   "official_x_account": "@LayoffAI",
   "repository_url": null,
   "data_last_updated": "2026-09-16",
-  "methodology_version": "1.0",
+  "methodology_version": "1.1",
   "disclaimer": "Independent community project. Not affiliated with or endorsed by LayoffHedge."
 }
 ```
@@ -317,7 +355,38 @@ amplifications) this resolves to `GOVERNMENT 2 · POLITICS 6 · TECH 1 · PUBLIC
 
 ```text
 verifiedMediaReferenceCount · uniquePublicationCount · referencesByPublication · referencesByType
+originalReferenceCount · syndicatedReferenceCount · featuredReferenceCount
+referencesByCountry · countryCount
 ```
+
+**The counting rule (B13).** Two questions are kept apart instead of averaged into one number,
+and neither figure is ever given the other's label:
+
+```text
+how many public records are there    verifiedMediaReferenceCount · uniquePublicationCount
+                                     referencesByPublication · referencesByType
+                                     -> every eligible record, republications included
+
+how much reporting is there          originalReferenceCount · referencesByCountry · countryCount
+                                     -> provenance === "original" only
+```
+
+A republication is a real page a real outlet published, so it stays a record, stays visible on
+`/evidence` and stays inside its own publication's row — dropping it would make a row's printed
+count disagree with the entries under it. But it is the same piece travelling, not a second
+newsroom reading the data, so it feeds no figure presented as coverage: one article plus eight
+republications of it is one piece of reporting, and adding them would overstate the coverage by
+eight. `originalReferenceCount + syndicatedReferenceCount === verifiedMediaReferenceCount`
+always, because the schema requires a provenance on every verified record.
+
+`referencesByCountry` counts original records with a non-null `country`; a record whose newsroom
+country is unknown is counted in no country. `countryCount` is that map's size — the figure
+behind "references from newsrooms in N countries". `featuredReferenceCount` counts eligible
+records carrying the `/methodology` criterion.
+
+`/methodology` states every one of these in the reader's words and prints today's values live.
+None of them is on the homepage: `docs/HOMEPAGE.md §11` keeps the Public References section
+without a dominant number, and that standing decision was not reopened in B13.
 
 ### Media selectors (`src/lib/metrics/media.ts`)
 
@@ -327,7 +396,23 @@ broken by smallest `id` (lexicographic) — the same reasoning as `compareArchiv
 
 `selectMediaReferences(mediaReferences: MediaReference[]): MediaReference[]` — the verified,
 sorted media list `/evidence`'s media section renders directly. No filters, no pagination. With
-today's dataset (100 raw records, 18 verified) this resolves to 18 rows.
+today's dataset (100 raw records, 18 verified) this resolves to 18 rows. Provenance does not
+filter this list: `/evidence` is the ledger where every verified record is auditable, and a
+republication is dropped from the derived coverage figures, never from the page that claims to
+list everything.
+
+`selectPublicationReferences(mediaReferences: MediaReference[]): PublicationReferences[]` — the
+Public References groups (`docs/HOMEPAGE.md §11`), each carrying its own `references`,
+`originalCount` and `featuredCount`. Group order is five factual keys, never a computed rank
+(`§11`).
+
+`mediaReferenceDescriptors(reference)` (`src/lib/format/media-descriptors.ts`) — the B13
+attributes as words, for the metadata line shared by the Public References panel and the
+`/evidence` media rows: the newsroom country (`src/lib/format/country.ts` resolves the ISO code
+to a name, falling back to the code rather than inventing one), `Republished from <outlet>` for a
+syndicated record, and `Names LayoffHedge as a source` for a featured one. A featured record
+prints its **criterion**, not the word "featured": there is no star, badge or icon anywhere in
+this system.
 
 ### Crossover
 Descriptive counts and real examples only. **Never invent** Crossover Score, Influence Score,
@@ -364,6 +449,26 @@ amplifications  featured first, then date descending
 media           published_at descending
 ```
 
+`media` stays chronological wherever the whole list is shown (`/evidence`): that page is a
+ledger, and a list whose dates do not run in order reads as broken.
+
+**Public References groups** (`docs/HOMEPAGE.md §11`) are ordered separately, because that is
+where prominence belongs. Five keys, every one a fact stored on the records:
+
+```text
+1  original reference count, descending      provenance carried as position
+2  featured reference count, descending      the declared criterion, its only effect
+3  total reference count, descending
+4  most recent published_at, descending
+5  publication name, ascending               final deterministic tie-break
+```
+
+Key 1 before key 2, and never a computed rank of any kind. Featured does not outrank a larger
+original count because the row prints its reference count: a list ordered featured-first would
+print 3, 1, 1, 3, 2 down the right rail and read as broken rather than as curated. The ordering
+still does the work — every featured publication leads the unfeatured ones it ties with, and a
+publication that only republished sorts below every publication that reported.
+
 ---
 
 ## 12. Validation requirements
@@ -381,6 +486,11 @@ media           published_at descending
   - amplification → `evidence_url`
   - media → `url`
 - every `verified` record carries `verified_at` (nullable only for `needs_review` / `archived`)
+- every `verified` media record carries a `provenance` (nullable only for `needs_review` /
+  `archived`)
+- `syndicated_from` is present exactly when `provenance` is `"syndicated"`, and never names the
+  record's own `publication`
+- `featured` media records are `verified` and `provenance: "original"` (`§7`)
 - `follower_count` never present without `follower_count_observed_at`
 - placeholder records reported
 
@@ -415,8 +525,11 @@ recorded · title short and neutral · status correct · no invented metrics · 
 **Amplification** — identity clear · role accurate · action correctly categorized · public evidence
 exists · date known · category normalized · related post linked when known · unique ID.
 
-**Media** — publication identified · title accurate · public URL exists · date known · reference
-genuinely concerns LayoffHedge/@LayoffAI · context factual · unique ID.
+**Media** — publication identified, under its standard public form · title accurate · public URL
+exists · date known · reference genuinely concerns LayoffHedge/@LayoffAI · context factual ·
+newsroom `country` filled or deliberately left `null` · `provenance` determined, with
+`syndicated_from` naming the credited outlet when it is a republication · `featured` set only
+where the article itself meets the `/methodology` criterion · unique ID.
 
 ---
 

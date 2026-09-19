@@ -2,6 +2,7 @@ import type { PublicationReferences } from "@/lib/metrics/media";
 import { REFERENCE_TYPE_LABELS } from "./evidence-record-row";
 import { formatCount } from "@/lib/format/number";
 import { formatDate } from "@/lib/format/date";
+import { mediaReferenceDescriptors } from "@/lib/format/media-descriptors";
 import { ExternalArrow } from "./external-arrow";
 
 /** One reference inside an expanded publication row, already field-selected for display. */
@@ -11,6 +12,13 @@ export interface MediaReferenceEntryData {
   referenceTypeLabel: string;
   publishedAt: string;
   author: string | null;
+  /**
+   * docs/WORKPLAN.md B13 — newsroom country, the outlet a republication
+   * credits, and the featured criterion, already resolved to words by
+   * `mediaReferenceDescriptors` and joined into the same metadata line as
+   * the type, date and author. Nothing here is a badge or a glyph.
+   */
+  descriptors: string[];
   context: string | null;
   url: string;
 }
@@ -39,6 +47,7 @@ export function toMediaReferenceRowData(entry: PublicationReferences): MediaRefe
       referenceTypeLabel: REFERENCE_TYPE_LABELS[reference.reference_type],
       publishedAt: reference.published_at,
       author: reference.author,
+      descriptors: mediaReferenceDescriptors(reference),
       context: reference.context,
       url: reference.url,
     })),
@@ -56,6 +65,14 @@ interface MediaReferenceRowProps {
  * selectors, both generic enough to apply here unchanged) for the same
  * reasons: zero-JS, keyboard-accessible expansion, and nothing hover-only on
  * mobile (docs/HOMEPAGE.md §15).
+ *
+ * B13 leaves this summary line exactly as it was. The publication name and
+ * `N references` are unchanged, and the provenance and featured facts live
+ * inside the panel instead: the right rail is `shrink-0 whitespace-nowrap`,
+ * so anything added there widens a fixed column and is the first thing to
+ * overflow at 390px. Prominence is carried by the group order
+ * (`selectPublicationReferences`) and by the words in each reference's own
+ * metadata line — never by a marker on the row.
  *
  * Planner decision (B8 brief): no row-level `↗`. docs/HOMEPAGE.md §11's
  * sketch shows one at the end of the publication line, but a publication
@@ -116,6 +133,7 @@ export function MediaReferenceRow({ row }: MediaReferenceRowProps) {
                     reference.referenceTypeLabel,
                     formatDate(reference.publishedAt),
                     ...(reference.author !== null ? [`By ${reference.author}`] : []),
+                    ...reference.descriptors,
                   ].join(" · ")}
                 </p>
                 {reference.context !== null && (

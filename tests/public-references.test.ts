@@ -12,6 +12,8 @@ function makeMediaReference(
     url: "https://example.com/article",
     author: null,
     country: null,
+    provenance: "original",
+    syndicated_from: null,
     context: null,
     related_post_id: null,
     featured: false,
@@ -92,8 +94,14 @@ describe("selectPublicationReferences — grouping and counts", () => {
   });
 });
 
+/**
+ * These fixtures are all `provenance: "original"` and unfeatured, so the
+ * first two B13 ordering keys tie and the original count equals the total —
+ * they exercise keys 3 to 5 exactly as they did before B13. Keys 1 and 2
+ * have their own cases in `tests/media-contract.test.ts`.
+ */
 describe("selectPublicationReferences — ordering", () => {
-  it("orders groups by reference count, descending (tie-break level 1)", () => {
+  it("orders groups by reference count, descending (ordering key 3, once original and featured counts tie)", () => {
     const references = [
       makeMediaReference({ id: "media-a", publication: "Forbes", published_at: "2026-01-01" }),
       makeMediaReference({ id: "media-b", publication: "Newsweek", published_at: "2026-01-01" }),
@@ -103,7 +111,7 @@ describe("selectPublicationReferences — ordering", () => {
     expect(groups.map((group) => group.publication)).toEqual(["Newsweek", "Forbes"]);
   });
 
-  it("breaks a tied count by most recent published_at, descending (tie-break level 2)", () => {
+  it("breaks a tied count by most recent published_at, descending (ordering key 4)", () => {
     const references = [
       makeMediaReference({ id: "media-a", publication: "Forbes", published_at: "2026-01-01" }),
       makeMediaReference({ id: "media-b", publication: "Newsweek", published_at: "2026-05-01" }),
@@ -112,7 +120,7 @@ describe("selectPublicationReferences — ordering", () => {
     expect(groups.map((group) => group.publication)).toEqual(["Newsweek", "Forbes"]);
   });
 
-  it("breaks a tied count and tied most-recent date by publication ascending (tie-break level 3)", () => {
+  it("breaks a tied count and tied most-recent date by publication ascending (ordering key 5)", () => {
     const references = [
       makeMediaReference({ id: "media-a", publication: "Zeta Media", published_at: "2026-01-01" }),
       makeMediaReference({ id: "media-b", publication: "Alpha Press", published_at: "2026-01-01" }),

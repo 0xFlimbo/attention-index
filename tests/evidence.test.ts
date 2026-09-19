@@ -21,6 +21,8 @@ function makeMediaReference(
     url: "https://example.com/article",
     author: null,
     country: null,
+    provenance: "original",
+    syndicated_from: null,
     context: null,
     related_post_id: null,
     featured: false,

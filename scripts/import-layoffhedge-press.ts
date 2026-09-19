@@ -24,6 +24,7 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 
 import { mediaSchema, mediaFileSchema, type MediaReference } from "../src/schemas/media.schema";
+import { splitSyndicationSuffix } from "../src/lib/validation/publication-name";
 
 const ROOT = process.cwd();
 const DATA_DIR = resolve(ROOT, "data");
@@ -300,7 +301,14 @@ async function main(): Promise<void> {
     const context = normalizeVoice(contextAfterAuthor);
     const referenceType = detectReferenceType(card.url, outlet, card.title, card.context);
 
-    let id = `media-${slugify(outlet.replace(/\s*\(via[^)]*\)/i, ""))}-${iso}`;
+    // docs/DATA.md §7 (B13): the press page writes provenance into the outlet
+    // name ("Inkl (via IBTimes UK)"). That belongs in `provenance` /
+    // `syndicated_from`, not in a publication name — docs/EDITORIAL.md §5
+    // requires the outlet's standard public form — so the suffix is split off
+    // here rather than imported and cleaned up by hand afterwards.
+    const { publication, syndicatedFrom } = splitSyndicationSuffix(outlet);
+
+    let id = `media-${slugify(publication)}-${iso}`;
     if (usedIds.has(id)) {
       let suffix = 2;
       while (usedIds.has(`${id}-${suffix}`)) suffix++;
@@ -310,13 +318,18 @@ async function main(): Promise<void> {
 
     const record: MediaReference = {
       id,
-      publication: outlet,
+      publication,
       title: card.title,
       reference_type: referenceType,
       published_at: iso,
       url: card.url,
       author,
       country: null,
+      // Imported records land unverified, so provenance stays undetermined
+      // unless the outlet name itself already stated it. Determining it for
+      // the rest is part of reading the article (docs/WORKPLAN.md B14).
+      provenance: syndicatedFrom === null ? null : "syndicated",
+      syndicated_from: syndicatedFrom,
       context: context.length > 0 ? context : null,
       related_post_id: null,
       featured: false,
@@ -337,7 +350,7 @@ async function main(): Promise<void> {
     }
 
     added.push(record);
-    publicationCounts.set(outlet, (publicationCounts.get(outlet) ?? 0) + 1);
+    publicationCounts.set(publication, (publicationCounts.get(publication) ?? 0) + 1);
   }
 
   console.log(`\nDiscovered: ${cards.length}`);

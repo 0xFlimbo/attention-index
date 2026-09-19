@@ -168,8 +168,18 @@ bad:  Forbes validates LayoffHedge.
 bad:  Mainstream media confirms the movement's importance.
 ```
 
-Publication and company names use their standard public form (`Forbes`, `Reuters`, `Microsoft`).
+Publication and company names use their standard public form (`Forbes`, `Reuters`, `Microsoft`)
+— and nothing else. A press page's `Inkl (via IBTimes UK)` packs a provenance fact into a name;
+the name keeps `Inkl` and the fact moves to the record's own fields (`docs/DATA.md §7`).
 Publication reference counts are derived, never asserted (`FORBES / 3 references`).
+
+**Republications** are described as the fact they are, never as a lesser form of coverage:
+`Republished from Western Journal`. The point of recording it is arithmetic, not judgement — one
+piece and its republications are one piece of reporting (`docs/DATA.md §10`).
+
+**Featured references** print their criterion, not the flag: `Names LayoffHedge as a source`.
+Saying what was observed is both more informative than a label and harder to read as a ranking.
+`FEATURED` as a badge word, and any star, icon or tier beside it, are out.
 
 ---
 
@@ -195,6 +205,12 @@ It does not independently verify every substantive claim contained inside the or
 **Attribution** — always distinguish what the source says from what this site concludes. Attribute
 journalists' interpretations; never adopt third-party promotional language as the site's own voice.
 Quote sparingly and identify the source: `The publication described LayoffHedge as "…"`.
+
+**Curation is declared, never disguised as measurement.** The `featured` flag is a rule this
+project wrote and applies by hand, so `/methodology` states the rule in the reader's words and
+says plainly that it is curation. It stays binary — no tiers, no score, no prestige number of the
+project's own invention (`CLAUDE.md §3`) — and it changes position only. A publication that is
+not featured is never described, or implied, to be a weaker source.
 
 **Verification** — "verified" means the maintainer checked that the public source supports the record.
 Not verified by X, not audited, not certified by LayoffHedge. `needs_review` records never appear as

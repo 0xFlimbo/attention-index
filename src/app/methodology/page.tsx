@@ -245,6 +245,67 @@ export default function MethodologyPage() {
           </p>
         </ProseSection>
 
+        {/*
+          docs/WORKPLAN.md B13 — the media record contract stated in the
+          reader's words: what provenance changes about the counts, and the
+          written criterion behind the `featured` flag. Every figure here is
+          read live from `getMediaMetrics`, like the rest of this page.
+        */}
+        <ProseSection id="media-contract" heading="Featured references, and how republications count">
+          <p className="text-body mt-6 max-w-prose text-ink-soft">
+            Some of the coverage in this dataset is a publication&apos;s own reporting. Some of it
+            is one outlet republishing another outlet&apos;s piece, which wire services,
+            aggregators and partner sites do routinely. Every verified media record says which of
+            the two it is, and a republication names the outlet it credits. Of the{" "}
+            {formatCount(mediaMetrics.verifiedMediaReferenceCount)} verified references today,{" "}
+            {formatCount(mediaMetrics.originalReferenceCount)} are the publication&apos;s own work
+            and {formatCount(mediaMetrics.syndicatedReferenceCount)}{" "}
+            {mediaMetrics.syndicatedReferenceCount === 1 ? "is a republication" : "are republications"}{" "}
+            of a piece recorded elsewhere.
+          </p>
+          <p className="text-body mt-6 max-w-prose text-ink-soft">
+            That distinction changes what a number means, so two figures are kept apart rather
+            than merged. A count of <strong className="text-ink">records</strong> — the media
+            figure in the dataset summary and on the evidence page — includes republications,
+            because each one is a real page a real outlet published and a reader can open it. A
+            count of <strong className="text-ink">reporting</strong> counts originals only,
+            because a republication is the same piece travelling, not a second newsroom reading
+            the data. One outlet&apos;s article and eight republications of it are one piece of
+            reporting, and any figure that added them together would overstate the coverage by
+            eight.
+          </p>
+          <p className="text-body mt-6 max-w-prose text-ink-soft">
+            Each record also carries the country of the publication&apos;s own newsroom — not the
+            country the story is about. Counted across original references only, the verified
+            records come from newsrooms in {formatCount(mediaMetrics.countryCount)}{" "}
+            {mediaMetrics.countryCount === 1 ? "country" : "countries"}. Where a publication&apos;s
+            newsroom country is not settled by a public, citable statement, the field is left
+            blank and that record is counted in no country at all — a blank is not a guess, and it
+            is never quietly filled with the likeliest answer.
+          </p>
+          <p className="text-body mt-8 max-w-prose text-ink-soft">
+            <strong className="text-ink">Featured references.</strong> A reference is marked
+            featured when two things are true of it: the publication produced the piece itself
+            rather than republishing someone else&apos;s, and the piece names LayoffHedge or
+            @LayoffAI in its own text — or, for a broadcast, on air — as the source of data or
+            findings it reports, rather than only embedding or linking a post alongside its own
+            reporting. Today{" "}
+            {formatCount(mediaMetrics.featuredReferenceCount)} of the{" "}
+            {formatCount(mediaMetrics.verifiedMediaReferenceCount)} verified references meet it.
+          </p>
+          <p className="text-body mt-6 max-w-prose text-ink-soft">
+            This is curation, and it is declared as curation rather than dressed up as a
+            measurement. It is a rule this project wrote, applied by hand, and it is binary — a
+            reference meets it or it does not. There is no score, no tier and no ranking of
+            publications anywhere in this dataset. All the flag does is position: a featured
+            reference&apos;s publication sorts above others that carry the same number of
+            references. There is no star, badge or icon marking it, and a reference that is not
+            featured is not a weaker source or a lesser publication — it means the record does not
+            show the article naming the project as a source in its own words. A reference can only
+            be featured once it has been verified.
+          </p>
+        </ProseSection>
+
         <ProseSection id="contribution" heading="How records are added and corrected">
           <p className="text-body mt-6 max-w-prose text-ink-soft">
             Every record change follows the same path: identify the right file, add or update the
@@ -254,11 +315,41 @@ export default function MethodologyPage() {
             (for example, a press sweep) land at <span className="font-mono">needs_review</span> by
             default and are promoted to verified individually, by hand.
           </p>
+          {/*
+            Repository-aware, not asserted. This paragraph shipped at B6 saying
+            the repository "is not published yet", which stopped being true on
+            2026-09-18 and was still on the page at B13 — a hardcoded fact about
+            a field that already exists. It now reads from
+            `project.repository_url`, the same switch the navigation, the footer
+            and the Evidence panel use (docs/DATA.md §9: a `null`
+            `repository_url` must degrade gracefully), so the sentence cannot go
+            stale again in either direction. No link is added here: the
+            `CONTRIBUTE DATA ↗` / `SUBMIT A CORRECTION ↗` CTAs live on
+            `/evidence` by the 2026-09-18 maintainer decision, and this points
+            at them rather than duplicating them.
+          */}
           <p className="text-body mt-6 max-w-prose text-ink-soft">
             The exact workflow — evidence requirements, id conventions and the full local check
-            sequence — is documented in this project&apos;s CONTRIBUTING guide. The project&apos;s
-            public repository is not published yet, so the pull-request step described there is
-            not currently open outside the maintainer; see{" "}
+            sequence — is documented in this project&apos;s CONTRIBUTING guide.{" "}
+            {project.repository_url !== null ? (
+              <>
+                It lives in the public repository, and a correction or a new record is submitted
+                there; the links are on{" "}
+                <Link
+                  href="/evidence#contribute"
+                  className="font-bold text-ink underline-offset-2 hover:underline"
+                >
+                  Evidence &amp; Sources
+                </Link>
+                .
+              </>
+            ) : (
+              <>
+                The project&apos;s public repository is not published yet, so the pull-request step
+                described there is not currently open outside the maintainer.
+              </>
+            )}{" "}
+            See{" "}
             <Link href="/about" className="font-bold text-ink underline-offset-2 hover:underline">
               About
             </Link>{" "}

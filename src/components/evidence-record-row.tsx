@@ -4,6 +4,7 @@ import type { MediaReference } from "@/schemas/media.schema";
 import { AMPLIFICATION_ACTION_LABELS, AMPLIFICATION_CATEGORY_LABELS } from "@/lib/metrics/amplification";
 import { formatCompactNumber } from "@/lib/format/number";
 import { formatDate } from "@/lib/format/date";
+import { mediaReferenceDescriptors } from "@/lib/format/media-descriptors";
 import { ExternalArrow } from "./external-arrow";
 
 /**
@@ -71,6 +72,13 @@ export function toAmplificationEvidenceRow(amplification: Amplification): Eviden
  * all nullable; only non-null fields ever reach `meta`. This is the first
  * time media records reach the UI (B5), so there is no established display
  * shape to reuse.
+ *
+ * `mediaReferenceDescriptors` appends the B13 attributes (newsroom country,
+ * the outlet a republication credits, and the featured criterion stated as
+ * the fact it stands for). `/evidence` is the ledger where every verified
+ * record is auditable, so a syndicated record appears here in full rather
+ * than being quietly dropped from a page that claims to list everything —
+ * what the provenance changes is the figures it feeds, not its visibility.
  */
 export function toMediaEvidenceRow(reference: MediaReference): EvidenceRecordRowData {
   return {
@@ -81,6 +89,7 @@ export function toMediaEvidenceRow(reference: MediaReference): EvidenceRecordRow
       REFERENCE_TYPE_LABELS[reference.reference_type],
       formatDate(reference.published_at),
       ...(reference.author !== null ? [`By ${reference.author}`] : []),
+      ...mediaReferenceDescriptors(reference),
     ],
     href: reference.url,
     linkLabel: "VIEW SOURCE",

@@ -102,7 +102,14 @@ components.
 `getAttentionMetrics(posts)`, `getAmplificationMetrics(amps)`, `getMediaMetrics(media)`.
 Definitions and eligibility rules are in `docs/DATA.md §10`.
 
-**`src/lib/format/`** — `number.ts`, `date.ts`:
+**`src/lib/validation/`** — pure rules a script and a test both need, with no I/O and no JSON
+import: `related-post-reference.ts`, `placeholder.ts`, `publication-name.ts`. Scripts import
+from here rather than exporting their own helpers, so a test can exercise the rule without
+running the script's `main()`.
+
+**`src/lib/format/`** — `number.ts`, `date.ts`, `country.ts` (ISO-2 to a display name, falling
+back to the code), `media-descriptors.ts` (the B13 record attributes as words, shared by the
+Public References panel and the `/evidence` media rows):
 
 ```ts
 formatCompactNumber(18_700_000) // "18.7M"   max one decimal

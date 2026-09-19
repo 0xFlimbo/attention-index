@@ -311,6 +311,30 @@ see `docs/WORKPLAN.md` "Decisions already made"). Never a wall of logos as the o
 and `CLAUDE.md` requires restrained motion; the marquee this section's spec originally allowed is
 left to B9, which owns the motion audit, rather than added ad hoc here.
 
+### B13 — prominence, without a badge
+
+**Row order carries it.** Groups are ordered by five factual keys, owned by `docs/DATA.md §11`:
+original reference count, featured reference count, total reference count, most recent
+`published_at`, publication name. A publication that did its own reporting leads one that only
+republished someone else's piece, and a featured publication leads the unfeatured ones it ties
+with. Never a computed rank.
+
+**The summary line is unchanged.** Publication name on the left, `N references` on the right,
+same as B8. Nothing was added to that right rail: it is `shrink-0 whitespace-nowrap`, so
+anything put there widens a fixed column and is the first thing to overflow at 390px.
+
+**The panel states the facts in words.** Each reference's metadata line now reads
+`<type> · <date> · By <author> · <newsroom country> · Republished from <outlet> · Names
+LayoffHedge as a source`, with every part after the date omitted when it does not apply. No star,
+no badge, no icon — `docs/DESIGN.md` has no decorative iconography anywhere in the system, and
+the official press page's star is a press kit's grammar, which is the one thing an independent
+index must not borrow. A featured reference prints its **criterion** rather than the word
+"featured", which is more informative and reads as a fact instead of a rank.
+
+**The section still has no figure of its own.** The B13 country and provenance metrics live on
+`/methodology` and, per record, on `/evidence`; the standing decision that this section keeps no
+dominant number (`docs/WORKPLAN.md`, "Decisions already made") was not reopened.
+
 ---
 
 ## 12. Evidence / Sources (09)
