@@ -1,5 +1,6 @@
 import type { Post } from "@/schemas/post.schema";
 import { isVerifiedRecord } from "@/lib/data/eligibility";
+import { latestObservation } from "@/lib/metrics/observation";
 
 /**
  * Deterministic archive ordering: highest views → earliest `published_at` →
@@ -16,7 +17,12 @@ import { isVerifiedRecord } from "@/lib/data/eligibility";
  * implementations agreeing today.
  */
 export function compareArchiveOrder(a: Post, b: Post): number {
-  if (a.metrics.views !== b.metrics.views) return b.metrics.views - a.metrics.views;
+  // One agreed reading per post (B18): the comparator sorts on each post's
+  // latest observation, the same value the row prints and the same one
+  // `getAttentionMetrics` sums.
+  const aViews = latestObservation(a).views;
+  const bViews = latestObservation(b).views;
+  if (aViews !== bViews) return bViews - aViews;
   if (a.published_at !== b.published_at) return a.published_at < b.published_at ? -1 : 1;
   if (a.id === b.id) return 0;
   return a.id < b.id ? -1 : 1;
@@ -101,5 +107,5 @@ export function selectArchiveThresholds(posts: Post[]): ArchiveThresholdOption[]
 }
 
 function countAtLeast(posts: Post[], minViews: number): number {
-  return posts.filter((post) => post.metrics.views >= minViews).length;
+  return posts.filter((post) => latestObservation(post).views >= minViews).length;
 }

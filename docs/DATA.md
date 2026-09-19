@@ -105,22 +105,71 @@ Public inclusion rule everywhere: `status === "verified" && _placeholder !== tru
   "status": "verified",
   "featured": false,                     // editorial flag, not a metric
   "tags": [],
-  "metrics": {
-    "views": 18700000,                   // integer >= 0, required
-    "likes": null, "reposts": null, "replies": null, "bookmarks": null,
-    "observed_at": "2026-09-15"          // required
-  },
+  "observations": [                      // append-only, oldest first, at least one
+    {
+      "views": 18700000,                 // integer >= 0, required
+      "likes": null, "reposts": null, "replies": null, "bookmarks": null,
+      "observed_at": "2026-09-15",       // required, unique within the post
+      "source": "interface"              // api | interface, required
+    }
+  ],
   "screenshot": null,                    // optional local path, e.g. /images/posts/…​.webp
   "notes": null,
   "verified_at": "2026-09-15"
 }
 ```
 
-Required: `id, platform, account, published_at, title, url, status, metrics.views, metrics.observed_at`.
+Required: `id, platform, account, published_at, title, url, status`, and at least one observation
+carrying `views`, `observed_at` and `source`.
 
 **Views are observations.** `views + observed_at` means *the post displayed ~that many public
 views when checked on that date* — not unique people, not a final lifetime count, not X analytics.
-V1 keeps only the latest observation; an `observations[]` history is a future extension, not V1.
+
+### The observation history (B18)
+
+**A refresh appends; it never replaces.** A reading of a public counter cannot be re-taken, so
+discarding it throws away the only record that the number was ever that on that day. The array is
+stored oldest first and validation enforces that.
+
+**The public figure is the latest observation** — the one with the greatest `observed_at`, via
+`latestObservation` (`src/lib/metrics/observation.ts`). Every derived metric reads exactly one
+observation per post through that function, which is what keeps the headline numbers meaning what
+they meant before the history existed: a sum of one agreed reading each, never a mix of readings
+from different days of the same post, and never a sum of a post's whole history.
+
+`observed_at` is **unique within a post**, which is what makes "the latest" a single well-defined
+record rather than a tie to break. Two readings on one day are the one case where a reading is
+genuinely redundant — same day, same counter, differing only in how it was read. If both must be
+kept, `§2` already allows a full timestamp, and that separates them.
+
+**`source` — and why there is no `precision` field.** A platform API returns exact integers; a
+public interface rounds above 1,000 (X prints `427K` for 427,443). Precision therefore *follows
+from* the source, and storing it separately would be a derivable value, which the canonical rule
+bans. It sits on each observation, not on the post, because one post can legitimately hold both
+kinds: seeded by hand before the API could return it, refreshed from the API afterwards.
+
+**What must never happen is a series drawn across mixed sources.** A single figure is always
+honest, because it is paired with its own date — "427K observed on Sep 19 2026" stays true even
+though an API reading two days earlier said 427,443. That 443-view difference is a rounding
+artefact, not a decline, and it only becomes a lie if someone plots the two points as a trend.
+`source` exists on every observation so a future consumer can filter for one kind. The selector
+deliberately does **not** prefer the API reading: doing so would publish a figure that is not the
+most recent one, on a judgement this project has no basis for making.
+
+**Process rule for refreshes.** An automated refresh always appends a reading with
+`source: "api"`, because that is where it reads from. An `interface` reading is only used to seed
+a post the API cannot return. Followed, the series stays homogeneous and the mixed-source hazard
+never arises in practice.
+
+**The 2026-09-19 backfill.** The 32 existing posts were migrated to a one-element history with
+`source` classified mechanically: a value that is exactly what X's interface would print is
+`interface`, anything else is `api`. Below 1,000 the interface prints exactly; from 1,000 it
+prints at most one decimal of `K` (a multiple of 100) and from 1,000,000 at most one decimal of
+`M` (a multiple of 100,000). That gives **31 `interface` and 1 `api`** — `427443` on
+`post-layoffai-2086800985079562516` — which matches the recorded history of those readings. The
+rule's known blind spot: an API reading that happens to land on a round number would be
+classified `interface`. It is stated here so a later correction is a one-line edit rather than an
+archaeology problem.
 
 ---
 
@@ -270,6 +319,12 @@ postsOver10M          views >= 10_000_000
 topPost               highest views → record + views + url + observed_at
 totalObservedViews    sum of views   → label "OBSERVED VIEWS ACROSS TRACKED POSTS"
 ```
+
+Every `views` above is **one observation per post** — the latest, resolved by
+`latestObservation(post)` (`src/lib/metrics/observation.ts`, B18). Never a post's whole history,
+and never two different readings of one post inside a single figure. `compareArchiveOrder` reads
+the same value, so the archive's rank, the top post and the sum can never disagree about what a
+post's view count is.
 
 Thresholds are inclusive (`>=`). `totalObservedViews` is a sum of post-level counters: it is not
 unique people, and the same person may appear in several posts. Methodology must state this.
@@ -481,8 +536,10 @@ publication that only republished sorts below every publication that reported.
 - required fields present
 - numeric metrics are non-negative integers
 - `related_post_id` references an existing post (fails if dangling)
+- every post carries at least one observation, stored oldest first, each with `views`,
+  `observed_at` and `source`, and no two observations of one post share an `observed_at`
 - `verified` records carry their required evidence:
-  - post → `url`, `metrics.views`, `metrics.observed_at`
+  - post → `url`, at least one observation with `views` and `observed_at`
   - amplification → `evidence_url`
   - media → `url`
 - every `verified` record carries `verified_at` (nullable only for `needs_review` / `archived`)
@@ -520,7 +577,9 @@ was erroneous, duplicate, never valid, or problematic.
 ## 14. Data entry checklists
 
 **Post** — public URL exists · published date known · views observed directly · observation date
-recorded · title short and neutral · status correct · no invented metrics · unique ID.
+recorded · `source` set to how the reading was actually taken · the reading **appended** to
+`observations`, never written over the previous one · title short and neutral · status correct ·
+no invented metrics · unique ID.
 
 **Amplification** — identity clear · role accurate · action correctly categorized · public evidence
 exists · date known · category normalized · related post linked when known · unique ID.

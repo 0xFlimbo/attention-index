@@ -15,14 +15,17 @@
       "consumer prices",
       "Disney"
     ],
-    "metrics": {
-      "views": 4500000,
-      "likes": 176230,
-      "reposts": 21017,
-      "replies": 1170,
-      "bookmarks": null,
-      "observed_at": "2026-09-16"
-    },
+    "observations": [
+      {
+        "views": 4500000,
+        "likes": 176230,
+        "reposts": 21017,
+        "replies": 1170,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-16"
@@ -43,14 +46,17 @@
       "international students",
       "Trine University"
     ],
-    "metrics": {
-      "views": 1200000,
-      "likes": 10444,
-      "reposts": 4094,
-      "replies": 571,
-      "bookmarks": null,
-      "observed_at": "2026-09-16"
-    },
+    "observations": [
+      {
+        "views": 1200000,
+        "likes": 10444,
+        "reposts": 4094,
+        "replies": 571,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-16"
@@ -71,14 +77,17 @@
       "gender",
       "labor market"
     ],
-    "metrics": {
-      "views": 2800000,
-      "likes": 12334,
-      "reposts": 2083,
-      "replies": 625,
-      "bookmarks": null,
-      "observed_at": "2026-09-16"
-    },
+    "observations": [
+      {
+        "views": 2800000,
+        "likes": 12334,
+        "reposts": 2083,
+        "replies": 625,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-16"
@@ -99,14 +108,17 @@
       "Texas",
       "congressional districts"
     ],
-    "metrics": {
-      "views": 1600000,
-      "likes": 5257,
-      "reposts": 1769,
-      "replies": 361,
-      "bookmarks": null,
-      "observed_at": "2026-09-16"
-    },
+    "observations": [
+      {
+        "views": 1600000,
+        "likes": 5257,
+        "reposts": 1769,
+        "replies": 361,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-16"
@@ -127,14 +139,17 @@
       "data tool",
       "congressional districts"
     ],
-    "metrics": {
-      "views": 427443,
-      "likes": 5510,
-      "reposts": 2169,
-      "replies": 224,
-      "bookmarks": null,
-      "observed_at": "2026-09-17"
-    },
+    "observations": [
+      {
+        "views": 427443,
+        "likes": 5510,
+        "reposts": 2169,
+        "replies": 224,
+        "bookmarks": null,
+        "observed_at": "2026-09-17",
+        "source": "api"
+      }
+    ],
     "screenshot": null,
     "notes": "Added after the X enrichment pass showed Rep. Warren Davidson quoting this post. Engagement figures supplied by the maintainer.",
     "verified_at": "2026-09-17"
@@ -155,14 +170,17 @@
       "welfare",
       "claims"
     ],
-    "metrics": {
-      "views": 218000,
-      "likes": 8500,
-      "reposts": 2900,
-      "replies": 204,
-      "bookmarks": null,
-      "observed_at": "2026-09-19"
-    },
+    "observations": [
+      {
+        "views": 218000,
+        "likes": 8500,
+        "reposts": 2900,
+        "replies": 204,
+        "bookmarks": null,
+        "observed_at": "2026-09-19",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-19"
@@ -183,14 +201,17 @@
       "Xbox",
       "layoffs"
     ],
-    "metrics": {
-      "views": 523000,
-      "likes": 7400,
-      "reposts": 1800,
-      "replies": 538,
-      "bookmarks": null,
-      "observed_at": "2026-09-19"
-    },
+    "observations": [
+      {
+        "views": 523000,
+        "likes": 7400,
+        "reposts": 1800,
+        "replies": 538,
+        "bookmarks": null,
+        "observed_at": "2026-09-19",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-19"
@@ -212,14 +233,17 @@
       "layoffs",
       "H-1B"
     ],
-    "metrics": {
-      "views": 423000,
-      "likes": 1400,
-      "reposts": 423,
-      "replies": 171,
-      "bookmarks": null,
-      "observed_at": "2026-09-19"
-    },
+    "observations": [
+      {
+        "views": 423000,
+        "likes": 1400,
+        "reposts": 423,
+        "replies": 171,
+        "bookmarks": null,
+        "observed_at": "2026-09-19",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-19"
@@ -240,14 +264,17 @@
       "AI",
       "internal culture"
     ],
-    "metrics": {
-      "views": 1200000,
-      "likes": 6082,
-      "reposts": 910,
-      "replies": 321,
-      "bookmarks": null,
-      "observed_at": "2026-09-16"
-    },
+    "observations": [
+      {
+        "views": 1200000,
+        "likes": 6082,
+        "reposts": 910,
+        "replies": 321,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-16"
@@ -269,14 +296,17 @@
       "outsourcing",
       "Iowa"
     ],
-    "metrics": {
-      "views": 633000,
-      "likes": 6800,
-      "reposts": 3400,
-      "replies": 446,
-      "bookmarks": null,
-      "observed_at": "2026-09-19"
-    },
+    "observations": [
+      {
+        "views": 633000,
+        "likes": 6800,
+        "reposts": 3400,
+        "replies": 446,
+        "bookmarks": null,
+        "observed_at": "2026-09-19",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-19"
@@ -296,14 +326,17 @@
       "AI detection",
       "education"
     ],
-    "metrics": {
-      "views": 4500000,
-      "likes": 3283,
-      "reposts": 394,
-      "replies": 67,
-      "bookmarks": null,
-      "observed_at": "2026-09-16"
-    },
+    "observations": [
+      {
+        "views": 4500000,
+        "likes": 3283,
+        "reposts": 394,
+        "replies": 67,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-16"
@@ -323,14 +356,17 @@
       "immigration",
       "labor market"
     ],
-    "metrics": {
-      "views": 1100000,
-      "likes": 5704,
-      "reposts": 2034,
-      "replies": 200,
-      "bookmarks": null,
-      "observed_at": "2026-09-16"
-    },
+    "observations": [
+      {
+        "views": 1100000,
+        "likes": 5704,
+        "reposts": 2034,
+        "replies": 200,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-16"
@@ -351,14 +387,17 @@
       "All-In podcast",
       "layoffs"
     ],
-    "metrics": {
-      "views": 890000,
-      "likes": 2200,
-      "reposts": 175,
-      "replies": 87,
-      "bookmarks": null,
-      "observed_at": "2026-09-19"
-    },
+    "observations": [
+      {
+        "views": 890000,
+        "likes": 2200,
+        "reposts": 175,
+        "replies": 87,
+        "bookmarks": null,
+        "observed_at": "2026-09-19",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-19"
@@ -379,14 +418,17 @@
       "H-1B",
       "layoffs"
     ],
-    "metrics": {
-      "views": 783000,
-      "likes": 7800,
-      "reposts": 2100,
-      "replies": 291,
-      "bookmarks": null,
-      "observed_at": "2026-09-19"
-    },
+    "observations": [
+      {
+        "views": 783000,
+        "likes": 7800,
+        "reposts": 2100,
+        "replies": 291,
+        "bookmarks": null,
+        "observed_at": "2026-09-19",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-19"
@@ -407,14 +449,17 @@
       "AI",
       "layoffs"
     ],
-    "metrics": {
-      "views": 1000000,
-      "likes": 595,
-      "reposts": 94,
-      "replies": 33,
-      "bookmarks": null,
-      "observed_at": "2026-09-16"
-    },
+    "observations": [
+      {
+        "views": 1000000,
+        "likes": 595,
+        "reposts": 94,
+        "replies": 33,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-16"
@@ -435,14 +480,17 @@
       "AI training",
       "employee monitoring"
     ],
-    "metrics": {
-      "views": 2400000,
-      "likes": 5043,
-      "reposts": 1165,
-      "replies": 316,
-      "bookmarks": null,
-      "observed_at": "2026-09-16"
-    },
+    "observations": [
+      {
+        "views": 2400000,
+        "likes": 5043,
+        "reposts": 1165,
+        "replies": 316,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-16"
@@ -463,14 +511,17 @@
       "layoffs",
       "AI"
     ],
-    "metrics": {
-      "views": 424000,
-      "likes": 768,
-      "reposts": 157,
-      "replies": 42,
-      "bookmarks": null,
-      "observed_at": "2026-09-19"
-    },
+    "observations": [
+      {
+        "views": 424000,
+        "likes": 768,
+        "reposts": 157,
+        "replies": 42,
+        "bookmarks": null,
+        "observed_at": "2026-09-19",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-19"
@@ -491,14 +542,17 @@
       "layoffs",
       "H-1B"
     ],
-    "metrics": {
-      "views": 1000000,
-      "likes": 1168,
-      "reposts": 285,
-      "replies": 49,
-      "bookmarks": null,
-      "observed_at": "2026-09-16"
-    },
+    "observations": [
+      {
+        "views": 1000000,
+        "likes": 1168,
+        "reposts": 285,
+        "replies": 49,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-16"
@@ -519,14 +573,17 @@
       "layoffs",
       "H-1B"
     ],
-    "metrics": {
-      "views": 1000000,
-      "likes": 3849,
-      "reposts": 1230,
-      "replies": 285,
-      "bookmarks": null,
-      "observed_at": "2026-09-16"
-    },
+    "observations": [
+      {
+        "views": 1000000,
+        "likes": 3849,
+        "reposts": 1230,
+        "replies": 285,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-16"
@@ -547,14 +604,17 @@
       "data tool",
       "immigration"
     ],
-    "metrics": {
-      "views": 2400000,
-      "likes": 31369,
-      "reposts": 11812,
-      "replies": 1250,
-      "bookmarks": null,
-      "observed_at": "2026-09-16"
-    },
+    "observations": [
+      {
+        "views": 2400000,
+        "likes": 31369,
+        "reposts": 11812,
+        "replies": 1250,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-16"
@@ -575,14 +635,17 @@
       "data tool",
       "immigration"
     ],
-    "metrics": {
-      "views": 1300000,
-      "likes": 10515,
-      "reposts": 3548,
-      "replies": 322,
-      "bookmarks": null,
-      "observed_at": "2026-09-16"
-    },
+    "observations": [
+      {
+        "views": 1300000,
+        "likes": 10515,
+        "reposts": 3548,
+        "replies": 322,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-16"
@@ -603,14 +666,17 @@
       "immigration",
       "layoffs"
     ],
-    "metrics": {
-      "views": 1400000,
-      "likes": 15921,
-      "reposts": 6313,
-      "replies": 394,
-      "bookmarks": null,
-      "observed_at": "2026-09-16"
-    },
+    "observations": [
+      {
+        "views": 1400000,
+        "likes": 15921,
+        "reposts": 6313,
+        "replies": 394,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-16"
@@ -631,14 +697,17 @@
       "immigration",
       "jobs report"
     ],
-    "metrics": {
-      "views": 727000,
-      "likes": 3700,
-      "reposts": 1400,
-      "replies": 120,
-      "bookmarks": null,
-      "observed_at": "2026-09-19"
-    },
+    "observations": [
+      {
+        "views": 727000,
+        "likes": 3700,
+        "reposts": 1400,
+        "replies": 120,
+        "bookmarks": null,
+        "observed_at": "2026-09-19",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-19"
@@ -659,14 +728,17 @@
       "layoffs",
       "workplace culture"
     ],
-    "metrics": {
-      "views": 1300000,
-      "likes": 17622,
-      "reposts": 2681,
-      "replies": 195,
-      "bookmarks": null,
-      "observed_at": "2026-09-16"
-    },
+    "observations": [
+      {
+        "views": 1300000,
+        "likes": 17622,
+        "reposts": 2681,
+        "replies": 195,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-16"
@@ -687,14 +759,17 @@
       "quarterly recap",
       "tracker"
     ],
-    "metrics": {
-      "views": 692000,
-      "likes": 5200,
-      "reposts": 2200,
-      "replies": 141,
-      "bookmarks": null,
-      "observed_at": "2026-09-19"
-    },
+    "observations": [
+      {
+        "views": 692000,
+        "likes": 5200,
+        "reposts": 2200,
+        "replies": 141,
+        "bookmarks": null,
+        "observed_at": "2026-09-19",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-19"
@@ -715,14 +790,17 @@
       "Stargate",
       "layoffs"
     ],
-    "metrics": {
-      "views": 1200000,
-      "likes": 1493,
-      "reposts": 432,
-      "replies": 56,
-      "bookmarks": null,
-      "observed_at": "2026-09-16"
-    },
+    "observations": [
+      {
+        "views": 1200000,
+        "likes": 1493,
+        "reposts": 432,
+        "replies": 56,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-16"
@@ -743,14 +821,17 @@
       "layoffs",
       "tracker"
     ],
-    "metrics": {
-      "views": 440000,
-      "likes": 3200,
-      "reposts": 501,
-      "replies": 48,
-      "bookmarks": null,
-      "observed_at": "2026-09-19"
-    },
+    "observations": [
+      {
+        "views": 440000,
+        "likes": 3200,
+        "reposts": 501,
+        "replies": 48,
+        "bookmarks": null,
+        "observed_at": "2026-09-19",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-19"
@@ -771,14 +852,17 @@
       "AI adoption",
       "layoffs"
     ],
-    "metrics": {
-      "views": 955000,
-      "likes": 1505,
-      "reposts": 371,
-      "replies": 84,
-      "bookmarks": null,
-      "observed_at": "2026-09-16"
-    },
+    "observations": [
+      {
+        "views": 955000,
+        "likes": 1505,
+        "reposts": 371,
+        "replies": 84,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-16"
@@ -801,14 +885,17 @@
       "Meta",
       "Microsoft"
     ],
-    "metrics": {
-      "views": 972000,
-      "likes": 5521,
-      "reposts": 2067,
-      "replies": 203,
-      "bookmarks": null,
-      "observed_at": "2026-09-16"
-    },
+    "observations": [
+      {
+        "views": 972000,
+        "likes": 5521,
+        "reposts": 2067,
+        "replies": 203,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-16"
@@ -829,14 +916,17 @@
       "AI",
       "job displacement"
     ],
-    "metrics": {
-      "views": 776000,
-      "likes": 2200,
-      "reposts": 412,
-      "replies": 127,
-      "bookmarks": null,
-      "observed_at": "2026-09-19"
-    },
+    "observations": [
+      {
+        "views": 776000,
+        "likes": 2200,
+        "reposts": 412,
+        "replies": 127,
+        "bookmarks": null,
+        "observed_at": "2026-09-19",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-19"
@@ -856,14 +946,17 @@
       "Dell",
       "layoffs"
     ],
-    "metrics": {
-      "views": 3900000,
-      "likes": 9764,
-      "reposts": 2037,
-      "replies": 219,
-      "bookmarks": null,
-      "observed_at": "2026-09-16"
-    },
+    "observations": [
+      {
+        "views": 3900000,
+        "likes": 9764,
+        "reposts": 2037,
+        "replies": 219,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-16"
@@ -884,14 +977,17 @@
       "layoffs",
       "white-collar work"
     ],
-    "metrics": {
-      "views": 942500,
-      "likes": 4771,
-      "reposts": 791,
-      "replies": 161,
-      "bookmarks": null,
-      "observed_at": "2026-09-16"
-    },
+    "observations": [
+      {
+        "views": 942500,
+        "likes": 4771,
+        "reposts": 791,
+        "replies": 161,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-16"

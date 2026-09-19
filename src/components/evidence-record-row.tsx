@@ -5,6 +5,7 @@ import { AMPLIFICATION_ACTION_LABELS, AMPLIFICATION_CATEGORY_LABELS } from "@/li
 import { formatCompactNumber } from "@/lib/format/number";
 import { formatDate } from "@/lib/format/date";
 import { mediaReferenceDescriptors } from "@/lib/format/media-descriptors";
+import { latestObservation } from "@/lib/metrics/observation";
 import { ExternalArrow } from "./external-arrow";
 
 /**
@@ -36,12 +37,17 @@ export interface EvidenceRecordRowData {
  * its own `observed_at`, never the record's `published_at`.
  */
 export function toPostEvidenceRow(post: Post): EvidenceRecordRowData {
+  // B18 — the latest of the post's observations, the same one every derived
+  // metric reads, so this row can never print a figure the homepage does not
+  // also use.
+  const observation = latestObservation(post);
+
   return {
     id: post.id,
     title: post.subject ?? post.title,
     meta: [
       `Published ${formatDate(post.published_at)}`,
-      `${formatCompactNumber(post.metrics.views)} views observed ${formatDate(post.metrics.observed_at)}`,
+      `${formatCompactNumber(observation.views)} views observed ${formatDate(observation.observed_at)}`,
     ],
     href: post.url,
     linkLabel: "VIEW SOURCE",

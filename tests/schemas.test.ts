@@ -17,14 +17,17 @@ function validPost(overrides: Record<string, unknown> = {}) {
     status: "verified",
     featured: false,
     tags: [],
-    metrics: {
-      views: 1_000_000,
-      likes: null,
-      reposts: null,
-      replies: null,
-      bookmarks: null,
-      observed_at: "2026-01-02",
-    },
+    observations: [
+      {
+        views: 1_000_000,
+        likes: null,
+        reposts: null,
+        replies: null,
+        bookmarks: null,
+        observed_at: "2026-01-02",
+        source: "interface",
+      },
+    ],
     screenshot: null,
     notes: null,
     verified_at: "2026-01-02",
@@ -91,7 +94,19 @@ describe("postSchema", () => {
 
   it("rejects negative views", () => {
     const result = postSchema.safeParse(
-      validPost({ metrics: { ...validPost().metrics as object, views: -1 } }),
+      validPost({
+        observations: [
+          {
+            views: -1,
+            likes: null,
+            reposts: null,
+            replies: null,
+            bookmarks: null,
+            observed_at: "2026-01-02",
+            source: "interface",
+          },
+        ],
+      }),
     );
     expect(result.success).toBe(false);
   });

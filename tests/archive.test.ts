@@ -6,6 +6,7 @@ import {
   HOMEPAGE_ARCHIVE_ROW_COUNT,
 } from "../src/lib/metrics/archive";
 import { getAttentionMetrics } from "../src/lib/metrics/attention";
+import { latestObservation } from "../src/lib/metrics/observation";
 import { getPosts } from "../src/lib/data/posts";
 import type { Post } from "../src/schemas/post.schema";
 
@@ -22,14 +23,17 @@ function makePost(overrides: Partial<Post> & { id: string; views: number }): Pos
     status: "verified",
     featured: false,
     tags: [],
-    metrics: {
-      views,
-      likes: null,
-      reposts: null,
-      replies: null,
-      bookmarks: null,
-      observed_at: "2026-01-02",
-    },
+    observations: [
+      {
+        views,
+        likes: null,
+        reposts: null,
+        replies: null,
+        bookmarks: null,
+        observed_at: "2026-01-02",
+        source: "interface",
+      },
+    ],
     screenshot: null,
     notes: null,
     verified_at: "2026-01-02",
@@ -110,7 +114,7 @@ describe("selectArchivePosts — stable rank", () => {
       makePost({ id: "post-c", views: 900_000 }),
     ];
     const archive = selectArchivePosts(posts);
-    const over1M = archive.filter((row) => row.post.metrics.views >= 1_000_000);
+    const over1M = archive.filter((row) => latestObservation(row.post).views >= 1_000_000);
     // post-b keeps rank 1 and post-a keeps rank 2 even though post-c (rank 3) was filtered out.
     expect(over1M.map((row) => row.rank)).toEqual([1, 2]);
   });
@@ -173,10 +177,10 @@ describe("HOMEPAGE_ARCHIVE_ROW_COUNT", () => {
     // against another slice of itself.
     const expectedViews = realPosts
       .filter((post) => post.status === "verified" && post._placeholder !== true)
-      .map((post) => post.metrics.views)
+      .map((post) => latestObservation(post).views)
       .sort((a, b) => b - a)
       .slice(0, HOMEPAGE_ARCHIVE_ROW_COUNT);
-    expect(homepageSubset.map((row) => row.post.metrics.views)).toEqual(expectedViews);
+    expect(homepageSubset.map((row) => latestObservation(row.post).views)).toEqual(expectedViews);
 
     expect(homepageSubset.map((row) => row.rank)).toEqual(
       Array.from({ length: Math.min(HOMEPAGE_ARCHIVE_ROW_COUNT, archive.length) }, (_, i) => i + 1),

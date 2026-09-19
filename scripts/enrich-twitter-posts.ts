@@ -1,6 +1,11 @@
 /**
  * pnpm enrich:twitter [-- --dry-run] [-- --refresh-metrics]
  *
+ * NOTE (B18): post readings live in `post.observations`, an append-only
+ * history. This script does not write them today; when `--refresh-metrics`
+ * is implemented (B12) it appends one observation with `source: "api"`
+ * rather than overwriting the previous reading.
+ *
  * One-time / occasional maintenance tool (docs/ENGINEERING.md §12). Never called
  * during `next build`, rendering, or CI.
  *
@@ -328,9 +333,17 @@ async function main(): Promise<void> {
   const token = loadBearerToken();
 
   if (refreshMetrics) {
+    // Still unimplemented — the refresh itself is docs/WORKPLAN.md B12. What
+    // changed at B18 is that the contract it has to honour now exists, so
+    // B12 has nothing left to invent: a refresh **appends** an observation to
+    // `post.observations`, never replaces one, and the appended reading
+    // carries `source: "api"` because that is where this script reads from.
+    // The stored history must stay chronological and must not gain a second
+    // reading for a date it already holds (docs/DATA.md §5).
     console.log(
-      "--refresh-metrics was passed, but a metric refresh is not implemented in this batch (B7). " +
-        "No metrics fields will be touched.",
+      "--refresh-metrics was passed, but the refresh itself is not implemented yet " +
+        "(docs/WORKPLAN.md B12). No observation will be appended. The contract it must " +
+        'follow is in docs/DATA.md §5: append, never replace, with source "api".',
     );
   }
 

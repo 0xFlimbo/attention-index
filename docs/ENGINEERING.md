@@ -301,8 +301,11 @@ amplifications: action · related_post_id · entity_name · account · date
 Process: extract the status ID from each URL → fetch → confirm `published_at` → read source text →
 write a neutral archive title, subject, short factual summary and a few tags → validate the record.
 
-**Preserve manually observed metrics** (`metrics.views/likes/reposts/replies/observed_at`) by default.
-A metric refresh must be opt-in (`--refresh-metrics`) and must update `observed_at`.
+**Never touch a stored observation.** Post readings live in `post.observations`, an append-only
+history (`docs/DATA.md §5`, B18): the enrichment pass leaves them alone entirely. A metric refresh
+stays opt-in (`--refresh-metrics`, still unimplemented — B12) and, when it lands, **appends** an
+observation carrying its own `observed_at` and `source: "api"` rather than overwriting the
+previous reading.
 
 Rules: credentials from `X_BEARER_TOKEN` in `.env.local` only — never committed, logged, placed in
 JSON, or exposed to the browser. Raw API responses go to a gitignored `.cache/twitter-enrichment.json`,

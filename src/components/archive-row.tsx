@@ -1,5 +1,6 @@
 import type { Post } from "@/schemas/post.schema";
 import { PLATFORM_LABELS } from "@/lib/metrics/attention-grid";
+import { latestObservation } from "@/lib/metrics/observation";
 import { formatCompactNumber, formatCount } from "@/lib/format/number";
 import { formatDate } from "@/lib/format/date";
 import { SourceFooter } from "./source-footer";
@@ -29,19 +30,25 @@ export interface ArchiveRowData {
 
 /** `post.subject` falls back to `post.title` — docs/DATA.md allows a null `subject`. */
 export function toArchiveRowData(post: Post, rank: number): ArchiveRowData {
+  // B18 — one agreed reading per post: the latest observation, the same one
+  // `compareArchiveOrder` ranked this row by and `getAttentionMetrics`
+  // summed. The row view model stays a flat, serializable shape, so the
+  // client-side preview on /archive never sees the history array.
+  const observation = latestObservation(post);
+
   return {
     id: post.id,
     rank,
-    views: post.metrics.views,
+    views: observation.views,
     subject: post.subject ?? post.title,
     publishedAt: post.published_at,
     url: post.url,
     platformLabel: PLATFORM_LABELS[post.platform] ?? "Source",
     summary: post.summary,
-    observedAt: post.metrics.observed_at,
-    likes: post.metrics.likes,
-    reposts: post.metrics.reposts,
-    replies: post.metrics.replies,
+    observedAt: observation.observed_at,
+    likes: observation.likes,
+    reposts: observation.reposts,
+    replies: observation.replies,
   };
 }
 
