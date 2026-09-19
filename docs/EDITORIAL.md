@@ -122,6 +122,34 @@ Never sensational (`Amazon massacre`, `Meta's shocking collapse`), even if the s
 
 **Post summaries** — 1–2 sentences, describe the subject, no dramatization, no interpretation unless needed.
 
+**Attribute the claim to the post.** A summary reports what a post says; it never restates the
+post's assertion as the site's own. Use `The post says …`, `The post describes …`,
+`The post relays …`. This matters most where the post carries contested statistics or a charge
+against a named party — the site's neutrality depends on the reader being able to tell whose claim
+it is.
+
+**Say when a post gives no source for its figures.** Where a post presents numeric claims with
+**no attribution of any kind**, the summary ends with a plain statement of that fact — `The post
+gives no source for the figures.` It is an observation about the post, not a judgement of it, and it
+is the transparency the rest of the site asks of itself: a project built on `show the source` cannot
+reproduce unsourced numbers silently.
+
+The test is attribution, not citation quality, and it is deliberately narrow so that it can be
+applied mechanically rather than by taste:
+
+```text
+no note:  names a source        — "Reuters got the memo", "the March jobs report"
+no note:  credits an institution — "a federal jury found", "her own words to staff"
+no note:  links out              — any URL in the post
+no note:  attributes to itself   — "we've had Oracle on our tracker", "we're already tracking"
+note:     figures and nothing else
+```
+
+Apply it consistently, never selectively — a caveat appearing only on posts the maintainer happens
+to distrust is editorialising, which is the failure this rule exists to avoid in both directions. It
+never applies to a post that makes no numeric claim. On the eleven posts added the day the rule was
+adopted it fired exactly once. (Maintainer decision, 2026-09-19.)
+
 **Amplification actions** — `REPOSTED · QUOTE-POSTED · MENTIONED · SHARED · CITED · INTERVIEWED`.
 Never upgrade a weak interaction. A mention is not a repost; a repost is not an endorsement unless
 the evidence clearly establishes one.

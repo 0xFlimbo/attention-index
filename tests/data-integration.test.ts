@@ -13,11 +13,11 @@ import { getMediaMetrics } from "@/lib/metrics/media";
 describe("real dataset — derived metrics", () => {
   it("matches the current dataset's expected values", () => {
     const attention = getAttentionMetrics(getPosts());
-    expect(attention.trackedPostCount).toBe(21);
+    expect(attention.trackedPostCount).toBe(32);
     expect(attention.postsOver1M).toBe(17);
     expect(attention.postsOver5M).toBe(0);
     expect(attention.postsOver10M).toBe(0);
-    expect(attention.totalObservedViews).toBe(37_096_943);
+    expect(attention.totalObservedViews).toBe(43_625_943);
     expect(attention.topPost?.views).toBe(4_500_000);
     // Two posts tie at 4.5M — the earlier-published one wins the tie-break.
     expect(attention.topPost?.post.id).toBe("post-layoffai-2063640043387052174");

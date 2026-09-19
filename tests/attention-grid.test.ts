@@ -45,9 +45,9 @@ describe("selectAttentionGridCells — current dataset resolution", () => {
       "OBSERVED VIEWS ACROSS TRACKED POSTS",
     ]);
     expect(cells[0]?.value).toBe("17");
-    expect(cells[1]?.value).toBe("21");
+    expect(cells[1]?.value).toBe("32");
     expect(cells[2]?.value).toBe("4.5M");
-    expect(cells[3]?.value).toBe("37.1M");
+    expect(cells[3]?.value).toBe("43.6M");
 
     // MOST VIEWED TRACKED POST is the only cell tied to one record — it carries
     // a source link and an observation date; the aggregate cells carry neither.
