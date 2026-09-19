@@ -108,8 +108,15 @@ export default function AboutPage() {
             </Link>
             .
           </p>
+          {/*
+            `.text-metadata`, not `.text-body`: this is a CTA in the same register
+            as /evidence's CONTRIBUTE DATA / SUBMIT A CORRECTION row, not a
+            sentence. It shipped at body size and was flagged at the B9 visual
+            review, where it stood out once the CTA block moved to /evidence and
+            left it alone here.
+          */}
           {project.repository_url !== null && (
-            <p className="text-body mt-4 max-w-prose text-ink-soft">
+            <p className="text-metadata mt-4 max-w-prose text-ink-soft">
               <a
                 href={project.repository_url}
                 target="_blank"
