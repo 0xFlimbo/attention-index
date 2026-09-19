@@ -206,12 +206,14 @@ external embeds).
   "check:production-data": "tsx scripts/check-production-data.ts",
   "enrich:twitter": "tsx scripts/enrich-twitter-posts.ts",
   "import:press": "tsx scripts/import-layoffhedge-press.ts",
+  "check:media-mentions": "tsx scripts/check-media-mentions.ts",
   "check:visual": "node scripts/visual-check.mjs"
 }
 ```
 
-`check:visual` is the browser review pass — see §16. It is never part of the pre-deploy pipeline
-below, because it must not run alongside a build.
+`check:visual` is the browser review pass — see §16. `check:media-mentions` is the press-queue
+probe — see §17. Neither is part of the pre-deploy pipeline below: the first must not run
+alongside a build, and the second makes outbound requests to third-party sites.
 
 Pre-deploy pipeline:
 
@@ -429,3 +431,48 @@ job.
 **Never:** `fullPage` on a tall page, `deviceScaleFactor: 2`, more than one browser context, or
 a build/test run while the browser is open. MSYS `pgrep`/`pkill` enumerate nothing on this
 machine — use PowerShell `Get-Process` / `Stop-Process` for cleanup.
+
+---
+
+## 17. Maintenance tool — `pnpm check:media-mentions`
+
+`scripts/check-media-mentions.ts`. **Occasional tool, never production runtime or CI** — it makes
+outbound requests to third-party publishers.
+
+**Strictly read-only.** It reads `data/media.json`, fetches each selected record's `url`, and
+reports whether the page text contains `layoffhedge` or `@LayoffAI`. It never writes to `data/`.
+Promotion stays a human edit, because the tool cannot do the thing that actually matters.
+
+```bash
+pnpm check:media-mentions                       # every needs_review record
+pnpm check:media-mentions --id media-forbes-…   # one record
+pnpm check:media-mentions --limit 10 --delay 1500
+pnpm check:media-mentions --no-proxy            # direct requests only
+```
+
+**A mention is not a verification, and the tool says so every run.** A hit means the string is on
+the page — it could be a sidebar, a related-links rail, an unrelated quote. `docs/WORKPLAN.md`
+B14's bar is unchanged: the article itself is read before a record is promoted, and `country`,
+`provenance` and the featured criterion are filled in the same edit (`docs/DATA.md §7`). What the
+tool buys is that the reading starts from a fetched page with a located mention rather than from
+a bare URL.
+
+**Two things it took a measurement to learn** (2026-09-19, `docs/HISTORY.md`):
+
+- **The `403`s are not a wall.** Sixteen of the 82 press-queue URLs refuse a direct request
+  (BeInCrypto, Financial Express, Sportskeeda, ROI-NJ, Iowa Capital Dispatch and others). Every
+  one of them is retrievable through `r.jina.ai`, so the tool falls back to it on a non-200 —
+  and also when a page returns `200` with no mention, which catches client-rendered articles
+  whose text is not in the served HTML.
+- **The two requests need different headers, and getting this wrong silently disables the
+  fallback.** A publisher refuses a default agent, so the direct request carries a browser
+  user-agent; the proxy refuses *that* user-agent with a `403` of its own. Sending browser
+  headers to both made every blocked record report as "not retrievable" when the proxy would
+  have returned it — the first version of this script shipped that way and the smoke test caught
+  it. Direct and proxy headers are separate constants for that reason.
+
+Pacing defaults to 3 s between records because the proxy throttles a burst, and a throttled
+response is indistinguishable from a hard block in the report.
+
+The per-record report is written to the gitignored `.cache/media-mentions.json`, never into
+canonical JSON.

@@ -13,6 +13,7 @@
     "check:production-data": "tsx scripts/check-production-data.ts",
     "enrich:twitter": "tsx scripts/enrich-twitter-posts.ts",
     "import:press": "tsx scripts/import-layoffhedge-press.ts",
+    "check:media-mentions": "tsx scripts/check-media-mentions.ts",
     "check:visual": "node scripts/visual-check.mjs"
   },
   "dependencies": {
