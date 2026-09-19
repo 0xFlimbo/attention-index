@@ -23,10 +23,11 @@ data/project.json         project metadata (no metrics)
 
 Optional later only if genuinely needed: `people.json`, `organizations.json`, `snapshots/`.
 
-**Current state (2026-09-19):** 32 posts (all `verified`), 10 amplifications (all `verified`),
-100 media references (18 `verified`, 82 `needs_review`), no placeholders. Of the 18 verified
-media records: 17 original, 1 republication, 8 featured, newsrooms in 4 countries. A dated
-reading of the dataset, not a target — derive, never match.
+**Current state (2026-09-19, after B14):** 32 posts (all `verified`), 10 amplifications (all
+`verified`), 103 media references (85 `verified`, 12 `needs_review`, 6 `archived`), no
+placeholders. Of the 85 verified media records: 70 original, 15 republications, 29 featured,
+newsrooms in 5 countries (54 of the 70 originals carry a country; the rest are deliberately
+blank). A dated reading of the dataset, not a target — derive, never match.
 
 ---
 
@@ -451,7 +452,7 @@ broken by smallest `id` (lexicographic) — the same reasoning as `compareArchiv
 
 `selectMediaReferences(mediaReferences: MediaReference[]): MediaReference[]` — the verified,
 sorted media list `/evidence`'s media section renders directly. No filters, no pagination. With
-today's dataset (100 raw records, 18 verified) this resolves to 18 rows. Provenance does not
+today's dataset (103 raw records, 85 verified) this resolves to 85 rows. Provenance does not
 filter this list: `/evidence` is the ledger where every verified record is auditable, and a
 republication is dropped from the derived coverage figures, never from the page that claims to
 list everything.
@@ -492,7 +493,7 @@ statement about the dataset — but its `href` is `null` instead of `/evidence#<
 `EvidenceBlock` never links to an `/evidence` anchor with nothing under it. This document owns the
 sample values; `docs/HOMEPAGE.md §12` draws the section's shape and deliberately prints no counter
 of its own, so the two cannot drift apart again. Read 2026-09-19:
-`POST DATA 32 · AMPLIFICATIONS 10 · MEDIA 18` — a dated reading, never a target to match.
+`POST DATA 32 · AMPLIFICATIONS 10 · MEDIA 85` — a dated reading, never a target to match.
 
 ---
 

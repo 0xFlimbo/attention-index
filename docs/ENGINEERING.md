@@ -474,5 +474,8 @@ a bare URL.
 Pacing defaults to 3 s between records because the proxy throttles a burst, and a throttled
 response is indistinguishable from a hard block in the report.
 
-The per-record report is written to the gitignored `.cache/media-mentions.json`, never into
-canonical JSON.
+The per-record report is written to the gitignored `.cache/media-mentions.json`, and the
+extracted text of every page a run fetched to `.cache/pages/<record-id>.txt` — never into
+canonical JSON. The text is kept because the tool's whole claim is that the reading starts from
+a fetched page with a located mention: storing only the counts made the reader fetch the same URL
+a second time to do the reading the counts exist to enable (added at B14, 2026-09-19).

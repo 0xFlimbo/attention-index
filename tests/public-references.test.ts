@@ -159,10 +159,10 @@ describe("selectPublicationReferences — ordering", () => {
 });
 
 describe("selectPublicationReferences — real dataset", () => {
-  it("matches today's known shape: 18 eligible references across 12 publications, top group 3", () => {
+  it("matches today's known shape: 85 eligible references across 45 publications, top group 17", () => {
     const groups = selectPublicationReferences(getMediaReferences());
-    expect(groups).toHaveLength(12);
-    expect(groups.reduce((sum, group) => sum + group.references.length, 0)).toBe(18);
-    expect(groups[0]?.references.length).toBe(3);
+    expect(groups).toHaveLength(45);
+    expect(groups.reduce((sum, group) => sum + group.references.length, 0)).toBe(85);
+    expect(groups[0]?.references.length).toBe(17);
   });
 });

@@ -26,11 +26,12 @@ describe("real dataset — derived metrics", () => {
     expect(amplification.verifiedAmplificationCount).toBe(10);
 
     const media = getMediaMetrics(getMediaReferences());
-    // 100 records were imported from the official press page; only the reviewed
-    // subset is verified, so the rest must stay out of the public count.
-    expect(media.verifiedMediaReferenceCount).toBe(18);
-    expect(media.uniquePublicationCount).toBe(12);
-    expect(getMediaReferences().length).toBe(100);
+    // 100 records came in from the official press page and B14 added three the
+    // importer had skipped for month-only dates; the queue that B14 could not
+    // read stays out of the public count.
+    expect(media.verifiedMediaReferenceCount).toBe(85);
+    expect(media.uniquePublicationCount).toBe(45);
+    expect(getMediaReferences().length).toBe(103);
   });
 
   it("loads project metadata with the required disclaimer", () => {

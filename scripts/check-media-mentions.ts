@@ -37,6 +37,13 @@ const ROOT = process.cwd();
 const DATA_DIR = resolve(ROOT, "data");
 const CACHE_DIR = resolve(ROOT, ".cache");
 const REPORT_FILE = resolve(CACHE_DIR, "media-mentions.json");
+/**
+ * The extracted text of every page this run fetched, one file per record.
+ * The tool's point is that a human reading starts from a fetched page with a
+ * located mention; keeping only the counts meant the reader had to fetch the
+ * same URL a second time to do the reading the counts exist to enable.
+ */
+const PAGES_DIR = resolve(CACHE_DIR, "pages");
 
 const PROXY = "https://r.jina.ai/";
 /**
@@ -94,6 +101,8 @@ interface ProbeResult {
   httpStatus: number;
   mentions: number;
   textLength: number;
+  /** Where this run left the extracted text, relative to the repo root. */
+  textFile?: string;
   error?: string;
 }
 
@@ -146,6 +155,14 @@ async function fetchThroughProxy(url: string): Promise<{ status: number; text: s
   return { status: 0, text: "" };
 }
 
+/** Writes a record's extracted text next to the report, for reading by hand. */
+function saveText(record: MediaReference, text: string): string {
+  mkdirSync(PAGES_DIR, { recursive: true });
+  const file = resolve(PAGES_DIR, `${record.id}.txt`);
+  writeFileSync(file, [record.url, "", text, ""].join("\n"));
+  return `.cache/pages/${record.id}.txt`;
+}
+
 async function probe(record: MediaReference): Promise<ProbeResult> {
   const base = {
     id: record.id,
@@ -179,6 +196,7 @@ async function probe(record: MediaReference): Promise<ProbeResult> {
     httpStatus,
     mentions,
     textLength: text.length,
+    ...(text.length > 0 ? { textFile: saveText(record, text) } : {}),
     ...(direct.error !== undefined && via === "none" ? { error: direct.error } : {}),
   };
 }

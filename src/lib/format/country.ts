@@ -14,6 +14,7 @@ const COUNTRY_NAMES: Record<string, string> = {
   BG: "Bulgaria",
   CA: "Canada",
   CH: "Switzerland",
+  CN: "China",
   DE: "Germany",
   ES: "Spain",
   FR: "France",

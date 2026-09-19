@@ -53,9 +53,9 @@ describe("selectDatasetSummary — real dataset", () => {
     expect(rows.find((row) => row.key === "media")?.count).toBe(expectedMedia);
   });
 
-  it("excludes needs_review and _placeholder media records — 100 raw records, only 18 verified", () => {
-    expect(input.mediaReferences.length).toBe(100);
-    expect(rows.find((row) => row.key === "media")?.count).toBe(18);
+  it("excludes needs_review and _placeholder media records — 103 raw records, 85 verified", () => {
+    expect(input.mediaReferences.length).toBe(103);
+    expect(rows.find((row) => row.key === "media")?.count).toBe(85);
   });
 
   it("gives every non-zero row a /evidence#<key> href", () => {

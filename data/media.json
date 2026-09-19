@@ -27,17 +27,17 @@
     "published_at": "2026-09-14",
     "url": "https://theunn.com/trine-university-under-scrutiny-for-foreign-student-recruitment-practices/",
     "author": null,
-    "country": null,
-    "provenance": null,
+    "country": "US",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Staff report. Credits the Trine investigation to layoffhedge in prose and points to the @LayoffAI post that carried it. First UNN citation.",
     "related_post_id": null,
-    "featured": false,
+    "featured": true,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-hoosier-enquirer-2026-09-14",
@@ -47,17 +47,17 @@
     "published_at": "2026-09-14",
     "url": "https://www.hoosierenquirer.com/post/the-other-trine-9-123-graduate-students-millions-for-recruiting-and-questions-indiana-deserves-a",
     "author": "Kelly Roberts",
-    "country": null,
-    "provenance": null,
+    "country": "US",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "The Indiana nonprofit newsroom builds its Trine reporting on LayoffHedge's investigation, naming layoffhedge three times and citing LayoffHedge's Form 990 findings on the Gurukul Overseas recruiting payments. First Hoosier Enquirer citation.",
     "related_post_id": null,
-    "featured": false,
+    "featured": true,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-the-post-millennial-2026-09-13",
@@ -87,17 +87,17 @@
     "published_at": "2026-09-13",
     "url": "https://americanbazaaronline.com/2026/09/13/trine-university-foreign-student-recruitment-488047/",
     "author": "Jayujyoti Mullick",
-    "country": null,
-    "provenance": null,
+    "country": "US",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Credits LayoffHedge's Trine University investigation to layoffhedge in prose and embeds the @LayoffAI post. Seventh American Bazaar citation.",
     "related_post_id": null,
-    "featured": false,
+    "featured": true,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-alex-jones-live-2026-09-07",
@@ -108,7 +108,7 @@
     "url": "https://www.alexjoneslive.com/2026/09/07/women-account-for-98-of-august-job-gains/",
     "author": null,
     "country": null,
-    "provenance": null,
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Charles Cornish-Dale builds the piece around LayoffHedge's August jobs post, embedded in full. Third Alex Jones Live citation.",
     "related_post_id": null,
@@ -116,8 +116,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-indiatimes-2026-09-02",
@@ -148,7 +148,7 @@
     "url": "https://geeksandgamers.com/disney-executives-offered-lucrative-voluntary-retirement-packages-amid-mass-layoffs/",
     "author": "Billy Oduory",
     "country": null,
-    "provenance": null,
+    "provenance": "original",
     "syndicated_from": null,
     "context": "First Geeks + Gamers citation. Embeds LayoffHedge's @LayoffAI post breaking the Disney executive buyout memo, which offered early retirement to US staff from director through EVP level and called it step one of much bigger cuts.",
     "related_post_id": null,
@@ -156,8 +156,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-the-gateway-pundit-2026-08-27",
@@ -208,7 +208,7 @@
     "url": "https://thesource.com/2026/08/25/disney-is-cutting-deeper-at-the-top-as-early-retirement-offer-hits-longtime-executives/",
     "author": "Lenox Washington",
     "country": null,
-    "provenance": null,
+    "provenance": "original",
     "syndicated_from": null,
     "context": "First citation from The Source. Embeds LayoffHedge's @LayoffAI post breaking the Disney executive buyout memo, which offered early retirement to US staff from director through EVP level and called it step one of much bigger cuts.",
     "related_post_id": null,
@@ -216,8 +216,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-ibtimes-uk-2026-08-25",
@@ -247,8 +247,8 @@
     "published_at": "2026-08-25",
     "url": "https://americanbazaaronline.com/2026/08/25/disneys-golden-goodbye-executives-offered-rich-exit-package-amid-layoffs/",
     "author": "Shubhangi Chowdhury",
-    "country": null,
-    "provenance": null,
+    "country": "US",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Sixth American Bazaar citation. Links LayoffHedge's @LayoffAI post as the source for the buyout memo, which offered early retirement to US staff from director through EVP level with severance running up to a year.",
     "related_post_id": null,
@@ -256,8 +256,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-breitbart-2026-08-18",
@@ -275,8 +275,8 @@
     "featured": false,
     "logo": null,
     "archive_url": null,
-    "notes": null,
-    "status": "needs_review",
+    "notes": "Archived at B14 review (open question 2): the reference is second-level. Breitbart embeds Rep. Brandon Gill's post, which quote-tweets the @LayoffAI card; Breitbart's own text never names the project, and the outlet's editorial act was choosing Gill's post, not LayoffHedge's. The event is recorded where it belongs, as the amplification amp-brandon-gill-2087634340632998361 against post-layoffai-2087170419027526094.",
+    "status": "archived",
     "verified_at": null
   },
   {
@@ -287,17 +287,17 @@
     "published_at": "2026-08-14",
     "url": "https://indiawest.com/texas-gop-districts-lead-in-h-1b-filing-numbers-despite-state-push-to-restrict-visas/",
     "author": null,
-    "country": null,
-    "provenance": null,
+    "country": "US",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "India-West News Desk. Names layoffhedge as the source of the federal labor data analysis behind the finding that Texas Republican districts lead H-1B filing growth, drawn from 6.9 million Labor Condition Applications.",
     "related_post_id": null,
-    "featured": false,
+    "featured": true,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-newsweek-2026-08-13",
@@ -327,17 +327,17 @@
     "published_at": "2026-08-13",
     "url": "https://thenationalpulse.com/2026/08/13/texas-districts-see-huge-surge-in-h-1b-visa-filings/",
     "author": null,
-    "country": null,
-    "provenance": null,
+    "country": "US",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Second National Pulse citation. Names layoffhedge as the tracker behind the new district-level analysis, carrying the finding that all eight of the fastest-growing H-1B districts sit in Texas.",
     "related_post_id": null,
-    "featured": false,
+    "featured": true,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-self-reliance-central-2026-08-12",
@@ -348,16 +348,16 @@
     "url": "https://selfreliancecentral.com/2026/08/12/curious-how-many-h-1b-visas-have-been-issued-in-your-zip-code-theres-a-site-for-that/",
     "author": "Kelly",
     "country": null,
-    "provenance": null,
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Hyperlinks layoffhedge.com as the source and embeds an @LayoffAI post, walking readers through the congressional district map and the ZIP code lookup.",
     "related_post_id": null,
-    "featured": false,
+    "featured": true,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-current-revolt-2026-08-12",
@@ -367,17 +367,17 @@
     "published_at": "2026-08-12",
     "url": "https://www.currentrevolt.com/p/houston-area-vape-shop-hires-multiple",
     "author": "Tommy Paine",
-    "country": null,
-    "provenance": null,
+    "country": "US",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Names layoffhedge in the body and hyperlinks LayoffHedge's congressional district map twice, pointing readers to the ZIP code lookup across seven million H-1B filings.",
     "related_post_id": null,
-    "featured": false,
+    "featured": true,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-newsweek-2026-08-11",
@@ -407,17 +407,17 @@
     "published_at": "2026-08-03",
     "url": "https://www.ibtimes.co.uk/us-employers-announce-august-layoffs-1812019",
     "author": "Stephanie Cruz",
-    "country": null,
-    "provenance": null,
+    "country": "GB",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Fifteenth IBTimes UK citation. Names layoffhedge as the layoff tracker behind the July job-cut totals, and embeds the @LayoffAI month-end recap post.",
     "related_post_id": null,
-    "featured": false,
+    "featured": true,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-ibtimes-jp-2026-08-03",
@@ -427,17 +427,17 @@
     "published_at": "2026-08-03",
     "url": "https://jp.ibtimes.com/layoffs-august-2026-walmart-amazon-fedex-17-more-companies-cutting-jobs-103315",
     "author": "Stephanie Cruz",
-    "country": null,
-    "provenance": null,
-    "syndicated_from": null,
+    "country": "JP",
+    "provenance": "syndicated",
+    "syndicated_from": "IBTimes UK",
     "context": "First IBTimes Japan pickup, syndicated the same day from IBTimes UK. Names layoffhedge as the tracker behind the July job-cut totals.",
     "related_post_id": null,
     "featured": false,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-the-hr-digest-2026-07-30",
@@ -467,8 +467,8 @@
     "published_at": "2026-07-28",
     "url": "https://www.ibtimes.co.uk/visa-job-cuts-ai-restructuring-1811159",
     "author": "Aiza Moraña",
-    "country": null,
-    "provenance": null,
+    "country": "GB",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Fourteenth IBTimes UK citation. Embeds the @LayoffAI post breaking Visa's 7% workforce cut: 2,600 jobs, with technology and product teams hit hardest.",
     "related_post_id": null,
@@ -476,8 +476,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-breitbart-2026-07-23",
@@ -507,17 +507,17 @@
     "published_at": "2026-07-23",
     "url": "https://americanbazaaronline.com/2026/07/23/uber-cut-customer-service-roles-ai-485147/",
     "author": "Jayujyoti Mullick",
-    "country": null,
-    "provenance": null,
+    "country": "US",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Fifth American Bazaar citation. Sources the whole story to the @LayoffAI post, and cites LayoffHedge's earlier reporting that Uber cut nearly a quarter of its HR division the month before.",
     "related_post_id": null,
-    "featured": false,
+    "featured": true,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-success-2026-07-22",
@@ -587,8 +587,8 @@
     "published_at": "2026-07-15",
     "url": "https://www.ibtimes.co.uk/former-meta-employee-h1b-visa-system-flaws-1808774",
     "author": "Niloy Chakrabarti",
-    "country": null,
-    "provenance": null,
+    "country": "GB",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Twelfth IBTimes UK citation. Quotes the LayoffHedge X post on the H-1B contradiction: \"a temporary visa that runs 14 years is not temporary.\"",
     "related_post_id": null,
@@ -596,8 +596,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-ibtimes-uk-2026-07-14",
@@ -607,8 +607,8 @@
     "published_at": "2026-07-14",
     "url": "https://www.ibtimes.co.uk/meta-ai-layoffs-discrimination-lawsuit-1808660",
     "author": "Christelle May Napiza",
-    "country": null,
-    "provenance": null,
+    "country": "GB",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Eleventh IBTimes UK citation. Embeds two @LayoffAI posts on the 26-employee suit alleging Meta's AI picked workers on medical leave for layoffs.",
     "related_post_id": null,
@@ -616,8 +616,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-inkl-2026-07-14",
@@ -627,7 +627,7 @@
     "published_at": "2026-07-14",
     "url": "https://www.inkl.com/news/ai-decided-who-got-fired-meta-sued-over-claims-ai-selected-workers-on-maternity-and-medical-leave-for-layoffs",
     "author": "Christelle May Napiza",
-    "country": null,
+    "country": "AU",
     "provenance": "syndicated",
     "syndicated_from": "IBTimes UK",
     "context": "Inkl syndication of the IBTimes UK piece, carrying both embedded @LayoffAI posts on the 26-employee suit against Meta.",
@@ -636,8 +636,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-the-american-bazaar-2026-07-14",
@@ -647,17 +647,17 @@
     "published_at": "2026-07-14",
     "url": "https://americanbazaaronline.com/2026/07/14/meta-layoff-forces-h-1b-worker-to-leave-us-484582/",
     "author": "Jayujyoti Mullick",
-    "country": null,
-    "provenance": null,
+    "country": "US",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Fourth American Bazaar citation. Credits @LayoffAI with driving the story and cites LayoffHedge's figure of 333,000+ LCA filings from the worker's former employers since FY2015.",
     "related_post_id": null,
-    "featured": false,
+    "featured": true,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-ibtimes-uk-2026-07-06",
@@ -688,16 +688,36 @@
     "url": "https://mwakilishi.com/news/2026-07-06/us-approves-273026-h-1b-renewals-in-first-nine-months-of-fy2026",
     "author": "Martin Olage",
     "country": null,
-    "provenance": null,
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Kenyan-American news outlet crediting layoffhedge as the source whose USCIS-data analysis produced the 273,026 continuing-employment H-1B approvals recorded in the first nine months of FY2026.",
+    "related_post_id": null,
+    "featured": true,
+    "logo": null,
+    "archive_url": null,
+    "notes": null,
+    "status": "verified",
+    "verified_at": "2026-09-19"
+  },
+  {
+    "id": "media-times-now-2026-07-04",
+    "publication": "Times Now",
+    "title": "Trump Administration Approves Record H-1B Visa Renewals Despite Crackdown Push",
+    "reference_type": "article",
+    "published_at": "2026-07-04",
+    "url": "https://www.timesnownews.com/world/us/us-news/trump-administration-approves-record-h-1b-visa-renewals-despite-crackdown-push-article-154920748",
+    "author": "Naman Trivedi",
+    "country": "IN",
+    "provenance": "syndicated",
+    "syndicated_from": "Newsweek",
+    "context": "Names LayoffHedge as the workforce analytics firm behind the 273,026 continuing-employment H-1B approvals recorded in the first nine months of FY2026, and attributes the expert interviews it carries to Newsweek.",
     "related_post_id": null,
     "featured": false,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-newsweek-2026-07-03",
@@ -720,6 +740,26 @@
     "verified_at": "2026-09-17"
   },
   {
+    "id": "media-ndtv-2026-07-03",
+    "publication": "NDTV",
+    "title": "Trump Tightened H-1B Visa Rules, Then Renewals Hit Record High",
+    "reference_type": "article",
+    "published_at": "2026-07-03",
+    "url": "https://www.ndtv.com/world-news/donald-trump-tightened-h-1b-visa-rules-then-renewals-hit-record-high-11724428",
+    "author": null,
+    "country": "IN",
+    "provenance": "syndicated",
+    "syndicated_from": "Newsweek",
+    "context": "Names LayoffHedge as the workforce analytics firm whose USCIS review found 273,026 continuing-employment H-1B approvals in the first nine months of FY2026, and credits Newsweek for the reporting it carries.",
+    "related_post_id": null,
+    "featured": false,
+    "logo": null,
+    "archive_url": null,
+    "notes": null,
+    "status": "verified",
+    "verified_at": "2026-09-19"
+  },
+  {
     "id": "media-the-gpu-trade-2026-07-01",
     "publication": "The GPU Trade",
     "title": "Concentrated Churn, Active Hiring in Agentic AI",
@@ -728,27 +768,27 @@
     "url": "https://thegputrade.com/news/concentrated-churn-active-hiring-in-agentic-ai-q1i90ut2/",
     "author": "Mark J. Harvilla",
     "country": null,
-    "provenance": null,
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Cites layoffhedge's June 2026 summary (147,618 jobs cut for the month) as the authority on monthly layoff tallies.",
     "related_post_id": null,
-    "featured": false,
+    "featured": true,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-the-deep-dive-canada-2026-07-01",
-    "publication": "The Deep Dive (Canada)",
+    "publication": "The Deep Dive",
     "title": "Microsoft Set to Cut Over 5,000 Jobs This Week, Sales and Xbox Hit Hardest",
     "reference_type": "article",
     "published_at": "2026-07-01",
     "url": "https://thedeepdive.ca/microsoft-set-to-cut-over-5000-jobs-this-week-sales-and-xbox-hit-hardest/",
     "author": "JP Alegre",
-    "country": null,
-    "provenance": null,
+    "country": "CA",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Third Deep Dive citation. Embeds the @LayoffAI post on the 5,000-plus Microsoft cut and the company's rank as the sixth largest H-1B filer since 2020.",
     "related_post_id": null,
@@ -756,8 +796,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-ibtimes-uk-2026-06-30",
@@ -767,8 +807,8 @@
     "published_at": "2026-06-30",
     "url": "https://www.ibtimes.co.uk/us-job-cuts-surge-may-2026-ai-tech-sector-1805876",
     "author": "Stephanie Cruz",
-    "country": null,
-    "provenance": null,
+    "country": "GB",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Eighth IBTimes UK citation. Embeds the @LayoffAI post on Groupon replacing ~25% of its workforce with AI voice agents.",
     "related_post_id": null,
@@ -776,8 +816,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-happygamer-2026-06-30",
@@ -788,7 +828,7 @@
     "url": "https://happygamer.com/bungie-cuts-half-staff-destiny-2-wind-down-marathon-158197/",
     "author": "Rachel Emerson",
     "country": null,
-    "provenance": null,
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Gaming outlet embedding the @LayoffAI post that broke Bungie cutting ~400 people (half its remaining staff) as it winds down Destiny 2 and hits Marathon.",
     "related_post_id": null,
@@ -796,8 +836,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-ibtimes-uk-2026-06-25",
@@ -807,8 +847,8 @@
     "published_at": "2026-06-25",
     "url": "https://www.ibtimes.co.uk/walmart-job-cuts-sunnyvale-tech-campus-1805005",
     "author": "Stephanie Cruz",
-    "country": null,
-    "provenance": null,
+    "country": "GB",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Ninth IBTimes UK citation. Embeds the @LayoffAI post reading the WARN notices behind Walmart's 300+ tech cuts at the former Meta Sunnyvale campus and its ongoing H-1B filings.",
     "related_post_id": null,
@@ -816,8 +856,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-ibtimes-uk-2026-06-23",
@@ -827,8 +867,8 @@
     "published_at": "2026-06-23",
     "url": "https://www.ibtimes.co.uk/lucid-group-cuts-workforce-financial-struggles-1804406",
     "author": "Christelle May Napiza",
-    "country": null,
-    "provenance": null,
+    "country": "GB",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Embeds the @LayoffAI post on Lucid's roughly 1,500-job second round, following the EV-maker cuts at Rivian the week prior.",
     "related_post_id": null,
@@ -836,8 +876,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-ibtimes-uk-2026-06-16",
@@ -847,8 +887,8 @@
     "published_at": "2026-06-16",
     "url": "https://www.ibtimes.co.uk/meta-employees-resist-hackathon-amidst-layoffs-1803149",
     "author": "Christelle May Napiza",
-    "country": null,
-    "provenance": null,
+    "country": "GB",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Seventh IBTimes UK citation. Embeds the @LayoffAI post on Meta's internal chaos, including the livestreamed all-hands interrupted by an expletive-filled employee rant.",
     "related_post_id": null,
@@ -856,8 +896,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-inkl-2026-06-16",
@@ -867,7 +907,7 @@
     "published_at": "2026-06-16",
     "url": "https://www.inkl.com/news/mark-zuckerberg-orders-surviving-meta-staff-to-have-fun-following-brutal-job-cuts",
     "author": null,
-    "country": null,
+    "country": "AU",
     "provenance": "syndicated",
     "syndicated_from": "IBTimes UK",
     "context": "Inkl syndication of the IBTimes UK Meta piece, carrying the @LayoffAI post on Meta's internal chaos to a wider aggregator audience.",
@@ -876,8 +916,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-ibtimes-uk-2026-06-11",
@@ -887,8 +927,8 @@
     "published_at": "2026-06-11",
     "url": "https://www.ibtimes.co.uk/meta-reliance-ai-data-centre-india-1802085",
     "author": "Stephanie Cruz",
-    "country": null,
-    "provenance": null,
+    "country": "GB",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Embeds the @LayoffAI post laying out Meta's escalating cuts, from the March 20%-or-more reports to the 8,000 jobs in May.",
     "related_post_id": null,
@@ -896,8 +936,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-iowa-capital-dispatch-2026-06-10",
@@ -907,17 +947,17 @@
     "published_at": "2026-06-10",
     "url": "https://iowacapitaldispatch.com/2026/06/10/reynolds-state-it-jobs-will-be-filled-by-iowans-after-privatization-move/",
     "author": "Robin Opsahl",
-    "country": null,
-    "provenance": null,
+    "country": "US",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Names LayoffHedge as the \"layoff tracker\" behind the H-1B ranking (Cognizant 3rd, Amazon 2nd) that fueled the governor's-race fight over Iowa's 200-job IT outsourcing to Cognizant.",
     "related_post_id": null,
-    "featured": false,
+    "featured": true,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-the-american-bazaar-2026-06-10",
@@ -927,8 +967,8 @@
     "published_at": "2026-06-10",
     "url": "https://americanbazaaronline.com/2026/06/10/dell-sec-filing-signals-more-workforce-cuts-as-severance-costs-climb-482584/",
     "author": "Shubhangi Chowdhury",
-    "country": null,
-    "provenance": null,
+    "country": "US",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Third American Bazaar citation. Links the @LayoffAI post that read Dell's new 10-Q: $227M in severance in 13 weeks (up 75% YoY), $242M more already set aside.",
     "related_post_id": null,
@@ -936,8 +976,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-ibtimes-uk-2026-06-09",
@@ -947,8 +987,8 @@
     "published_at": "2026-06-09",
     "url": "https://www.ibtimes.co.uk/sam-altman-openai-ipo-tools-humanity-layoffs-1801636",
     "author": "Brian Yalung",
-    "country": null,
-    "provenance": null,
+    "country": "GB",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Sixth IBTimes UK citation. Embeds the @LayoffAI / LayoffHedge post breaking the Tools for Humanity layoff memo on the same day OpenAI filed its IPO.",
     "related_post_id": null,
@@ -956,8 +996,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-fox-news-2026-06-05",
@@ -988,7 +1028,7 @@
     "url": "https://www.alexjoneslive.com/2026/06/05/nearly-all-new-americans-jobs-go-to-foreigners-yet-foreigners-are-also-major-welfare-recipients/",
     "author": null,
     "country": null,
-    "provenance": null,
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Second Alex Jones Live pickup. Carries the recurring @LayoffAI \"9 of every 10 new American jobs\" thread to a new audience inside the alt-media ecosystem.",
     "related_post_id": null,
@@ -996,8 +1036,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-zerohedge-2026-06-05",
@@ -1067,7 +1107,7 @@
     "published_at": "2026-06-03",
     "url": "https://www.inkl.com/news/ai-is-not-responsible-uber-layoffs-hit-23-of-hr-and-recruitment-staff-to-fix-complicated-teams",
     "author": "Vinay Patel",
-    "country": null,
+    "country": "AU",
     "provenance": "syndicated",
     "syndicated_from": "IBTimes UK",
     "context": "Embeds the @LayoffAI post catching Uber's contradiction: CEO Khosrowshahi said AI will replace 70-80% of human work, then framed today's People-division cuts as unrelated to AI.",
@@ -1076,8 +1116,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-inkl-2026-06-02",
@@ -1087,7 +1127,7 @@
     "published_at": "2026-06-02",
     "url": "https://www.inkl.com/news/jensen-huang-calls-ai-job-loss-fears-complete-nonsense-as-107-000-tech-jobs-vanish-in-2026",
     "author": "Niloy Chakrabarti",
-    "country": null,
+    "country": "AU",
     "provenance": "syndicated",
     "syndicated_from": "IBTimes UK",
     "context": "Hyperlinks layoffhedge.com/industry/tech-layoffs-2026 directly to contradict Huang: 172,130 jobs lost YTD, 107,775 attributed to AI.",
@@ -1096,8 +1136,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-ibtimes-uk-2026-06-02",
@@ -1107,17 +1147,17 @@
     "published_at": "2026-06-02",
     "url": "https://www.ibtimes.co.uk/nvidia-ceo-jensen-huang-debunks-ai-job-loss-myths-1800266",
     "author": "Niloy Chakrabarti",
-    "country": null,
-    "provenance": null,
+    "country": "GB",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Original IBTimes UK piece (later syndicated by Inkl). Hyperlinks layoffhedge.com/industry/tech-layoffs-2026 to contradict Huang's \"nonsense\" framing with LayoffHedge's 172,130 YTD jobs / 107,775 AI-attributed numbers.",
     "related_post_id": null,
-    "featured": false,
+    "featured": true,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-the-national-pulse-2026-06-01",
@@ -1127,17 +1167,17 @@
     "published_at": "2026-06-01",
     "url": "https://thenationalpulse.com/2026/06/01/foreigners-have-taken-90-percent-of-post-covid-u-s-jobs/",
     "author": null,
-    "country": null,
-    "provenance": null,
+    "country": "US",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Embeds two Official Layoff / @LayoffAI tweets (the \"42x faster\" foreign-born employment stat and the May 29 follow-up) and attributes LayoffHedge's 335,000+ layoff tracking total as a data source.",
     "related_post_id": null,
-    "featured": false,
+    "featured": true,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-inkl-2026-05-28",
@@ -1147,7 +1187,7 @@
     "published_at": "2026-05-28",
     "url": "https://www.inkl.com/news/sudden-lockout-no-warning-webflow-worker-on-foreign-work-permit-asks-ceo-do-i-still-have-a-job",
     "author": null,
-    "country": null,
+    "country": "AU",
     "provenance": "syndicated",
     "syndicated_from": "IBTimes UK",
     "context": "Inkl syndication of the IBTimes UK report. Embeds the @LayoffAI post carrying CEO Linda Tong's full restructuring blog.",
@@ -1156,8 +1196,28 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
+  },
+  {
+    "id": "media-news18-2026-05-28",
+    "publication": "News18",
+    "title": "'Do I Still Have A Job?': Webflow Employee Asked After Sudden Laptop Lockout Before Layoff Blog",
+    "reference_type": "article",
+    "published_at": "2026-05-28",
+    "url": "https://www.news18.com/business/economy/do-i-still-have-a-job-webflow-employee-asked-after-sudden-laptop-lockout-before-layoff-blog-ws-l-10117136.html",
+    "author": "Varun Yadav",
+    "country": "IN",
+    "provenance": "original",
+    "syndicated_from": null,
+    "context": "Embeds the @LayoffAI post that broke the Webflow lockout, in which an employee asked the CEO on LinkedIn whether they still had a job before the restructuring blog went up.",
+    "related_post_id": null,
+    "featured": false,
+    "logo": null,
+    "archive_url": null,
+    "notes": null,
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-ibtimes-uk-2026-05-27",
@@ -1167,8 +1227,8 @@
     "published_at": "2026-05-27",
     "url": "https://www.ibtimes.co.uk/groupon-ai-restructuring-job-cuts-1799091",
     "author": "Akshay Puri",
-    "country": null,
-    "provenance": null,
+    "country": "GB",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Third IBTimes UK citation. Embeds the @LayoffAI tweet that broke the Groupon 25% cut and AI voice-agent rebuild.",
     "related_post_id": null,
@@ -1176,8 +1236,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-inkl-2026-05-27",
@@ -1187,7 +1247,7 @@
     "published_at": "2026-05-27",
     "url": "https://www.inkl.com/news/groupon-cuts-25-workforce-globally-ai-voice-agents-replacing-human-sales-workers-will-save-up-to-25m",
     "author": null,
-    "country": null,
+    "country": "AU",
     "provenance": "syndicated",
     "syndicated_from": "IBTimes UK",
     "context": "Inkl syndication of the IBTimes UK report. Carries the @LayoffAI alert that broke the Groupon 25% cut and AI voice-agent rebuild.",
@@ -1196,8 +1256,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-glass-almanac-2026-05-23",
@@ -1208,7 +1268,7 @@
     "url": "https://glassalmanac.com/many-leaders-will-announce-org-changes-sparks-staff-revolt-in-2026-what-happens-next/",
     "author": "Emily Thompson",
     "country": null,
-    "provenance": null,
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Second Glass Almanac citation. Embeds two @LayoffAI posts: the 8,000-cut / 7,000-reassign Meta breakdown and the 1,000-employee petition against keystroke and screenshot surveillance.",
     "related_post_id": null,
@@ -1216,8 +1276,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-alex-jones-live-2026-05-20",
@@ -1228,16 +1288,16 @@
     "url": "https://www.alexjoneslive.com/2026/05/20/meta-axes-8000-workers-as-zuckerberg-admits-ai-is-watching-replacing-labor/",
     "author": null,
     "country": null,
-    "provenance": null,
-    "syndicated_from": null,
+    "provenance": "syndicated",
+    "syndicated_from": "ZeroHedge",
     "context": "Republished from ZeroHedge. Carries the embedded Official Layoff / @LayoffAI leaked-audio post to the Alex Jones Live audience.",
     "related_post_id": null,
     "featured": false,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-people-and-computers-israel-2026-05-20",
@@ -1261,14 +1321,14 @@
   },
   {
     "id": "media-the-deep-dive-canada-2026-05-20",
-    "publication": "The Deep Dive (Canada)",
+    "publication": "The Deep Dive",
     "title": "Leaked Audio Surfaces as Meta Begins Laying Off 8,000 Workers",
     "reference_type": "article",
     "published_at": "2026-05-20",
     "url": "https://thedeepdive.ca/leaked-audio-surfaces-as-meta-begins-laying-off-8000-workers/",
     "author": "JP Alegre",
-    "country": null,
-    "provenance": null,
+    "country": "CA",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Embeds the Official Layoff / @LayoffAI post that broke the Zuckerberg all-hands leaked audio on AI device tracking. Second Deep Dive citation.",
     "related_post_id": null,
@@ -1276,19 +1336,19 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-digit-india-2026-05-20",
-    "publication": "Digit (India)",
+    "publication": "Digit",
     "title": "Mark Zuckerberg leaked voice memo: Meta will train AI on employees work and keep plans confidential",
     "reference_type": "article",
     "published_at": "2026-05-20",
     "url": "https://www.digit.in/news/general/mark-zuckerberg-leaked-voice-memo-meta-will-train-ai-on-employees-work-and-keep-plans-confidential.html",
     "author": "Bhaskar Sharma",
-    "country": null,
-    "provenance": null,
+    "country": "IN",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Indian tech publication embedding the @LayoffAI post as standalone evidence of the leaked Zuckerberg all-hands audio.",
     "related_post_id": null,
@@ -1296,8 +1356,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-slay-news-2026-05-20",
@@ -1307,8 +1367,8 @@
     "published_at": "2026-05-20",
     "url": "https://slaynews.com/metas-mass-purge-workers-sparks-alarm-zuckerberg-admits-leaked-audio-training-ai-to-replace-employees/",
     "author": null,
-    "country": null,
-    "provenance": null,
+    "country": "US",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Coverage of the @LayoffAI leaked-audio breakthrough as it spread across conservative-news distribution.",
     "related_post_id": null,
@@ -1316,8 +1376,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-the-american-bazaar-2026-05-20",
@@ -1327,8 +1387,8 @@
     "published_at": "2026-05-20",
     "url": "https://americanbazaaronline.com/2026/05/20/intuit-job-cuts-hit-3000-as-it-expands-ai-across-turbotax-mailchimp-credit-karma-481185/",
     "author": "Jayujyoti Mullick",
-    "country": null,
-    "provenance": null,
+    "country": "US",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Hyperlinks an @LayoffAI post as the source that drove \"widespread discussion\" connecting the 17% Intuit workforce cut to its AI investments. Second American Bazaar citation.",
     "related_post_id": null,
@@ -1336,8 +1396,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-zerohedge-2026-05-19",
@@ -1368,7 +1428,7 @@
     "url": "https://kingy.ai/ai/meta-layoffs-2026-leaked-memo-reveals-8000-cut-at-4-am-wednesday/",
     "author": "Curtis Pyke",
     "country": null,
-    "provenance": null,
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Hyperlinks the \"viral @LayoffAI thread\" and quotes LayoffHedge's framing directly: \"Meta is rebuilding the company around fewer people. Everyone staying is getting moved into AI roles.\"",
     "related_post_id": null,
@@ -1376,8 +1436,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-beincrypto-2026-05-19",
@@ -1421,34 +1481,34 @@
   },
   {
     "id": "media-free-press-journal-india-2026-05-18",
-    "publication": "Free Press Journal (India)",
+    "publication": "Free Press Journal",
     "title": "Meta Layoff Horror: Employee Says It Almost Feels Like 'Doomsday' On Eve Of Job Cuts",
     "reference_type": "article",
     "published_at": "2026-05-18",
     "url": "https://www.freepressjournal.in/tech/meta-layoff-horror-employee-says-it-almost-feels-like-doomsday-on-eve-of-job-cuts-recalls-people-stuffing-bags-with-free-snacks-drinks-chargers",
     "author": null,
-    "country": null,
-    "provenance": null,
+    "country": "IN",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Indian English-language daily naming LayoffAI as the \"layoff tracker\" that aggregated accounts of Meta's pre-layoff atmosphere alongside the SF Standard.",
     "related_post_id": null,
-    "featured": false,
+    "featured": true,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-the-deep-dive-canada-2026-05-18",
-    "publication": "The Deep Dive (Canada)",
+    "publication": "The Deep Dive",
     "title": "Starbucks Cuts 300 Corporate Jobs and Closes Four Regional Offices",
     "reference_type": "article",
     "published_at": "2026-05-18",
     "url": "https://thedeepdive.ca/starbucks-cuts-300-corporate-jobs-and-closes-four-regional-offices/",
     "author": "JP Alegre",
-    "country": null,
-    "provenance": null,
+    "country": "CA",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Embeds an Official Layoff / @LayoffAI tweet as corroborating evidence on the executive-level cuts and $400K-per-head severance math.",
     "related_post_id": null,
@@ -1456,8 +1516,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-beincrypto-2026-05-16",
@@ -1487,17 +1547,17 @@
     "published_at": "2026-05-13",
     "url": "https://www.ibtimes.co.uk/gm-restructures-workforce-ai-future-1796547",
     "author": "Vinay Patel",
-    "country": null,
-    "provenance": null,
+    "country": "GB",
+    "provenance": "original",
     "syndicated_from": null,
-    "context": "Embeds two @LayoffAI tweets as the primary sourcing on GM's 500-600 IT cuts and the foreign-labor rehire pattern. Second IBTimes UK citation after the Daily Wire piece.",
+    "context": "Embeds the @LayoffAI post on GM's 500-600 IT cuts and the company's rank as the #2 H-1B employer in Michigan, alongside a second embedded post from a different tracking account. Second IBTimes UK citation after the Daily Wire piece.",
     "related_post_id": null,
     "featured": false,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-townhall-2026-05-10",
@@ -1568,7 +1628,7 @@
     "url": "https://glassalmanac.com/meta-reveals-10-cut-on-may-20-2026-why-reality-labs-strategy-shifts-now/",
     "author": "Emily Thompson",
     "country": null,
-    "provenance": null,
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Embeds the @LayoffAI tweet that broke the May 20 Meta layoff date alongside LayoffHedge's 15,800-headcount projection.",
     "related_post_id": null,
@@ -1576,8 +1636,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-woozle-research-2026-05-07",
@@ -1588,7 +1648,7 @@
     "url": "https://insights.woozleresearch.com/coinbases-ai-native-gambit-structural-transformation-or-cyclical-cost-cut-in-disguise/",
     "author": null,
     "country": null,
-    "provenance": null,
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Independent research firm citing layoffhedge by name with a direct quote on Coinbase's \"one person teams\" experiment and the implications for software industry headcount.",
     "related_post_id": null,
@@ -1596,28 +1656,28 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-candace-owens-ep-332-2026-05-05",
-    "publication": "Candace Owens (Ep 332)",
+    "publication": "Candace Owens",
     "title": "Daily Wire COLLAPSES! Ben Shapiro Wants REVENGE.",
     "reference_type": "podcast",
     "published_at": "2026-05-05",
     "url": "https://www.youtube.com/watch?v=uC_GjKU8rs8",
     "author": null,
     "country": null,
-    "provenance": null,
+    "provenance": "original",
     "syndicated_from": null,
-    "context": "Candace Owens names layoffhedge.com on-camera, quoting LayoffHedge's 60%+ cumulative Daily Wire workforce reduction estimate. Full transcript available via Happy Scribe.",
+    "context": "At 12:04 Owens reads an X analysis post by Akash Gupta aloud on the Daily Wire layoffs, naming layoffhedge.com as the source of the estimate that cumulative headcount reduction passed 60% over the previous year.",
     "related_post_id": null,
-    "featured": false,
+    "featured": true,
     "logo": null,
     "archive_url": null,
-    "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "notes": "Verified by listening (maintainer, 2026-09-19). The citation is audio only and no fetch can confirm it: the YouTube watch page returns a 280-byte shell to every request tried. Newsroom country left null — the show publishes no citable statement of where it is produced.",
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-startup-ecosystem-2026-05-05",
@@ -1635,8 +1695,8 @@
     "featured": false,
     "logo": null,
     "archive_url": null,
-    "notes": null,
-    "status": "needs_review",
+    "notes": "Archived at B14 review (open question 14): a link-roundup card listing layoffhedge.com/company/coinbase beside other outlets' stories. The page carries no reporting of its own, so it is neither original nor syndicated, and a link surface is not a publication reference.",
+    "status": "archived",
     "verified_at": null
   },
   {
@@ -1647,17 +1707,17 @@
     "published_at": "2026-05-03",
     "url": "https://www.ibtimes.co.uk/daily-wire-layoffs-ben-shapiro-decline-1794839",
     "author": "Chelsie Napiza",
-    "country": null,
-    "provenance": null,
+    "country": "GB",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Calls layoffhedge.com an \"independent industry tracker\" and cites it twice as the primary source for Daily Wire headcount estimates.",
     "related_post_id": null,
-    "featured": false,
+    "featured": true,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-inkl-2026-05-03",
@@ -1667,7 +1727,7 @@
     "published_at": "2026-05-03",
     "url": "https://www.inkl.com/news/the-daily-wire-slashes-half-of-workforce-as-ben-shapiro-youtube-viewership-plummets-by-85-since-last-year",
     "author": null,
-    "country": null,
+    "country": "AU",
     "provenance": "syndicated",
     "syndicated_from": "IBTimes UK",
     "context": "Inkl syndication of the IBTimes UK report. Names layoffhedge.com as the independent tracker behind both Daily Wire headcount estimates.",
@@ -1676,8 +1736,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-forbes-digital-assets-2026-04-24",
@@ -1707,17 +1767,17 @@
     "published_at": "2026-04-22",
     "url": "https://tennesseeconservativenews.com/tennessee-tops-new-report-for-states-with-highest-foreign-born-population-jobs-rate/",
     "author": "Olivia Lupia",
-    "country": null,
-    "provenance": null,
+    "country": "US",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Treats layoffhedge as a primary data source. Hyperlinks layoffhedge.com and multiple @LayoffAI posts; credits \"Official Layoff / Layoffhedge\" in the lead image.",
     "related_post_id": null,
-    "featured": false,
+    "featured": true,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-roi-nj-2026-04-22",
@@ -1727,17 +1787,17 @@
     "published_at": "2026-04-22",
     "url": "https://www.roi-nj.com/2026/04/22/healthcare/bristol-myers-squibb-files-warn-notice-for-206-jobs/",
     "author": null,
-    "country": null,
-    "provenance": null,
+    "country": "US",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "New Jersey business publication citing the layoffhedge.com layoff tracker for Bristol Myers Squibb workforce reduction context.",
     "related_post_id": null,
-    "featured": false,
+    "featured": true,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-not-the-bee-2026-04-21",
@@ -1748,7 +1808,7 @@
     "url": "https://notthebee.com/article/report-9-out-of-every-10-hires-in-the-us-since-2020-have-gone-to-foreigners",
     "author": null,
     "country": null,
-    "provenance": null,
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Picked up the viral @LayoffAI \"9 of every 10 new American jobs\" data post for a wider conservative-news audience.",
     "related_post_id": null,
@@ -1756,8 +1816,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-ifunny-2026-04-21",
@@ -1775,8 +1835,8 @@
     "featured": false,
     "logo": null,
     "archive_url": null,
-    "notes": null,
-    "status": "needs_review",
+    "notes": "Archived at B14 review: the page is a user's meme repost of an @LayoffAI screenshot, posted by the account DankMemerr, not a reference published by an outlet.",
+    "status": "archived",
     "verified_at": null
   },
   {
@@ -1788,16 +1848,16 @@
     "url": "https://www.panewslab.com/en/articles/019da4ef-9f34-747c-a49d-b7208f19ddda",
     "author": null,
     "country": null,
-    "provenance": null,
-    "syndicated_from": null,
+    "provenance": "syndicated",
+    "syndicated_from": "Odaily",
     "context": "Cites @LayoffAI on Meta's internal AI-driven performance evaluation policy.",
     "related_post_id": null,
     "featured": false,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-kucoin-news-2026-04-18",
@@ -1808,16 +1868,16 @@
     "url": "https://www.kucoin.com/news/flash/meta-to-begin-major-ai-driven-layoffs-in-may",
     "author": null,
     "country": null,
-    "provenance": null,
-    "syndicated_from": null,
+    "provenance": "syndicated",
+    "syndicated_from": "MarsBit",
     "context": "Quotes @LayoffAI on Meta incorporating AI-driven impact into performance reviews.",
     "related_post_id": null,
     "featured": false,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-odaily-2026-04-18",
@@ -1827,17 +1887,17 @@
     "published_at": "2026-04-18",
     "url": "https://www.odaily.news/en/post/5210344",
     "author": "Azuma",
-    "country": null,
-    "provenance": null,
+    "country": "CN",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Cites @LayoffAI as a primary source on Meta's AI-driven performance policy.",
     "related_post_id": null,
-    "featured": false,
+    "featured": true,
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-binance-square-2026-04-18",
@@ -1855,8 +1915,8 @@
     "featured": false,
     "logo": null,
     "archive_url": null,
-    "notes": null,
-    "status": "needs_review",
+    "notes": "Archived at B14 review (open question 14): a distribution surface for a piece published elsewhere, carrying no reporting of its own, so neither provenance value describes it. The article's text is also not in the served page.",
+    "status": "archived",
     "verified_at": null
   },
   {
@@ -1875,8 +1935,8 @@
     "featured": false,
     "logo": null,
     "archive_url": null,
-    "notes": null,
-    "status": "needs_review",
+    "notes": "Archived at B14 review (open question 14): a distribution surface for a piece published elsewhere, carrying no reporting of its own, so neither provenance value describes it. The article's text is also not in the served page.",
+    "status": "archived",
     "verified_at": null
   },
   {
@@ -1915,20 +1975,20 @@
     "featured": false,
     "logo": null,
     "archive_url": null,
-    "notes": null,
-    "status": "needs_review",
+    "notes": "Archived at B14 review: a promotional profile of LayoffHedge in the site's newsroom placement section, bylined to the outlet itself and quoting the developer, rather than an outlet citing the project's data.",
+    "status": "archived",
     "verified_at": null
   },
   {
     "id": "media-the-deep-dive-canada-2026-04-15",
-    "publication": "The Deep Dive (Canada)",
+    "publication": "The Deep Dive",
     "title": "Disney Cuts 1,000 Jobs in New CEO's First Major Move",
     "reference_type": "article",
     "published_at": "2026-04-15",
     "url": "https://thedeepdive.ca/disney-cuts-1000-jobs-in-new-ceos-first-major-move/",
     "author": "JP Alegre",
-    "country": null,
-    "provenance": null,
+    "country": "CA",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Embeds the @LayoffAI post naming Disney's internal codename for the round, Project Imagine, and the CEO email that opened it.",
     "related_post_id": null,
@@ -1936,8 +1996,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-the-american-bazaar-2026-04-14",
@@ -1947,8 +2007,8 @@
     "published_at": "2026-04-14",
     "url": "https://americanbazaaronline.com/2026/04/14/social-media-speculates-oracle-layoffs-may-be-linked-to-h-1b-hiring-478914/",
     "author": "Vishnu Kaimal",
-    "country": null,
-    "provenance": null,
+    "country": "US",
+    "provenance": "original",
     "syndicated_from": null,
     "context": "Cites and links an @LayoffAI post on the Oracle layoffs and H-1B hiring connection.",
     "related_post_id": null,
@@ -1956,8 +2016,8 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   },
   {
     "id": "media-financial-express-2026-04-12",
@@ -1987,7 +2047,7 @@
     "published_at": "2026-04-03",
     "url": "https://www.inkl.com/news/oracle-layoffs-10-000-staff-axed-in-global-6-am-email-from-anonymous-leadership",
     "author": "Maybelyn B. Paden",
-    "country": null,
+    "country": "AU",
     "provenance": "syndicated",
     "syndicated_from": "IBTimes UK",
     "context": "Inkl syndication of the IBTimes UK report, embedding the @LayoffAI post on Oracle's unsigned 6 AM layoff email.",
@@ -1996,7 +2056,7 @@
     "logo": null,
     "archive_url": null,
     "notes": null,
-    "status": "needs_review",
-    "verified_at": null
+    "status": "verified",
+    "verified_at": "2026-09-19"
   }
 ]
