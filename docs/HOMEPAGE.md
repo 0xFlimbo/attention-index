@@ -21,13 +21,16 @@ The homepage is a **scroll-driven editorial story backed by verifiable data**, n
 07 Viral Archive
 08 Public References
 09 Evidence / Sources
-10 Token (optional, omit in V1)
+10 Closing line
 11 Footer
 ```
 
 Build order differs from display order — see `docs/WORKPLAN.md`.
 
-Anchors: `#top #attention #crossover #amplified #archive #references #evidence`.
+Anchors: `#top #attention #crossover #amplified #archive #references #evidence #project`.
+
+`#project` is the closing line (`§13`, B15). Like every other section anchor it exists for
+deep-linking and for review captures, not for navigation — `§3` fixes the nav at five entries.
 
 Rhythm rule: alternate large editorial statements → data blocks → archive/database views →
 evidence blocks. Never "heading + four rounded cards" repeated down the page.
@@ -372,9 +375,49 @@ Treatment: **dark panel inside a cream section** (`--color-panel-dark`) — cont
 
 ---
 
-## 13. Token (10) — omitted in V1
+## 13. Closing line (10) — shipped in B15
 
-If enabled later: small, late, factual.
+One factual statement and one link to the project this site measures, which until B15 was
+reachable only from the footer and `/about`. Approved copy:
+
+```text
+ATTENTION CAME FIRST.
+
+This site documents the public attention around LayoffHedge.
+The project itself publishes at layoffhedge.com.
+
+OFFICIAL LAYOFFHEDGE ↗
+```
+
+**It is information, not a recommendation.** No imperative verb, no community recruitment, no
+token, no purchase path (`docs/WORKPLAN.md`, `Decisions already made` item (c)). "Join the
+community" is an implied endorsement, which `CLAUDE.md §3` bans by name, and this site grows by
+being cited rather than by converting readers. The second sentence says where the destination is;
+it never suggests going there.
+
+Three calls made at the B15 plan, with the maintainer:
+
+- **`OFFICIAL LAYOFFHEDGE ↗`, not `OFFICIAL PROJECT ↗`.** The batch title used the latter, but
+  the footer (`§14`) and `/about` already ship the former for this exact URL, and
+  `docs/EDITORIAL.md §9` wants link text that survives out of context. One destination, one
+  label — a third wording adds vocabulary and no information.
+- **No disclaimer inside the block.** The hero (`§4`) carries `project.disclaimer` and the
+  footer's long form sits immediately below this section, so the independence statement already
+  brackets it on both sides. Re-examine if the section ever moves.
+- **No section eyebrow.** This is a coda, not a section with data, and `docs/DESIGN.md §6` closes
+  the eyebrow list at `01`–`06`.
+
+Cream and typographic, no new visual device: `docs/DESIGN.md` allows the full red block at most
+1–2 times on the homepage and `§7`'s Narrative Break has spent it. The heading sits in the
+section-headline register (`text-2xl md:text-3xl`), not the hero's, so the hero stays the page's
+dominant statement and the Primary Attention Metric stays its dominant number. No motion — the
+homepage budget is exactly three effects and this adds none.
+
+### If a token section is ever enabled
+
+Kept here by the standing decision that `§13` holds this copy for later (`docs/WORKPLAN.md`,
+`Decisions already made`). It is **not** shipped, and B15 did not revive it — the closing line
+above deliberately takes only the one line of it that is a statement about attention.
 
 ```text
 THE MOVEMENT

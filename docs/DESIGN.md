@@ -245,6 +245,15 @@ linkable on its own (`/#media-newsweek-2026-08-12`) — the same id `/evidence` 
 `.media-reference-entry` gives those targets the sticky-nav scroll offset `section[id]` already
 gets.
 
+### Closing line
+
+The homepage coda (`ClosingLine`, added B15 — `docs/HOMEPAGE.md §13`). Cream, `container-editorial
+section-padding`, no new device: a section-register heading, one body paragraph at `max-w-prose`,
+and a single `.text-metadata` external CTA. Deliberately **not** a poster callout and **not** the
+red block — the full red device is capped at 1–2 uses per page and the Narrative Break has spent
+it — and deliberately without a section eyebrow, since the eyebrow list above is closed at
+`01`–`06` and this is a coda rather than a data section. No motion.
+
 ### Source footer
 
 ```text

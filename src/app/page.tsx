@@ -11,12 +11,13 @@ import { AmplifiedBy } from "@/components/amplified-by";
 import { ViralArchive } from "@/components/viral-archive";
 import { PublicReferences } from "@/components/public-references";
 import { EvidenceBlock } from "@/components/evidence-block";
+import { ClosingLine } from "@/components/closing-line";
 import { Footer } from "@/components/footer";
 
 /**
  * docs/HOMEPAGE.md §1 — sections 00–04 (B2), Crossover + Amplified By
  * (05–06, B4), Viral Archive (07, B3), Public References (08, B8),
- * Evidence + Footer (09, 11, B5). Thin composition: data loading + metrics
+ * Evidence + Footer (09, 11, B5), Closing line (10, B15). Thin composition: data loading + metrics
  * calls, no layout logic, no inline metric math.
  */
 export default function Home() {
@@ -54,6 +55,7 @@ export default function Home() {
           mediaReferences={mediaReferences}
           repositoryUrl={project.repository_url}
         />
+        <ClosingLine officialProjectUrl={project.official_project_url} />
       </main>
       <Footer project={project} />
     </div>
