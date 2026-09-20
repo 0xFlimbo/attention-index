@@ -64,11 +64,20 @@ describe("selectCrossoverCategories — real dataset", () => {
       ).length;
       expect(rawCount).toBe(0);
     }
-    // Today's dataset: government, politics, tech, public_figure have records;
-    // journalism, media, business, other do not.
-    expect(categories.map((entry) => entry.category).sort()).toEqual(
-      ["government", "politics", "tech", "public_figure"].sort(),
+    // The complement of the check above, and the reason this assertion is a
+    // relationship rather than the list of four categories it used to name:
+    // B10's sweep exists to put records into journalism, media and business,
+    // so a literal set here fails on exactly the record the batch is hunting
+    // for (docs/WORKPLAN.md B10-B12). The dated literal is kept against frozen
+    // input in `tests/frozen-dataset.test.ts`.
+    const nonEmpty = amplificationCategoryEnum.options.filter(
+      (category) =>
+        amplifications.filter(
+          (amp) =>
+            amp.status === "verified" && amp._placeholder !== true && amp.category === category,
+        ).length > 0,
     );
+    expect(categories.map((entry) => entry.category).sort()).toEqual([...nonEmpty].sort());
   });
 
   it("caps examples at 3 real entity names, in featured-first/date-descending order", () => {

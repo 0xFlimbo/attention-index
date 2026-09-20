@@ -1,0 +1,995 @@
+[
+  {
+    "id": "post-layoffai-2099180586858393814",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-09-13",
+    "title": "Disney World ticket prices since 1971",
+    "subject": "Long-run consumer prices",
+    "summary": "The post pairs the line \"55 years of inflation\" with an image comparing Walt Disney World admission tickets, priced at $3.50 in 1971 and $189 today.",
+    "url": "https://x.com/LayoffAI/status/2099180586858393814",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "inflation",
+      "consumer prices",
+      "Disney"
+    ],
+    "observations": [
+      {
+        "views": 4500000,
+        "likes": 176230,
+        "reposts": 21017,
+        "replies": 1170,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-16"
+  },
+  {
+    "id": "post-layoffai-2098762091423203710",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-09-12",
+    "title": "Trine University international enrollment records",
+    "subject": "Trine University",
+    "summary": "The post says Trine University's federal enrollment records list 9,123 graduate students, 98.3% of them foreign nationals, and describes payments to an overseas recruiting agency not reflected in the university's audited financial statements.",
+    "url": "https://x.com/LayoffAI/status/2098762091423203710",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "higher education",
+      "international students",
+      "Trine University"
+    ],
+    "observations": [
+      {
+        "views": 1200000,
+        "likes": 10444,
+        "reposts": 4094,
+        "replies": 571,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-16"
+  },
+  {
+    "id": "post-layoffai-2096250047679574269",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-09-05",
+    "title": "98 of 100 new U.S. jobs in August went to women",
+    "subject": "U.S. employment by gender",
+    "summary": "The post says the U.S. economy added 162,000 jobs in August, with 158,000 going to women and 4,000 to men, and cites a 12-month change of +870K for women and -1.5M for men.",
+    "url": "https://x.com/LayoffAI/status/2096250047679574269",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "employment",
+      "gender",
+      "labor market"
+    ],
+    "observations": [
+      {
+        "views": 2800000,
+        "likes": 12334,
+        "reposts": 2083,
+        "replies": 625,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-16"
+  },
+  {
+    "id": "post-layoffai-2087170419027526094",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-08-11",
+    "title": "Fastest-growing H-1B districts represented by Texas Republicans",
+    "subject": "H-1B visas by congressional district",
+    "summary": "The post says the eight U.S. congressional districts with the fastest-growing H-1B visa filings are all represented by Texas Republicans.",
+    "url": "https://x.com/LayoffAI/status/2087170419027526094",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "H-1B",
+      "Texas",
+      "congressional districts"
+    ],
+    "observations": [
+      {
+        "views": 1600000,
+        "likes": 5257,
+        "reposts": 1769,
+        "replies": 361,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-16"
+  },
+  {
+    "id": "post-layoffai-2086800985079562516",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-08-10",
+    "title": "H-1B filings mapped to congressional districts",
+    "subject": "H-1B visas by congressional district",
+    "summary": "The post announces an interactive tool assigning 6.9 million H-1B filings from FY2015 onward to each of the 436 U.S. congressional districts, searchable by ZIP code.",
+    "url": "https://x.com/LayoffAI/status/2086800985079562516",
+    "status": "verified",
+    "featured": true,
+    "tags": [
+      "H-1B",
+      "data tool",
+      "congressional districts"
+    ],
+    "observations": [
+      {
+        "views": 427443,
+        "likes": 5510,
+        "reposts": 2169,
+        "replies": 224,
+        "bookmarks": null,
+        "observed_at": "2026-09-17",
+        "source": "api"
+      }
+    ],
+    "screenshot": null,
+    "notes": "Added after the X enrichment pass showed Rep. Warren Davidson quoting this post. Engagement figures supplied by the maintainer.",
+    "verified_at": "2026-09-17"
+  },
+  {
+    "id": "post-layoffai-2083176603019022471",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-07-31",
+    "title": "Claims about immigrant populations and welfare reliance",
+    "subject": "Immigration and welfare claims",
+    "summary": "Under the heading \"the most generous country in the world\", the post lists figures it attributes to several nationalities: the share said to live in the United States and the share said to rely on welfare. The post gives no source for the figures.",
+    "url": "https://x.com/LayoffAI/status/2083176603019022471",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "immigration",
+      "welfare",
+      "claims"
+    ],
+    "observations": [
+      {
+        "views": 218000,
+        "likes": 8500,
+        "reposts": 2900,
+        "replies": 204,
+        "bookmarks": null,
+        "observed_at": "2026-09-19",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-19"
+  },
+  {
+    "id": "post-layoffai-2074629736140075212",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-07-07",
+    "title": "Microsoft lays off a 37-year veteran engineer",
+    "subject": "Microsoft gaming layoffs",
+    "summary": "The post says a 37-year Microsoft veteran, described as the engineer who built Xbox backward compatibility, was cut during the company's gaming layoffs, and argues that past achievements and seniority no longer protect employees.",
+    "url": "https://x.com/LayoffAI/status/2074629736140075212",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "Microsoft",
+      "Xbox",
+      "layoffs"
+    ],
+    "observations": [
+      {
+        "views": 523000,
+        "likes": 7400,
+        "reposts": 1800,
+        "replies": 538,
+        "bookmarks": null,
+        "observed_at": "2026-09-19",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-19"
+  },
+  {
+    "id": "post-layoffai-2074134552717435128",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-07-06",
+    "title": "Microsoft cuts 4,800 jobs with Xbox taking the largest share",
+    "subject": "Microsoft layoffs",
+    "summary": "A long post on Microsoft's announcement of 4,800 job cuts, 3,200 of them at Xbox, which it calls the largest gaming layoff announced to date. It also covers four studios leaving the company, the earlier \"Rule of 70\" buyout programme, Microsoft's H-1B filing rank and its AI infrastructure spending.",
+    "url": "https://x.com/LayoffAI/status/2074134552717435128",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "Microsoft",
+      "Xbox",
+      "layoffs",
+      "H-1B"
+    ],
+    "observations": [
+      {
+        "views": 423000,
+        "likes": 1400,
+        "reposts": 423,
+        "replies": 171,
+        "bookmarks": null,
+        "observed_at": "2026-09-19",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-19"
+  },
+  {
+    "id": "post-layoffai-2065598432652472605",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-06-13",
+    "title": "Wired report on internal turmoil at Meta",
+    "subject": "Meta AI restructuring",
+    "summary": "The post cites a Wired report describing internal turmoil at Meta following AI-related restructuring, including reassigned employees and a petition against workplace monitoring used to generate AI training data.",
+    "url": "https://x.com/LayoffAI/status/2065598432652472605",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "Meta",
+      "AI",
+      "internal culture"
+    ],
+    "observations": [
+      {
+        "views": 1200000,
+        "likes": 6082,
+        "reposts": 910,
+        "replies": 321,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-16"
+  },
+  {
+    "id": "post-layoffai-2064486751998185710",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-06-09",
+    "title": "Iowa outsources 200 state IT jobs to Cognizant",
+    "subject": "Public-sector outsourcing and H-1B",
+    "summary": "The post says Iowa is laying off 200 state IT workers and outsourcing the work to Cognizant, and sets out the company's H-1B certification total since 2015, a 2024 federal jury finding of discrimination and a 2019 foreign bribery charge against two executives. It also describes the national composition of the company's leadership team.",
+    "url": "https://x.com/LayoffAI/status/2064486751998185710",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "Cognizant",
+      "H-1B",
+      "outsourcing",
+      "Iowa"
+    ],
+    "observations": [
+      {
+        "views": 633000,
+        "likes": 6800,
+        "reposts": 3400,
+        "replies": 446,
+        "bookmarks": null,
+        "observed_at": "2026-09-19",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-19"
+  },
+  {
+    "id": "post-layoffai-2063640043387052174",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-06-07",
+    "title": "Student scholarship loss after AI detector result",
+    "subject": "AI detection and education",
+    "summary": "The post describes a student losing a $45,000 scholarship after an AI-detection tool flagged his work, and says the review board declined to examine six months of edit history.",
+    "url": "https://x.com/LayoffAI/status/2063640043387052174",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "AI detection",
+      "education"
+    ],
+    "observations": [
+      {
+        "views": 4500000,
+        "likes": 3283,
+        "reposts": 394,
+        "replies": 67,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-16"
+  },
+  {
+    "id": "post-layoffai-2062172954624999853",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-06-03",
+    "title": "U.S. immigrant population compared with other countries",
+    "subject": "Immigration",
+    "summary": "The post says the United States hosts roughly one in six of the world's immigrants, more than three times any other country, and links that share to recent job growth.",
+    "url": "https://x.com/LayoffAI/status/2062172954624999853",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "immigration",
+      "labor market"
+    ],
+    "observations": [
+      {
+        "views": 1100000,
+        "likes": 5704,
+        "reposts": 2034,
+        "replies": 200,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-16"
+  },
+  {
+    "id": "post-layoffai-2058558639460192708",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-05-24",
+    "title": "Chamath Palihapitiya criticises the Cloudflare CEO's layoff op-ed",
+    "subject": "Reaction to the Cloudflare layoffs",
+    "summary": "The post relays Chamath Palihapitiya dismissing the Cloudflare CEO's op-ed on AI-driven layoffs during an episode of the All-In podcast, in strongly worded terms.",
+    "url": "https://x.com/LayoffAI/status/2058558639460192708",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "Cloudflare",
+      "All-In podcast",
+      "layoffs"
+    ],
+    "observations": [
+      {
+        "views": 890000,
+        "likes": 2200,
+        "reposts": 175,
+        "replies": 87,
+        "bookmarks": null,
+        "observed_at": "2026-09-19",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-19"
+  },
+  {
+    "id": "post-layoffai-2057896706499588138",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-05-22",
+    "title": "Reddit account says no visa workers were cut in a Meta round",
+    "subject": "Visa status and layoff selection",
+    "summary": "The post relays an account posted to Reddit by a Meta employee, who says all 15 people cut from two combined teams were citizens or green-card holders while about 40% of the team held visas. The post argues that visa-tied employment makes those workers less likely to be selected, and notes that companies do not publish visa-status breakdowns.",
+    "url": "https://x.com/LayoffAI/status/2057896706499588138",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "Meta",
+      "H-1B",
+      "layoffs"
+    ],
+    "observations": [
+      {
+        "views": 783000,
+        "likes": 7800,
+        "reposts": 2100,
+        "replies": 291,
+        "bookmarks": null,
+        "observed_at": "2026-09-19",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-19"
+  },
+  {
+    "id": "post-layoffai-2057485600346005923",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-05-21",
+    "title": "Cloudflare CEO explains AI-driven layoffs",
+    "subject": "Cloudflare layoffs",
+    "summary": "The post describes Cloudflare laying off 1,100 employees during a record-revenue quarter and cites the CEO's Wall Street Journal op-ed on using AI to replace certain roles.",
+    "url": "https://x.com/LayoffAI/status/2057485600346005923",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "Cloudflare",
+      "AI",
+      "layoffs"
+    ],
+    "observations": [
+      {
+        "views": 1000000,
+        "likes": 595,
+        "reposts": 94,
+        "replies": 33,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-16"
+  },
+  {
+    "id": "post-layoffai-2056858309618282743",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-05-19",
+    "title": "Leaked audio on Meta employee monitoring for AI training",
+    "subject": "Meta AI training practices",
+    "summary": "The post describes leaked audio in which Meta's CEO reportedly discusses tracking employee device use to generate AI training data ahead of layoffs, saying employee-generated data outperforms outside contractors.",
+    "url": "https://x.com/LayoffAI/status/2056858309618282743",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "Meta",
+      "AI training",
+      "employee monitoring"
+    ],
+    "observations": [
+      {
+        "views": 2400000,
+        "likes": 5043,
+        "reposts": 1165,
+        "replies": 316,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-16"
+  },
+  {
+    "id": "post-layoffai-2056512380050555196",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-05-18",
+    "title": "Leaked Meta memo on the mechanics of its layoffs",
+    "subject": "Meta layoffs",
+    "summary": "The post describes an internal Meta memo obtained by Reuters setting out how the layoffs were to be carried out, citing more than 8,000 roles cut, 7,000 staff reassigned to AI workflow initiatives and manager roles eliminated.",
+    "url": "https://x.com/LayoffAI/status/2056512380050555196",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "Meta",
+      "layoffs",
+      "AI"
+    ],
+    "observations": [
+      {
+        "views": 424000,
+        "likes": 768,
+        "reposts": 157,
+        "replies": 42,
+        "bookmarks": null,
+        "observed_at": "2026-09-19",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-19"
+  },
+  {
+    "id": "post-layoffai-2055002525519294970",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-05-14",
+    "title": "Meta 2026 layoff total revised to 22,000",
+    "subject": "Meta layoffs",
+    "summary": "The post says Meta's 2026 job cuts total roughly 22,000 once unannounced reductions and cancelled openings are included, citing Reuters reporting alongside Meta's H-1B and green-card filing activity.",
+    "url": "https://x.com/LayoffAI/status/2055002525519294970",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "Meta",
+      "layoffs",
+      "H-1B"
+    ],
+    "observations": [
+      {
+        "views": 1000000,
+        "likes": 1168,
+        "reposts": 285,
+        "replies": 49,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-16"
+  },
+  {
+    "id": "post-layoffai-2051709389476946089",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-05-05",
+    "title": "Cognizant layoff estimate revised to 15,000",
+    "subject": "Cognizant layoffs",
+    "summary": "The post says analysts revised Cognizant's layoff estimate from 4,000 to 15,000 employees, describing the company as a major H-1B employer.",
+    "url": "https://x.com/LayoffAI/status/2051709389476946089",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "Cognizant",
+      "layoffs",
+      "H-1B"
+    ],
+    "observations": [
+      {
+        "views": 1000000,
+        "likes": 3849,
+        "reposts": 1230,
+        "replies": 285,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-16"
+  },
+  {
+    "id": "post-layoffai-2047676942128685469",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-04-24",
+    "title": "H-1B LCA filings and hiring map",
+    "subject": "H-1B and labor market",
+    "summary": "The post presents a map of 6.9 million Department of Labor LCA filings over 11 years, the filings legally required before an H-1B petition.",
+    "url": "https://x.com/LayoffAI/status/2047676942128685469",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "H-1B",
+      "data tool",
+      "immigration"
+    ],
+    "observations": [
+      {
+        "views": 2400000,
+        "likes": 31369,
+        "reposts": 11812,
+        "replies": 1250,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-16"
+  },
+  {
+    "id": "post-layoffai-2047314552191119792",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-04-23",
+    "title": "LayoffHedge launches H-1B visa filing explorer",
+    "subject": "H-1B visa data tool",
+    "summary": "The post announces an interactive tool mapping H-1B visa filings by county across 11 fiscal years, cross-referenced against the account's layoff tracker.",
+    "url": "https://x.com/LayoffAI/status/2047314552191119792",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "H-1B",
+      "data tool",
+      "immigration"
+    ],
+    "observations": [
+      {
+        "views": 1300000,
+        "likes": 10515,
+        "reposts": 3548,
+        "replies": 322,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-16"
+  },
+  {
+    "id": "post-layoffai-2045524643906269494",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-04-18",
+    "title": "Native-born vs foreign-born U.S. employment since pre-COVID",
+    "subject": "U.S. employment and immigration",
+    "summary": "The post says foreign-born employment rose by 4.3M and native-born employment by 471K since before COVID, alongside more than 335,000 U.S. layoffs recorded in 2026.",
+    "url": "https://x.com/LayoffAI/status/2045524643906269494",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "employment",
+      "immigration",
+      "layoffs"
+    ],
+    "observations": [
+      {
+        "views": 1400000,
+        "likes": 15921,
+        "reposts": 6313,
+        "replies": 394,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-16"
+  },
+  {
+    "id": "post-layoffai-2040140526796644571",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-04-03",
+    "title": "Claim that foreign-born employment is growing 42x faster",
+    "subject": "Employment composition claims",
+    "summary": "The post says foreign-born employment has grown 42 times faster than native-born employment since 2019, and cites the March jobs report as confirmation.",
+    "url": "https://x.com/LayoffAI/status/2040140526796644571",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "employment",
+      "immigration",
+      "jobs report"
+    ],
+    "observations": [
+      {
+        "views": 727000,
+        "likes": 3700,
+        "reposts": 1400,
+        "replies": 120,
+        "bookmarks": null,
+        "observed_at": "2026-09-19",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-19"
+  },
+  {
+    "id": "post-layoffai-2039711953602625630",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-04-02",
+    "title": "Oracle employee reaction after layoffs",
+    "subject": "Oracle layoffs and workplace culture",
+    "summary": "The post reproduces a Reddit thread from r/employeesOfOracle in which a remaining employee urges colleagues to withhold discretionary effort after the layoffs.",
+    "url": "https://x.com/LayoffAI/status/2039711953602625630",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "Oracle",
+      "layoffs",
+      "workplace culture"
+    ],
+    "observations": [
+      {
+        "views": 1300000,
+        "likes": 17622,
+        "reposts": 2681,
+        "replies": 195,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-16"
+  },
+  {
+    "id": "post-layoffai-2039373906109513916",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-04-01",
+    "title": "First-quarter 2026 layoff recap",
+    "subject": "Quarterly layoff totals",
+    "summary": "The post recaps the first quarter of 2026 with per-company figures — Oracle 30,000, HSBC 20,000, Meta 16,000, Nokia 14,000 — and says the account is already tracking 100+ further companies expected to cut in the following three months.",
+    "url": "https://x.com/LayoffAI/status/2039373906109513916",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "layoffs",
+      "quarterly recap",
+      "tracker"
+    ],
+    "observations": [
+      {
+        "views": 692000,
+        "likes": 5200,
+        "reposts": 2200,
+        "replies": 141,
+        "bookmarks": null,
+        "observed_at": "2026-09-19",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-19"
+  },
+  {
+    "id": "post-layoffai-2039080883270156557",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-03-31",
+    "title": "Oracle layoffs amid Stargate data center buildout",
+    "subject": "Oracle layoffs",
+    "summary": "The post links Oracle's termination of about 30,000 employees to its data-center lease commitments and AI infrastructure spending tied to the Stargate project, contrasting the cuts with previously announced construction jobs.",
+    "url": "https://x.com/LayoffAI/status/2039080883270156557",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "Oracle",
+      "Stargate",
+      "layoffs"
+    ],
+    "observations": [
+      {
+        "views": 1200000,
+        "likes": 1493,
+        "reposts": 432,
+        "replies": 56,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-16"
+  },
+  {
+    "id": "post-layoffai-2038983551841182057",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-03-31",
+    "title": "Oracle cutting 30,000 jobs, on the tracker since March",
+    "subject": "Oracle layoffs",
+    "summary": "The post says Oracle has been on the account's layoff tracker since 10 March with 30,000 jobs cut to fund AI data centres, and gives running quarterly totals of 95+ companies and 330,000+ cuts.",
+    "url": "https://x.com/LayoffAI/status/2038983551841182057",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "Oracle",
+      "layoffs",
+      "tracker"
+    ],
+    "observations": [
+      {
+        "views": 440000,
+        "likes": 3200,
+        "reposts": 501,
+        "replies": 48,
+        "bookmarks": null,
+        "observed_at": "2026-09-19",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-19"
+  },
+  {
+    "id": "post-layoffai-2038753137377325342",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-03-30",
+    "title": "Meta ties promotions to AI adoption after layoffs",
+    "subject": "Meta layoffs and AI mandates",
+    "summary": "Following layoffs of about 700 employees and plans for 15,000 more, the post describes leaked internal Meta documents requiring large shares of code to be AI-assisted and factoring AI adoption into performance reviews.",
+    "url": "https://x.com/LayoffAI/status/2038753137377325342",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "Meta",
+      "AI adoption",
+      "layoffs"
+    ],
+    "observations": [
+      {
+        "views": 955000,
+        "likes": 1505,
+        "reposts": 371,
+        "replies": 84,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-16"
+  },
+  {
+    "id": "post-layoffai-2036172276148871395",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-03-23",
+    "title": "H-1B hiring claims and layoffs at major companies",
+    "subject": "H-1B and layoffs",
+    "summary": "The post sets layoff totals at Amazon, Meta and Microsoft against H-1B visa approvals recorded at each company over the same period.",
+    "url": "https://x.com/LayoffAI/status/2036172276148871395",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "H-1B",
+      "layoffs",
+      "Amazon",
+      "Meta",
+      "Microsoft"
+    ],
+    "observations": [
+      {
+        "views": 972000,
+        "likes": 5521,
+        "reposts": 2067,
+        "replies": 203,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-16"
+  },
+  {
+    "id": "post-layoffai-2035820416586142160",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-03-22",
+    "title": "Snowflake replaces its technical writing team with AI",
+    "subject": "AI job displacement",
+    "summary": "The post says Snowflake replaced its technical writing team of roughly 70 people with AI rather than reducing it, and argues that work which can be documented can be automated.",
+    "url": "https://x.com/LayoffAI/status/2035820416586142160",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "Snowflake",
+      "AI",
+      "job displacement"
+    ],
+    "observations": [
+      {
+        "views": 776000,
+        "likes": 2200,
+        "reposts": 412,
+        "replies": 127,
+        "bookmarks": null,
+        "observed_at": "2026-09-19",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-19"
+  },
+  {
+    "id": "post-layoffai-2034123649939079593",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-03-18",
+    "title": "Dell confirms 11,000 job cuts",
+    "subject": "Dell layoffs",
+    "summary": "The post says Dell confirmed 11,000 job cuts in its annual filing and recorded $569M in severance costs.",
+    "url": "https://x.com/LayoffAI/status/2034123649939079593",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "Dell",
+      "layoffs"
+    ],
+    "observations": [
+      {
+        "views": 3900000,
+        "likes": 9764,
+        "reposts": 2037,
+        "replies": 219,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-16"
+  },
+  {
+    "id": "post-layoffai-2033937691751157797",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-03-17",
+    "title": "AI-driven job replacement and layoffs",
+    "subject": "AI and employment",
+    "summary": "The post relays Andrew Yang's account of a public-company CEO describing successive workforce cuts of 15% and then 20%, framed against the size of the U.S. white-collar workforce.",
+    "url": "https://x.com/LayoffAI/status/2033937691751157797",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "AI",
+      "layoffs",
+      "white-collar work"
+    ],
+    "observations": [
+      {
+        "views": 942500,
+        "likes": 4771,
+        "reposts": 791,
+        "replies": 161,
+        "bookmarks": null,
+        "observed_at": "2026-09-16",
+        "source": "interface"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-16"
+  }
+]
