@@ -147,8 +147,10 @@ Cells are **selected by data availability**, in this priority order, showing exa
 ```
 
 Rule: never render a threshold cell whose value is `0`. Fall through to the next available metric.
-With the current dataset (20 posts, max 4.5M) the grid resolves to:
-`POSTS ABOVE 1M · TRACKED POSTS · MOST VIEWED TRACKED POST · OBSERVED VIEWS`.
+What today's dataset resolves to is stated once, in `docs/DATA.md §10`, which owns the sample
+values — this section draws the shape and deliberately prints no count of its own. It carried
+`20 posts, max 4.5M` until B10, by which time the dataset held 32: the same drift `§12` was
+restructured to prevent, fixed here the same way.
 
 Desktop 2×2; mobile 1 column (2×2 only if labels stay comfortably readable).
 Flat, border-led, low radius, no shadows, strongly typographic.

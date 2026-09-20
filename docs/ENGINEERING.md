@@ -59,16 +59,24 @@ it must never gate main metrics, archive rows, source URLs, the disclaimer or me
 │   └── og/
 ├── scripts/         validate-data.ts  check-production-data.ts
 │                    enrich-twitter-posts.ts  import-layoffhedge-press.ts
+│                    check-media-mentions.ts  sweep-quote-tweets.ts  visual-check.mjs
 ├── src/
 │   ├── app/         layout.tsx page.tsx archive/ evidence/ methodology/ about/
 │   ├── components/  layout/ editorial/ data/ archive/ ui/
-│   ├── lib/         data/ metrics/ format/ utils/
+│   ├── lib/         data/ metrics/ format/ validation/ sweep/
 │   ├── schemas/     post.schema.ts amplification.schema.ts media.schema.ts project.schema.ts
 │   ├── styles/
 │   └── types/
 ├── tests/
+├── research/            paid API data + the working files behind it (gitignored, NOT a cache)
 └── references/visual/   (design references, not shipped)
 ```
+
+`research/` exists because `.cache/` is disposable by convention and some of what is in there cost
+money and cannot be re-obtained — a profile's follower count and bio are readings of a moment, the
+same argument `docs/DATA.md §5` makes about view counts. `research/README.md` records what each
+file cost and whether it is replaceable. Raw API responses still go to `.cache/`; what survives a
+run and was paid for goes to `research/`.
 
 Avoid deeper nesting than useful.
 
@@ -106,6 +114,13 @@ Definitions and eligibility rules are in `docs/DATA.md §10`.
 import: `related-post-reference.ts`, `placeholder.ts`, `publication-name.ts`. Scripts import
 from here rather than exporting their own helpers, so a test can exercise the rule without
 running the script's `main()`.
+
+**`src/lib/sweep/`** — the same arrangement for the discovery tools: `quote-candidates.ts` holds
+the judgements `pnpm sweep:quotes` makes about a quote post (is this a quote of *this* post, is
+this account already recorded, what is worth a human's attention) as pure functions with no I/O.
+Nothing the site renders imports it. It lives here for the reason `validation/` does — the
+decisions that shape what a maintainer is asked to read are testable without spending an API
+budget to exercise them (§18).
 
 **`src/lib/format/`** — `number.ts`, `date.ts`, `country.ts` (ISO-2 to a display name, falling
 back to the code), `media-descriptors.ts` (the B13 record attributes as words, shared by the
@@ -207,13 +222,15 @@ external embeds).
   "enrich:twitter": "tsx scripts/enrich-twitter-posts.ts",
   "import:press": "tsx scripts/import-layoffhedge-press.ts",
   "check:media-mentions": "tsx scripts/check-media-mentions.ts",
+  "sweep:quotes": "tsx scripts/sweep-quote-tweets.ts",
   "check:visual": "node scripts/visual-check.mjs"
 }
 ```
 
 `check:visual` is the browser review pass — see §16. `check:media-mentions` is the press-queue
-probe — see §17. Neither is part of the pre-deploy pipeline below: the first must not run
-alongside a build, and the second makes outbound requests to third-party sites.
+probe — see §17. `sweep:quotes` is the quote-post discovery sweep — see §18. None of the three is
+part of the pre-deploy pipeline below: the first must not run alongside a build, and the other two
+make outbound requests to third-party services.
 
 Pre-deploy pipeline:
 
@@ -239,6 +256,33 @@ Vitest. Pragmatic minimum:
 
 Metric functions must be deterministic. Do not spend time testing presentational markup.
 Playwright is optional and later.
+
+### A test over the live `data/` files asserts relationships, not values (B10)
+
+A test that pins a headline figure as a literal against `data/` is a good guard for a hand-made
+edit — it forces a human to confirm the number moved on purpose — and a bad one for a dataset that
+grows by import or sweep, because the suite goes red on the first new record and a job that edits
+its own expectations to go green is not a guard at all.
+
+So the two jobs are split, and neither assertion is deleted:
+
+```text
+tests/data-integration.test.ts   live data/ — every expectation recomputed from the JSON on disk,
+                                 read independently of src/lib, plus cross-metric invariants
+tests/frozen-dataset.test.ts     tests/fixtures/dataset-2026-09-20/ — the literal figures
+                                 (32 posts · 43,625,943 views · 10 amplifications · 94 references)
+                                 against input that cannot drift
+```
+
+The frozen fixture guards the **derivation chain** — schema parse, eligibility rule, pure metric,
+formatted figure — not the dataset. It is re-cut only when a schema migration makes it unparseable,
+and the figures are then re-derived and read by a human, never pasted from the run that failed.
+
+**The pattern is wider than the one file B10 converted.** A live-data literal still sits in
+`tests/evidence.test.ts`, `tests/media-contract.test.ts` and `tests/public-references.test.ts`
+(media counts — B11's path) and in `tests/attention-grid.test.ts`, `tests/archive.test.ts` and
+`tests/observations.test.ts` (post counts — B12's path). Each goes red on the first record its
+batch adds. Convert them in the batch that moves those records, in the shape above.
 
 ---
 
@@ -479,3 +523,74 @@ extracted text of every page a run fetched to `.cache/pages/<record-id>.txt` —
 canonical JSON. The text is kept because the tool's whole claim is that the reading starts from
 a fetched page with a located mention: storing only the counts made the reader fetch the same URL
 a second time to do the reading the counts exist to enable (added at B14, 2026-09-19).
+
+---
+
+## 18. Maintenance tool — `pnpm sweep:quotes`
+
+`scripts/sweep-quote-tweets.ts`. **Occasional discovery tool. Never production runtime.**
+Must not be called during `next build`, rendering, or CI.
+
+```bash
+pnpm sweep:quotes                                   # measure only — one request
+pnpm sweep:quotes -- --post <post-id|status-id>     # sweep one post
+pnpm sweep:quotes -- --all --max-pages 5            # walk the set, largest first
+pnpm sweep:quotes -- --post <id> --dry-run          # no report file written
+```
+
+Purpose (`docs/WORKPLAN.md` B10): enumerate the accounts that quoted a tracked post, drop the ones
+already recorded, and report the rest so a human can read them. All four federal legislators in
+`data/amplifications.json` surfaced by accident; this makes the search systematic instead of lucky.
+
+**Strictly read-only against `data/`.** It never writes an amplification. Promotion is a human edit
+— the same line `check:media-mentions` holds, and for a stronger reason: a discovery sweep is where
+auto-promotion would do the most damage, because nothing upstream has vouched for the record.
+
+`--measure` is the default, so an unqualified run costs one request rather than a budget. The pure
+decisions live in `src/lib/sweep/quote-candidates.ts` and are tested in `tests/quote-sweep.test.ts`,
+which is why a sweep can be reasoned about without spending anything.
+
+**What it filters, and why twice.** The endpoint's timeline is mostly not quotes of the post:
+measured 2026-09-20, 94 of the first 96 entries on the highest-quote post were plain retweets, and
+with `exclude=retweets` applied the next 392 entries still resolved to 199 quotes and 151 replies.
+So the request excludes retweets and the tool then checks that `referenced_tweets` carries
+`quoted → this post`. A retweet is also the wrong record on its own terms — someone else's quote
+post travelling is an act belonging to whoever wrote the quote, which is B14's standing rule about
+a surface that carries no act of its own.
+
+**Flags are signals to read, never a ranking.** `government-verified`, `role-phrase` and
+`large-following`, printed as words. No score, no order of merit — `CLAUDE.md §3` bans invented
+Influence and Attention numbers, and a maintenance tool is not an exception. An unflagged account
+is not thereby uninteresting, which is why every account reaches the report file.
+
+**The binding constraint is an API credit budget, not the rate limit** (measured 2026-09-20). The
+`quote_tweets` rate limit is 75 requests per 15 minutes and a full sweep is ≥69 pages, so the rate
+limit alone would cost two or three windows. What actually stops a run is separate: after ~14
+requests the account returned `402 credits depleted` on **every** v2 endpoint, tweet lookup
+included, while rate-limit headers still reported 3 496 and 60 remaining. The two budgets are
+independent, the credit one is much smaller, and waiting does not clear it. `--max-pages` (default
+10) caps what a run can spend.
+
+A failure mid-pagination **keeps the pages already paid for** and records why it stopped in
+`stoppedBy`. This is not defensive habit: the first real sweep lost 274 already-collected accounts
+to a `402` on the seventh page, because the throw escaped the loop. Where the budget is the scarce
+resource, discarding completed work on the next call's error is the expensive bug.
+
+**Two phases, because the two costs are separate** (added 2026-09-20). Enumeration is billed per
+post returned, profiles per user returned. Phase one pages with **no `expansions`** — `author_id`
+is a tweet field and rides along free, whereas the expansion attaches a user object on every page
+the same account appears on. Phase two resolves profiles in one batched `/2/users?ids=` call for
+the top `--profiles` accounts (default 30), ranked by the engagement of their own quote post — a
+property of the post, never a claim about the person. Authors enumerated but not profiled keep
+their ids in the report, so a later run describes them without re-paying to find them.
+
+Per-post reports go to the gitignored `.cache/quote-sweep/<status-id>.json`, never into canonical
+JSON. Anything paid for that outlives the run belongs in `research/` instead (§3). Credentials come
+from `X_BEARER_TOKEN` in `.env.local` only — never committed, logged, placed in JSON, or exposed to
+the browser.
+
+**The full cost model, operator list and discovery procedure are in `docs/X-API.md`.** It is not
+about this site and is deliberately kept local; read it before any further X API work. The short
+version: billing is per resource returned, `GET /2/usage/credits` reports the balance in USD so a
+run can be priced exactly, resources deduplicate within 24h, and full-archive search **cannot see
+quote posts** — which is why this tool exists and a search cannot replace it.

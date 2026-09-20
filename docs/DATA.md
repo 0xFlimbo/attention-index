@@ -23,8 +23,9 @@ data/project.json         project metadata (no metrics)
 
 Optional later only if genuinely needed: `people.json`, `organizations.json`, `snapshots/`.
 
-**Current state (2026-09-19, after B14):** 32 posts (all `verified`), 10 amplifications (all
-`verified`), 103 media references (94 `verified`, 9 `archived`, **no `needs_review` left** — the
+**Current state (2026-09-20, after B10):** 32 posts (all `verified`), 14 amplifications (all
+`verified` — four added by B10's search sweep, which opened the `media` category at three records),
+103 media references (94 `verified`, 9 `archived`, **no `needs_review` left** — the
 imported press queue has been worked through end to end). Of the 94 verified media records: 77
 original, 17 republications, 33 featured, newsrooms in 7 countries (56 of the 77 originals carry
 a country; the rest are deliberately blank). A dated reading of the dataset, not a target —
@@ -350,9 +351,11 @@ Returns the first four candidates. Only `MOST VIEWED TRACKED POST` is tied to on
 record — it is the only cell carrying `sourceUrl` / `sourcePlatformLabel` / `observedAt`; the
 count and sum cells derive from many records with different observation dates and carry none of
 those fields. If no threshold cell qualifies, fewer than four cells are returned — the function
-never fabricates a fourth cell to pad the grid; `StatGrid` renders whatever it receives. With
-today's dataset (21 posts, `postsOver1M` 17, max 4.5M, sum 37.1M) this resolves to
-`POSTS ABOVE 1M · TRACKED POSTS · MOST VIEWED TRACKED POST · OBSERVED VIEWS ACROSS TRACKED POSTS`.
+never fabricates a fourth cell to pad the grid; `StatGrid` renders whatever it receives. Read
+2026-09-20 (32 posts, `postsOver1M` 17, max 4.5M, sum 43,625,943) this resolves to
+`POSTS ABOVE 1M · TRACKED POSTS · MOST VIEWED TRACKED POST · OBSERVED VIEWS ACROSS TRACKED POSTS`
+— a dated reading, never a target to match. The post count and the sum were stale here (21 and
+37.1M, the figures from before the eleven posts landed); corrected at B10.
 
 ### Archive selectors (`src/lib/metrics/archive.ts`)
 
@@ -404,9 +407,11 @@ pagination.
 schema's fixed enum order (`government, politics, journalism, media, business, tech, public_figure,
 other`) so node position in `CrossoverMap` is a pure function of this array's order, never
 hand-positioned. Categories with a count of `0` are omitted entirely. `examples` holds up to 3 real
-entity names per category, in `compareAmplifierOrder`. With today's dataset (10 verified
-amplifications) this resolves to `GOVERNMENT 2 · POLITICS 6 · TECH 1 · PUBLIC FIGURES 1`;
-`JOURNALISM`, `MEDIA`, `BUSINESS` and `OTHER` are absent (zero records).
+entity names per category, in `compareAmplifierOrder`. Read 2026-09-20 (14 verified amplifications)
+this resolves to `GOVERNMENT 2 · POLITICS 6 · MEDIA 3 · TECH 1 · PUBLIC FIGURES 2`; `JOURNALISM`,
+`BUSINESS` and `OTHER` are absent (zero records) — a dated reading, never a target to match.
+`MEDIA` was itself at zero until B10's search sweep found three outlets citing the project on X,
+which is what the batch existed to do.
 
 ### Media (`media.json`)
 
@@ -504,8 +509,8 @@ regardless of which datasets have records. A zero-count row still renders — it
 statement about the dataset — but its `href` is `null` instead of `/evidence#<key>`, so
 `EvidenceBlock` never links to an `/evidence` anchor with nothing under it. This document owns the
 sample values; `docs/HOMEPAGE.md §12` draws the section's shape and deliberately prints no counter
-of its own, so the two cannot drift apart again. Read 2026-09-19:
-`POST DATA 32 · AMPLIFICATIONS 10 · MEDIA 94` — a dated reading, never a target to match.
+of its own, so the two cannot drift apart again. Read 2026-09-20:
+`POST DATA 32 · AMPLIFICATIONS 14 · MEDIA 94` — a dated reading, never a target to match.
 
 ---
 

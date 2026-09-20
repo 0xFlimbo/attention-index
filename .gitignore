@@ -24,3 +24,11 @@ coverage/
 /docs/WORKPLAN.md
 /docs/HISTORY.md
 /docs/archive/
+
+# Cross-project engineering reference, kept local like the process docs above.
+# Not about this site: it documents the X API itself.
+/docs/X-API.md
+
+# Paid API data and research working files. NOT a cache - see research/README.md.
+# Raw third-party dumps holding hundreds of public profiles; the verified records go to data/.
+/research/
