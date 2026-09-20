@@ -14,6 +14,7 @@
     "enrich:twitter": "tsx scripts/enrich-twitter-posts.ts",
     "import:press": "tsx scripts/import-layoffhedge-press.ts",
     "check:media-mentions": "tsx scripts/check-media-mentions.ts",
+    "sweep:quotes": "tsx scripts/sweep-quote-tweets.ts",
     "check:visual": "node scripts/visual-check.mjs"
   },
   "dependencies": {
