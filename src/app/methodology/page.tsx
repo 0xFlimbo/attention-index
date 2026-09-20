@@ -277,7 +277,9 @@ export default function MethodologyPage() {
           <p className="text-body mt-6 max-w-prose text-ink-soft">
             Each record also carries the country of the publication&apos;s own newsroom — not the
             country the story is about. Counted across original references only, the verified
-            records come from newsrooms in {formatCount(mediaMetrics.countryCount)}{" "}
+            records come from newsrooms in {formatCount(mediaMetrics.countryCount)}
+            {/* Bound to its noun, same reason as the homepage sentence that prints this figure. */}
+            {"\u00A0"}
             {mediaMetrics.countryCount === 1 ? "country" : "countries"}. Where a publication&apos;s
             newsroom country is not settled by a public, citable statement, the field is left
             blank and that record is counted in no country at all — a blank is not a guess, and it

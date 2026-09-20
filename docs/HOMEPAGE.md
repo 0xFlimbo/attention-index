@@ -364,6 +364,12 @@ same "show the source" contract the rest of the page keeps. Each sentence is omi
 nothing true to say — no record carries a country, or the list is short enough that nothing is
 capped — and both numbers print with the singular when they are `1`.
 
+Each figure is joined to the noun after it by a **non-breaking space**. B19's visual review found
+the 390px line breaking as `References from newsrooms in 7` / `countries.`, which leaves a
+numeral at the end of a line with nothing to read it against. It binds the number to its unit
+only; the rest of the sentence wraps normally, so it cannot widen the paragraph. `/methodology`
+prints the country figure in its own prose and carries the same binding, so the two cannot drift.
+
 ---
 
 ## 12. Evidence / Sources (09)

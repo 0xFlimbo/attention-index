@@ -67,16 +67,27 @@ export function PublicReferences({ mediaReferences }: PublicReferencesProps) {
       */}
       {(countryCount > 0 || hiddenCount > 0) && (
         <p className="text-body mt-3 max-w-2xl text-ink-soft">
+          {/*
+            A non-breaking space between each derived figure and the noun that
+            gives it meaning. B19's visual review found the 390px line breaking
+            as "newsrooms in 7" / "countries.", which leaves a numeral alone at
+            the end of a line with nothing to read it against. It binds the
+            number to its unit only — the rest of the sentence still wraps
+            normally, so nothing here can push the paragraph wider.
+          */}
           {countryCount > 0 && (
             <>
-              References from newsrooms in {formatCount(countryCount)}{" "}
+              References from newsrooms in {formatCount(countryCount)}
+              {"\u00A0"}
               {countryCount === 1 ? "country" : "countries"}.{" "}
             </>
           )}
           {hiddenCount > 0 && (
             <>
-              Showing {formatCount(rows.length)} of {formatCount(publications.length)}{" "}
-              publications; every reference is listed on the evidence page.
+              Showing {formatCount(rows.length)} of {formatCount(publications.length)}
+              {"\u00A0"}
+              {publications.length === 1 ? "publication" : "publications"}; every reference is
+              listed on the evidence page.
             </>
           )}
         </p>
