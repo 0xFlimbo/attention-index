@@ -280,5 +280,25 @@
     "notes": "Shares the site with a recommendation; does not name it in prose. Representative for Oklahoma 2nd district 2001-2005; acting Under Secretary of Defense for Personnel and Readiness 2015; University of Tulsa president 2021-2025.",
     "status": "verified",
     "verified_at": "2026-09-20"
+  },
+  {
+    "id": "amp-jason-chaffetz-2026-08-10",
+    "entity_type": "person",
+    "entity_name": "Jason Chaffetz",
+    "role": "Former U.S. Representative; Fox News contributor",
+    "organization": null,
+    "category": "politics",
+    "action": "share",
+    "date": "2026-08-10",
+    "platform": "x",
+    "account": "@jasoninthehouse",
+    "evidence_url": "https://x.com/jasoninthehouse/status/2086841889131844067",
+    "related_post_id": null,
+    "country": "US",
+    "featured": false,
+    "portrait": null,
+    "notes": "Shares the H-1B congressional-district tool and cites the filing count for Utah 3rd, the district he represented 2009-2017. Chaired the House Committee on Oversight and Government Reform 2015-2017. A standalone post, not a reply.",
+    "status": "verified",
+    "verified_at": "2026-09-20"
   }
 ]

@@ -23,8 +23,8 @@ data/project.json         project metadata (no metrics)
 
 Optional later only if genuinely needed: `people.json`, `organizations.json`, `snapshots/`.
 
-**Current state (2026-09-20, after B10):** 32 posts (all `verified`), 14 amplifications (all
-`verified` — four added by B10's search sweep, which opened the `media` category at three records),
+**Current state (2026-09-20, after B10):** 32 posts (all `verified`), 15 amplifications (all
+`verified` — five added by B10's search sweep, which opened the `media` category at three records),
 103 media references (94 `verified`, 9 `archived`, **no `needs_review` left** — the
 imported press queue has been worked through end to end). Of the 94 verified media records: 77
 original, 17 republications, 33 featured, newsrooms in 7 countries (56 of the 77 originals carry
@@ -407,8 +407,8 @@ pagination.
 schema's fixed enum order (`government, politics, journalism, media, business, tech, public_figure,
 other`) so node position in `CrossoverMap` is a pure function of this array's order, never
 hand-positioned. Categories with a count of `0` are omitted entirely. `examples` holds up to 3 real
-entity names per category, in `compareAmplifierOrder`. Read 2026-09-20 (14 verified amplifications)
-this resolves to `GOVERNMENT 2 · POLITICS 6 · MEDIA 3 · TECH 1 · PUBLIC FIGURES 2`; `JOURNALISM`,
+entity names per category, in `compareAmplifierOrder`. Read 2026-09-20 (15 verified amplifications)
+this resolves to `GOVERNMENT 2 · POLITICS 7 · MEDIA 3 · TECH 1 · PUBLIC FIGURES 2`; `JOURNALISM`,
 `BUSINESS` and `OTHER` are absent (zero records) — a dated reading, never a target to match.
 `MEDIA` was itself at zero until B10's search sweep found three outlets citing the project on X,
 which is what the batch existed to do.
@@ -510,7 +510,7 @@ statement about the dataset — but its `href` is `null` instead of `/evidence#<
 `EvidenceBlock` never links to an `/evidence` anchor with nothing under it. This document owns the
 sample values; `docs/HOMEPAGE.md §12` draws the section's shape and deliberately prints no counter
 of its own, so the two cannot drift apart again. Read 2026-09-20:
-`POST DATA 32 · AMPLIFICATIONS 14 · MEDIA 94` — a dated reading, never a target to match.
+`POST DATA 32 · AMPLIFICATIONS 15 · MEDIA 94` — a dated reading, never a target to match.
 
 ---
 
