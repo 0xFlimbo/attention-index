@@ -199,7 +199,41 @@ describe("getMediaMetrics — the B13 counting rule", () => {
 });
 
 describe("selectPublicationReferences — prominence by ordering", () => {
-  it("puts a publication with its own reporting above one that only republished", () => {
+  /*
+   * B19 revised these keys: the printed reference count is now key 1, above
+   * provenance and featured. The two assertions below were written at B13
+   * against the old order and are updated on purpose — provenance still
+   * carries prominence, but inside a tie in the printed number rather than
+   * above it. The reasoning lives in `selectPublicationReferences` and in
+   * docs/DATA.md §11.
+   */
+  it("puts a publication with its own reporting above one that only republished, at an equal reference count", () => {
+    const groups = selectPublicationReferences([
+      makeMediaReference({
+        id: "media-a",
+        publication: "Inkl",
+        published_at: "2026-05-01",
+        provenance: "syndicated",
+        syndicated_from: "IBTimes UK",
+      }),
+      makeMediaReference({
+        id: "media-b",
+        publication: "Inkl",
+        published_at: "2026-05-02",
+        provenance: "syndicated",
+        syndicated_from: "IBTimes UK",
+      }),
+      makeMediaReference({ id: "media-c", publication: "Townhall", published_at: "2026-01-01" }),
+      makeMediaReference({ id: "media-d", publication: "Townhall", published_at: "2026-01-02" }),
+    ]);
+    // Both print "2 references", so the rail stays sorted either way and the
+    // provenance key is free to decide: Townhall reported, Inkl republished,
+    // and Inkl's fresher date does not buy back the distinction.
+    expect(groups.map((group) => group.publication)).toEqual(["Townhall", "Inkl"]);
+    expect(groups[1]?.references).toHaveLength(2);
+  });
+
+  it("does not let provenance reorder the printed reference count", () => {
     const groups = selectPublicationReferences([
       makeMediaReference({
         id: "media-a",
@@ -217,10 +251,10 @@ describe("selectPublicationReferences — prominence by ordering", () => {
       }),
       makeMediaReference({ id: "media-c", publication: "Townhall", published_at: "2026-01-01" }),
     ]);
-    // Inkl has more records and a fresher date and still sorts last: two
-    // republications of someone else's piece are not two acts of coverage.
-    expect(groups.map((group) => group.publication)).toEqual(["Townhall", "Inkl"]);
-    expect(groups[1]?.references).toHaveLength(2);
+    // The defect B19 exists to fix, at its smallest: a row printing
+    // "2 references" must not sit below a row printing "1 reference".
+    expect(groups.map((group) => group.publication)).toEqual(["Inkl", "Townhall"]);
+    expect(groups.map((group) => group.references.length)).toEqual([2, 1]);
   });
 
   it("breaks an equal original count by featured count", () => {
@@ -237,7 +271,7 @@ describe("selectPublicationReferences — prominence by ordering", () => {
     expect(groups.map((group) => group.publication)).toEqual(["Zeta Media", "Alpha Press"]);
   });
 
-  it("does not let featured outrank a larger original count", () => {
+  it("does not let featured outrank a larger reference count", () => {
     const groups = selectPublicationReferences([
       makeMediaReference({
         id: "media-a",

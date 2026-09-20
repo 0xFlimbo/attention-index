@@ -1,6 +1,11 @@
 import Link from "next/link";
 import type { MediaReference } from "@/schemas/media.schema";
-import { selectPublicationReferences } from "@/lib/metrics/media";
+import {
+  getMediaMetrics,
+  selectPublicationReferences,
+  HOMEPAGE_PUBLIC_REFERENCE_ROW_COUNT,
+} from "@/lib/metrics/media";
+import { formatCount } from "@/lib/format/number";
 import { MediaReferenceRow, toMediaReferenceRowData } from "./media-reference-row";
 import { SectionEyebrow } from "./section-eyebrow";
 
@@ -28,6 +33,16 @@ export function PublicReferences({ mediaReferences }: PublicReferencesProps) {
   const publications = selectPublicationReferences(mediaReferences);
   if (publications.length === 0) return null;
 
+  const rows = publications.slice(0, HOMEPAGE_PUBLIC_REFERENCE_ROW_COUNT);
+  const hiddenCount = publications.length - rows.length;
+
+  // Both figures are derived on this render and neither is written down
+  // anywhere: `countryCount` is the same value `/methodology` prints, over
+  // original references only (docs/DATA.md §10), and the group count is the
+  // length of the list immediately below. Each sentence disappears when it
+  // has nothing true to say — no country on any record, or nothing capped.
+  const { countryCount } = getMediaMetrics(mediaReferences);
+
   return (
     <section id="references" className="container-editorial section-padding">
       <SectionEyebrow index="05" label="PUBLIC REFERENCES" />
@@ -40,13 +55,39 @@ export function PublicReferences({ mediaReferences }: PublicReferencesProps) {
         Documented references across publications, journalism, broadcasts, research, and other
         public sources.
       </p>
+      {/*
+        docs/WORKPLAN.md B19 — the country figure is a sentence in the
+        supporting copy, never a stat cell: this section carries no dominant
+        number (docs/WORKPLAN.md "Decisions already made"), and a display-size
+        numeral here would compete with the Primary Attention Metric. The
+        capped-list sentence sits beside it so the cap is stated rather than
+        silent: without it the section drops most of the list without a word,
+        and forty of the fifty-one rows hold a single reference each, so what
+        a cap hides is mostly the long tail rather than the dense groups.
+      */}
+      {(countryCount > 0 || hiddenCount > 0) && (
+        <p className="text-body mt-3 max-w-2xl text-ink-soft">
+          {countryCount > 0 && (
+            <>
+              References from newsrooms in {formatCount(countryCount)}{" "}
+              {countryCount === 1 ? "country" : "countries"}.{" "}
+            </>
+          )}
+          {hiddenCount > 0 && (
+            <>
+              Showing {formatCount(rows.length)} of {formatCount(publications.length)}{" "}
+              publications; every reference is listed on the evidence page.
+            </>
+          )}
+        </p>
+      )}
 
       {/*
         A real list, not a div of divs, so assistive technology announces how
         many publications there are — same reasoning as `AmplifiedBy`'s grid.
       */}
       <ul className="mt-10 md:mt-14">
-        {publications.map((entry) => (
+        {rows.map((entry) => (
           <li key={entry.publication}>
             <MediaReferenceRow row={toMediaReferenceRowData(entry)} />
           </li>

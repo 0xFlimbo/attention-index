@@ -245,6 +245,14 @@ linkable on its own (`/#media-newsweek-2026-08-12`) — the same id `/evidence` 
 `.media-reference-entry` gives those targets the sticky-nav scroll offset `section[id]` already
 gets.
 
+**The row is unchanged at B19; the section around it is capped.** The summary line still carries
+only the publication name and its derived count — the right rail stays `shrink-0
+whitespace-nowrap`, so the option of printing the original count beside the total was rejected
+again for B13's reason: anything added there widens a fixed column and is the first thing to
+overflow at 390px. The row band is capped at `HOMEPAGE_PUBLIC_REFERENCE_ROW_COUNT` (12) instead,
+with two lines of derived supporting copy above it (`docs/HOMEPAGE.md §11`), which keeps the flat
+ledger reading as a ledger at fifty-one records instead of twelve.
+
 ### Closing line
 
 The homepage coda (`ClosingLine`, added B15 — `docs/HOMEPAGE.md §13`). Cream, `container-editorial

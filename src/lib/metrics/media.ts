@@ -146,13 +146,14 @@ export interface PublicationReferences {
  * Group order is deterministic, same tie-break philosophy as
  * `compareArchiveOrder` / `compareMediaOrder` / `compareAmplifierOrder`
  * (never relying on JS sort stability or object key order). Every key is a
- * fact stored on the records, never a computed rank (docs/WORKPLAN.md B13):
- *   1. **original** reference count, descending — a publication that did its
- *      own reporting leads one that republished someone else's, which is the
+ * fact stored on the records, never a computed rank (docs/DATA.md §11):
+ *   1. **total** reference count, descending — the number the row actually
+ *      prints, so the right rail always descends;
+ *   2. original reference count, descending — a publication that did its own
+ *      reporting leads one that republished someone else's, which is the
  *      whole provenance distinction expressed as position;
- *   2. featured reference count, descending — the declared curation
+ *   3. featured reference count, descending — the declared curation
  *      criterion published on `/methodology`, and the only place it acts;
- *   3. total reference count, descending;
  *   4. most recent `published_at` among the group's own references,
  *      descending (a tied publication with fresher coverage leads);
  *   5. `publication`, ascending, lexicographic (final deterministic
@@ -161,13 +162,22 @@ export interface PublicationReferences {
  * `compareMediaOrder`, so the newest reference is also what "most recent
  * published_at" reads from step 4.
  *
- * Why original count outranks featured, and not the reverse: the row prints
- * its total reference count, and `featured` is invisible to the reader, so a
- * list ordered featured-first would print 3, 1, 1, 3, 2 down the right rail
- * and read as broken rather than as curated. Ordering still carries the
- * prominence B13 asked for — every featured publication leads the
- * unfeatured ones it ties with, and the one publication that only
- * republished sits last. Reversible without touching anything else.
+ * Why the printed count outranks both provenance and featured (B19, revised
+ * from B13's order). B13's own rule was that an invisible key must not
+ * reorder a visible number: it demoted `featured` below the original count
+ * because "a list ordered featured-first would print 3, 1, 1, 3, 2 down the
+ * right rail and read as broken rather than as curated". The original count
+ * is just as invisible to the reader as `featured` is, so the same rule
+ * applies to it one key higher up — which only became observable when B14
+ * took the section from 12 rows to 51. At that size the provenance key put
+ * `Inkl` (8 references, 0 originals) at row 43, below thirty-odd rows
+ * printing `1 reference`, and `Alex Jones Live` (3 references, 2 originals)
+ * below `The National Pulse` (2 references) in the first screenful at 390px.
+ * Both are the keys doing exactly what they were written to do, and both
+ * read as a broken sort. Prominence still does its work, inside the ties the
+ * printed number creates: among publications with the same reference count,
+ * the one that reported leads the one that republished, and a featured
+ * publication leads the unfeatured ones it ties with.
  */
 export function selectPublicationReferences(mediaReferences: MediaReference[]): PublicationReferences[] {
   const eligible = mediaReferences.filter(isVerifiedRecord);
@@ -195,9 +205,9 @@ export function selectPublicationReferences(mediaReferences: MediaReference[]): 
   );
 
   groups.sort((a, b) => {
+    if (a.references.length !== b.references.length) return b.references.length - a.references.length;
     if (a.originalCount !== b.originalCount) return b.originalCount - a.originalCount;
     if (a.featuredCount !== b.featuredCount) return b.featuredCount - a.featuredCount;
-    if (a.references.length !== b.references.length) return b.references.length - a.references.length;
 
     // `references` is already sorted newest-first (compareMediaOrder), so
     // index 0 is each group's most recent `published_at`.
@@ -211,3 +221,23 @@ export function selectPublicationReferences(mediaReferences: MediaReference[]): 
 
   return groups;
 }
+
+/**
+ * docs/HOMEPAGE.md §11 — the homepage Public References section shows the
+ * first N groups of `selectPublicationReferences`; `/evidence` lists every
+ * verified record, and the section's own `OPEN EVIDENCE →` link is how a
+ * reader reaches the rest. The counterpart of
+ * `HOMEPAGE_ARCHIVE_ROW_COUNT` (src/lib/metrics/archive.ts), and chosen the
+ * same way: the homepage shows a readable head of a list whose full form
+ * lives on its own route.
+ *
+ * Twelve, because twelve rows is the composition this section was reviewed
+ * at and approved in B8 and B13 — B14 grew the dataset behind it from 12
+ * publications to 51, which is a reason to cap the section, not a reason to
+ * resize it. It is a constant, not a threshold: it is deliberately not
+ * "however many publications have more than one reference" (eleven, today),
+ * because that is a property of this week's dataset and would silently
+ * change the section's height every time a record is added. If the dataset
+ * holds fewer groups than this, the section shows what exists — no padding.
+ */
+export const HOMEPAGE_PUBLIC_REFERENCE_ROW_COUNT = 12;

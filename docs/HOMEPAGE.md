@@ -317,10 +317,11 @@ left to B9, which owns the motion audit, rather than added ad hoc here.
 ### B13 — prominence, without a badge
 
 **Row order carries it.** Groups are ordered by five factual keys, owned by `docs/DATA.md §11`:
-original reference count, featured reference count, total reference count, most recent
+total reference count, original reference count, featured reference count, most recent
 `published_at`, publication name. A publication that did its own reporting leads one that only
 republished someone else's piece, and a featured publication leads the unfeatured ones it ties
-with. Never a computed rank.
+with. Never a computed rank. (B19 moved the total count to key 1; the keys and the reason are
+`docs/DATA.md §11`'s.)
 
 **The summary line is unchanged.** Publication name on the left, `N references` on the right,
 same as B8. Nothing was added to that right rail: it is `shrink-0 whitespace-nowrap`, so
@@ -337,6 +338,31 @@ index must not borrow. A featured reference prints its **criterion** rather than
 **The section still has no figure of its own.** The B13 country and provenance metrics live on
 `/methodology` and, per record, on `/evidence`; the standing decision that this section keeps no
 dominant number (`docs/WORKPLAN.md`, "Decisions already made") was not reopened.
+
+### B19 — the section at fifty-one rows
+
+**Capped at `HOMEPAGE_PUBLIC_REFERENCE_ROW_COUNT` (12), with the existing `OPEN EVIDENCE →`
+underneath.** B14 took the list from 12 publications to 51 and fifty-one flat rows at the foot of
+the homepage is a different object from twelve. The constant is `docs/DATA.md §10`'s, next to
+`HOMEPAGE_ARCHIVE_ROW_COUNT`, and it is a count rather than a rule about the data. The cap only
+hides rows; `/evidence` still lists every verified record.
+
+**Two derived sentences of supporting copy, below the approved paragraph and above the rows.**
+Both are computed on render and neither is written down anywhere:
+
+```text
+References from newsrooms in 7 countries.
+Showing 12 of 51 publications; every reference is listed on the evidence page.
+```
+
+The country figure is `countryCount` (`docs/DATA.md §10`, original references only) — the same
+value `/methodology` prints in the reader's words. It is a **sentence, never a stat cell**: the
+standing decision that this section carries no dominant number holds, and a display-size numeral
+here would compete with the Primary Attention Metric. The second sentence exists because a silent
+cap drops thirty-nine publications without a word; saying what is shown and what is not is the
+same "show the source" contract the rest of the page keeps. Each sentence is omitted when it has
+nothing true to say — no record carries a country, or the list is short enough that nothing is
+capped — and both numbers print with the singular when they are `1`.
 
 ---
 

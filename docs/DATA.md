@@ -461,7 +461,18 @@ list everything.
 `selectPublicationReferences(mediaReferences: MediaReference[]): PublicationReferences[]` — the
 Public References groups (`docs/HOMEPAGE.md §11`), each carrying its own `references`,
 `originalCount` and `featuredCount`. Group order is five factual keys, never a computed rank
-(`§11`).
+(`§11`). Read 2026-09-20: 51 groups over 94 references, `IBTimes UK` 17 · `Inkl` 8 ·
+`The American Bazaar` 7 · `BeInCrypto` 4 · `The Deep Dive` 4, then a tail in which **40 of the 51
+groups hold exactly one reference** — a dated reading, never a target to match.
+
+`HOMEPAGE_PUBLIC_REFERENCE_ROW_COUNT = 12` — the homepage Public References section
+(`docs/HOMEPAGE.md §11`) shows the first N of that result; `/evidence` lists every verified record
+and the section's `OPEN EVIDENCE →` link is how the rest is reached. The counterpart of
+`HOMEPAGE_ARCHIVE_ROW_COUNT` above, and the same contract: a dataset smaller than N shows what
+exists rather than padding. Twelve is the composition the section was reviewed at in B8 and B13 —
+B14 grew the list behind it from 12 groups to 51, which is an argument for capping the section,
+not for resizing it. It is deliberately a constant and not a threshold ("every group with more
+than one reference" is eleven today and a different number next import).
 
 `mediaReferenceDescriptors(reference)` (`src/lib/format/media-descriptors.ts`) — the B13
 attributes as words, for the metadata line shared by the Public References panel and the
@@ -513,18 +524,26 @@ ledger, and a list whose dates do not run in order reads as broken.
 where prominence belongs. Five keys, every one a fact stored on the records:
 
 ```text
-1  original reference count, descending      provenance carried as position
-2  featured reference count, descending      the declared criterion, its only effect
-3  total reference count, descending
+1  total reference count, descending         the number the row prints
+2  original reference count, descending      provenance carried as position
+3  featured reference count, descending      the declared criterion, its only effect
 4  most recent published_at, descending
 5  publication name, ascending               final deterministic tie-break
 ```
 
-Key 1 before key 2, and never a computed rank of any kind. Featured does not outrank a larger
-original count because the row prints its reference count: a list ordered featured-first would
-print 3, 1, 1, 3, 2 down the right rail and read as broken rather than as curated. The ordering
-still does the work — every featured publication leads the unfeatured ones it ties with, and a
-publication that only republished sorts below every publication that reported.
+**The printed number first (B19, revising B13's order).** The rule has not changed: a key the
+reader cannot see must never reorder a number the reader can. B13 applied it to `featured`, which
+is why featured sits below the counts; B19 applies the same rule one key higher, because the
+original count is exactly as invisible on the row as `featured` is. At twelve rows the difference
+was undetectable; at fifty-one it put `Inkl` (8 references, 0 originals) at row 43 below thirty-odd
+rows printing `1 reference`, and `Alex Jones Live` (3 references) below `The National Pulse` (2) in
+the first screenful at 390px. Both were the keys working as designed and both read as a broken
+sort — which is what makes it a display decision rather than a data one.
+
+Never a computed rank of any kind, and the ordering still does the prominence work B13 asked of
+it, inside the ties the printed number creates: among publications printing the same count, one
+that did its own reporting leads one that only republished, and a featured publication leads the
+unfeatured ones it ties with.
 
 ---
 

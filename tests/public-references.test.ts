@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { selectPublicationReferences } from "../src/lib/metrics/media";
+import {
+  selectPublicationReferences,
+  HOMEPAGE_PUBLIC_REFERENCE_ROW_COUNT,
+} from "../src/lib/metrics/media";
 import { getMediaReferences } from "../src/lib/data/media";
 import type { MediaReference } from "../src/schemas/media.schema";
 
@@ -96,12 +99,13 @@ describe("selectPublicationReferences — grouping and counts", () => {
 
 /**
  * These fixtures are all `provenance: "original"` and unfeatured, so the
- * first two B13 ordering keys tie and the original count equals the total —
- * they exercise keys 3 to 5 exactly as they did before B13. Keys 1 and 2
- * have their own cases in `tests/media-contract.test.ts`.
+ * original count equals the total and the featured key ties — they exercise
+ * the reference-count key and the two tie-breaks below it. The provenance
+ * and featured keys (2 and 3 after B19) have their own cases in
+ * `tests/media-contract.test.ts`.
  */
 describe("selectPublicationReferences — ordering", () => {
-  it("orders groups by reference count, descending (ordering key 3, once original and featured counts tie)", () => {
+  it("orders groups by reference count, descending (ordering key 1)", () => {
     const references = [
       makeMediaReference({ id: "media-a", publication: "Forbes", published_at: "2026-01-01" }),
       makeMediaReference({ id: "media-b", publication: "Newsweek", published_at: "2026-01-01" }),
@@ -164,5 +168,55 @@ describe("selectPublicationReferences — real dataset", () => {
     expect(groups).toHaveLength(51);
     expect(groups.reduce((sum, group) => sum + group.references.length, 0)).toBe(94);
     expect(groups[0]?.references.length).toBe(17);
+  });
+
+  /*
+   * The B19 guard, on the real file rather than on fixtures: the defect this
+   * batch fixed was only ever visible at 51 rows. Nothing about the number of
+   * references is asserted here — only that the column the reader actually
+   * sees never steps back up.
+   */
+  it("prints a right rail that never increases going down the list", () => {
+    const counts = selectPublicationReferences(getMediaReferences()).map(
+      (group) => group.references.length,
+    );
+    for (let index = 1; index < counts.length; index += 1) {
+      expect(counts[index]!).toBeLessThanOrEqual(counts[index - 1]!);
+    }
+  });
+
+  it("puts the two groups B14's review found out of place back in count order", () => {
+    const order = selectPublicationReferences(getMediaReferences()).map(
+      (group) => group.publication,
+    );
+    // Inkl (8 references, 0 originals) was at row 43, below thirty-odd rows
+    // printing "1 reference"; Alex Jones Live (3) was below The National
+    // Pulse (2). Both are pinned by position now, not merely by the rail
+    // check above.
+    expect(order.indexOf("Inkl")).toBe(1);
+    expect(order.indexOf("Alex Jones Live")).toBeLessThan(order.indexOf("The National Pulse"));
+  });
+});
+
+describe("HOMEPAGE_PUBLIC_REFERENCE_ROW_COUNT", () => {
+  it("caps the homepage section below the full list, which stays reachable on /evidence", () => {
+    const groups = selectPublicationReferences(getMediaReferences());
+    expect(HOMEPAGE_PUBLIC_REFERENCE_ROW_COUNT).toBe(12);
+    // A cap that does not cap is the one shape this constant must not have:
+    // the section's "Showing N of M publications" sentence would disappear
+    // and the reader would be told nothing about a list that is still whole.
+    expect(groups.length).toBeGreaterThan(HOMEPAGE_PUBLIC_REFERENCE_ROW_COUNT);
+  });
+
+  it("keeps every multi-reference publication above the cap today", () => {
+    const groups = selectPublicationReferences(getMediaReferences());
+    const shown = groups.slice(0, HOMEPAGE_PUBLIC_REFERENCE_ROW_COUNT);
+    const hidden = groups.slice(HOMEPAGE_PUBLIC_REFERENCE_ROW_COUNT);
+    // Not the reason for the number — twelve is the composition this section
+    // was reviewed at, not a threshold derived from the data — but a dated
+    // reading worth failing loudly if a future import buries a dense group in
+    // the hidden tail, which is exactly the Inkl case one level up.
+    expect(hidden.every((group) => group.references.length === 1)).toBe(true);
+    expect(shown.filter((group) => group.references.length > 1)).toHaveLength(11);
   });
 });
