@@ -49,7 +49,16 @@ const CACHE_DIR = resolve(ROOT, ".cache");
 const CACHE_FILE = resolve(CACHE_DIR, "twitter-enrichment.json");
 const X_API_URL = "https://api.x.com/2/tweets";
 const TWEET_FIELDS = "created_at,text,public_metrics,referenced_tweets,entities,note_tweet";
-const EXPANSIONS = "author_id,referenced_tweets.id";
+/*
+ * `author_id` only. `referenced_tweets.id` used to be here and was removed
+ * 2026-09-21: the OpenAPI spec names that expansion `referenced_posts`, so the
+ * old spelling was silently ignored — HTTP 200, no error, no field. Nothing in
+ * this script ever read `includes.tweets`, so it consumed nothing and cost
+ * nothing; the bug was only ever latent. Correcting the spelling instead of
+ * deleting it would have started billing a post read per referenced post, for
+ * data no code reads.
+ */
+const EXPANSIONS = "author_id";
 const USER_FIELDS = "username,name";
 const MAX_RETRIES = 4;
 

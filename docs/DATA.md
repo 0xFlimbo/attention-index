@@ -213,6 +213,56 @@ action:   repost | quote_post | reply | mention | share | citation | interview |
 Use the most accurate action — a mention is not a repost, a repost is not an endorsement.
 New categories require updating this doc, the schema and the UI filter config together.
 
+### Choosing `category` — the full mapping
+
+**The governing rule (maintainer decision, 2026-09-21):** *the category follows the role the
+person or organisation holds **at the time of the act**, not the highest office they ever held.*
+
+It was settled when a third former-officeholder record arrived and the first two had been
+categorised differently. It reproduces both of those unchanged, and it is the tie-breaker whenever
+a record could sit in two categories.
+
+| Category | Who it holds | Test at the time of the act | Records today |
+|---|---|---|---|
+| `government` | officials and official bodies acting in an administrative or enforcement capacity | holds an appointed or civil-service position, or is an agency account | 2 — an Assistant Attorney General, a federal Inspector General |
+| `politics` | elected officeholders, and people whose current public role is political | holds elected office, seeks it, or acts publicly as a political figure or commentator | 7 — five members of Congress, a sitting governor, a former member now commentating for a news network |
+| `journalism` | **individual** reporters, editors, correspondents, columnists | that is their job when they act | **0** |
+| `media` | news **organisations** posting as themselves | the account is the outlet, not a person | 3 |
+| `business` | companies and executives outside technology | acting in that commercial role | **0** |
+| `tech` | technology companies and their executives | acting in that role | 1 |
+| `public_figure` | notable people whose current public role fits none of the above | notable, but not currently political, journalistic, media, business or tech | 3 |
+| `other` | anything genuinely outside the seven | — | 0 |
+
+**`government` vs `politics`** is the line that needs stating, because both are public office. The
+dataset draws it on *how the office is held*: `politics` is for people who stand for election —
+legislators, governors, candidates — and `government` is for appointed officials and institutional
+accounts acting administratively. A sitting governor is `politics`; a Department's Inspector
+General is `government`.
+
+**`media` vs `journalism`** is organisation versus individual. An outlet's own X post is an
+amplification carrying `category: media`; a reporter posting under their own name is `journalism`.
+Note that an outlet's *published article* is not an amplification at all — it belongs in
+`media.json` (§7). The same outlet can therefore appear in both files for different acts.
+
+**Worked examples, the three that set the rule:**
+
+```text
+Chaffetz   former U.S. Representative, now a news-network commentator  -> politics
+Carson     former U.S. Representative, now runs a policy organisation  -> public_figure
+Evans      former state legislator, now in business and farming        -> public_figure
+```
+
+All three carry the office in the `role` string regardless, so nothing is lost by the category: a
+reader sees "Former member of the West Virginia House of Delegates" either way.
+
+**`journalism` and `business` stand at zero, and that is not a gap in the data.**
+`selectCrossoverCategories` omits any category with no records (§10), so an empty category is
+invisible to a reader and costs nothing. They are kept because removing a category from the enum is
+a schema change that would have to be reversed the moment a reporter or a non-tech executive
+appears. What they should *not* attract is discovery spend aimed at filling them: journalists cite
+in prose, which is the full-archive search population, never the quote-post population — so no
+quote-post sweep can fill `journalism` however many posts it covers.
+
 Follower counts are contextual metadata only, never evidence of impressions.
 
 ---

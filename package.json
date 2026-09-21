@@ -15,7 +15,10 @@
     "import:press": "tsx scripts/import-layoffhedge-press.ts",
     "check:media-mentions": "tsx scripts/check-media-mentions.ts",
     "sweep:quotes": "tsx scripts/sweep-quote-tweets.ts",
-    "check:visual": "node scripts/visual-check.mjs"
+    "check:visual": "node scripts/visual-check.mjs",
+    "review:profiles": "tsx scripts/review-paid-profiles.ts",
+    "refetch:truncated": "tsx scripts/refetch-truncated-posts.ts",
+    "probe:fields": "tsx scripts/probe-field-parameter.ts"
   },
   "dependencies": {
     "next": "16.3.5",

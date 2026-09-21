@@ -52,7 +52,7 @@ it must never gate main metrics, archive rows, source URLs, the disclaimer or me
 ```text
 /
 ├── CLAUDE.md  AGENTS.md  README.md
-├── docs/            PRODUCT DESIGN HOMEPAGE DATA ENGINEERING EDITORIAL WORKPLAN HISTORY + archive/
+├── docs/            USING PRODUCT DESIGN HOMEPAGE DATA ENGINEERING EDITORIAL WORKPLAN HISTORY + archive/
 ├── data/            posts.json amplifications.json media.json project.json
 ├── public/
 │   ├── images/      posts/ people/ media/
@@ -228,9 +228,11 @@ external embeds).
 ```
 
 `check:visual` is the browser review pass — see §16. `check:media-mentions` is the press-queue
-probe — see §17. `sweep:quotes` is the quote-post discovery sweep — see §18. None of the three is
-part of the pre-deploy pipeline below: the first must not run alongside a build, and the other two
-make outbound requests to third-party services.
+probe — see §17. `sweep:quotes` is the quote-post discovery sweep — see §18. `review:profiles`
+re-reads profiles already paid for and **makes no network request at all** — see §19.
+`refetch:truncated` and `probe:fields` are one-off diagnostics, both already run (§20). None of the
+six is part of the pre-deploy pipeline below: the first must not run alongside a build, and two of
+the rest make outbound requests to third-party services.
 
 Pre-deploy pipeline:
 
@@ -584,13 +586,142 @@ the top `--profiles` accounts (default 30), ranked by the engagement of their ow
 property of the post, never a claim about the person. Authors enumerated but not profiled keep
 their ids in the report, so a later run describes them without re-paying to find them.
 
-Per-post reports go to the gitignored `.cache/quote-sweep/<status-id>.json`, never into canonical
-JSON. Anything paid for that outlives the run belongs in `research/` instead (§3). Credentials come
-from `X_BEARER_TOKEN` in `.env.local` only — never committed, logged, placed in JSON, or exposed to
+**Output goes to `research/`, not `.cache/` — corrected 2026-09-21.** Per-post reports are written
+to `research/quote-sweeps/<status-id>.json`. They used to go to `.cache/quote-sweep/`, which
+contradicted the rule stated in the very next sentence of this section: `.cache/` sits beside
+`.next/` in `.gitignore` and is cleared without thought, while a sweep report holds paid
+enumeration — author ids, quote text, profile readings — that cannot be re-obtained as the same
+reading at any price. Never into canonical JSON either way. Credentials come from
+`X_BEARER_TOKEN` in `.env.local` only — never committed, logged, placed in JSON, or exposed to
 the browser.
+
+**Nothing paid for is ever bought twice.** Every profile the tool receives is written to
+`research/x-api-profiles.json`, keyed by account id and stamped with the date it was read. Before
+phase two spends anything the store is consulted, and the run reports what it reused and what that
+saved. The store is also **rebuilt from every `.json` under `research/` on each run**, not merely
+loaded: a profile sitting in some older research file that the store never learned about would
+otherwise be re-bought at $0.010 with nothing reporting that it was already held. The failure is
+silent and shows up as a bill, so the rescan is unconditional.
+
+Profiles are stored with `observed_at` and merged newest-first: a follower count is an observation,
+not a fact (`docs/DATA.md §5`), and an undated reading never displaces a dated one.
+
+**The register match.** The tool matches each profiled account against the free
+`unitedstates/congress-legislators` register, current **and** historical, on the display **name**
+rather than the handle. Measured 2026-09-21 against the eight federal legislators in `data/`:
+name matching caught 8 of 8, handle and account-id matching caught 2 — the register records
+taxpayer-funded official accounts only, so personal accounts, second official handles and every
+former member are invisible to both. False positives run 0.67%. A match is a reason to look, never
+a verification; and a *miss* is evidence about nobody, since no congressional register contains
+state legislators or executive-branch appointees, both of which this dataset holds.
+See `docs/X-API.md §7`.
 
 **The full cost model, operator list and discovery procedure are in `docs/X-API.md`.** It is not
 about this site and is deliberately kept local; read it before any further X API work. The short
 version: billing is per resource returned, `GET /2/usage/credits` reports the balance in USD so a
 run can be priced exactly, resources deduplicate within 24h, and full-archive search **cannot see
 quote posts** — which is why this tool exists and a search cannot replace it.
+
+---
+
+## 19. Maintenance tool — `pnpm review:profiles`
+
+`scripts/review-paid-profiles.ts`. **Makes no network request of any kind.** Read-only against
+both `data/` and `research/`; it never writes a record and never edits a paid file.
+
+```bash
+pnpm review:profiles                  # every account meeting at least one criterion
+pnpm review:profiles -- --floor 1000  # lower the follower criterion
+pnpm review:profiles -- --all         # print every account, criterion or not
+```
+
+It re-reads every profile the project has already paid for — recovered from every `.json` under
+`research/`, whatever shape that file happens to use — and reports which accounts a human should
+look at, with the criterion that fired.
+
+**Why it exists as a script rather than a one-off.** `research/` grows with every sweep and the
+review criteria have already changed twice. A stored pass can be re-run across the whole corpus
+whenever a criterion moves, instead of leaving a human to remember which files were screened under
+which rule. The reading is free; only the data was expensive.
+
+**The criteria, and why each one is there:**
+
+```text
+register match          matched a U.S. legislator by name, handle or account id
+government verified_type the one verified_type that names an office
+role phrase             the account described a public role in its own words
+followers >= 5,000      Track A's reading floor, not a new invention
+```
+
+The follower floor is inherited, not chosen here: Track A checked all 210 authors below 5,000 and
+found 16 with a role phrase and none with weight. It applies **only** to the follower criterion — a
+register match, a `government` verified_type or a role phrase is reported at any account size,
+because the one officeholder ever measured in a sweep had 13,924 followers and would clear no
+sensible "large account" bar.
+
+The run prints **each criterion's own yield**, so a criterion that never fires can be retired on
+evidence rather than kept because it sounds prudent. Read on 2026-09-21 across 448 accounts not
+already recorded: register match 3, government 0, role phrase 20, followers ≥5,000 55.
+
+A register match is a reason to look, **not** a verification — names collide, and the historical
+register holds twelve thousand people. Identity is confirmed from independent sources, off-API, by
+a human (`docs/X-API.md §9` step 4).
+
+---
+
+## 20. API request hygiene — and two one-off scripts
+
+**Every field name a script sends is validated against the X API's OpenAPI spec by
+`tests/api-field-validity.test.ts`.** This is not ceremony: X ignores an unknown field value
+silently — HTTP 200, `errors: []`, field simply absent — so a wrong spelling looks exactly like a
+right one in the code and produces a bill either way. Two real bugs were found this way
+(`docs/X-API.md §16`), one of which had already been written up as an API limitation when it was
+our own request. The test resolves interpolated constants, so a field list held in a `const` is
+checked too, and it skips when the spec file is absent because `research/` is gitignored.
+
+The two rules that go with it: **keep the raw response body** beside anything derived from it, since
+a missing field and an ignored request are indistinguishable downstream; and **assert on page one**
+that the fields a paginated run depends on actually arrived, because a run that pages on regardless
+bills for the whole post and reports nothing.
+
+### `pnpm probe:fields`
+
+`scripts/probe-field-parameter.ts`. Asks one post for the same fields twice, once under
+`tweet.fields` and once under `post.fields`, and keeps both raw bodies. It exists as the record of
+how the vocabulary question was settled: the API answers in the dialect you ask in — `note_tweet`
+versus `note_post` — and both carry the full text. Re-runnable for a few tenths of a cent, free
+inside the 24-hour dedup window.
+
+### `pnpm refetch:truncated`
+
+`scripts/refetch-truncated-posts.ts`. **Already executed, 2026-09-21.** Kept as the record of a
+measurement, not as a tool anyone needs to run again.
+
+**Read its result as corrected, not as first written.** Its first run concluded that `note_post` is
+unpopulated on this tier. That was our bug, not the API's: the request sent `tweet.fields` and the
+reader looked for `note_post`, a key that only exists in the `post.fields` dialect. Re-run with the
+key read correctly — free, inside the dedup window — it recovered **32,495 characters across 34 of
+48 posts**, and **24 of them name the project in prose** where the stored text did not. One
+maintainer rejection was reversed as a result.
+
+It re-fetched 48 Track A posts asking for `note_post` — the field the OpenAPI spec says carries the
+remainder of a long post — and wrote the result to
+`research/x-api-2026-09-20/track-a-full-text.json`.
+
+**It disproved the premise it was built on**, which is why it is worth keeping:
+
+- **`note_post` appeared to return nothing** — 48 posts, 0 characters recovered. Later shown to be
+  a dialect mismatch in our own reader, not an API limitation. The corrected lesson: *when a
+  documented field comes back empty, suspect your request before blaming the API.*
+- **The selection heuristic was wrong.** "Text ending in a bare t.co link" is usually an ordinary
+  post with an attached photo, not a stub. The function keeps that heuristic, commented as wrong,
+  because changing it would misdescribe which 48 posts were actually bought.
+- **What the 48 were:** 28 link `layoffhedge.com` without naming it in prose, matching the Track A
+  query through `url:` rather than through the text. Overwhelmingly token promotion — the "bare
+  link, no act of its own" shape already archived on sight. No record had been missed.
+- **Post reads bill at exactly $0.005.** Balance $1.02 → $0.78 for 48 posts, no user reads. This
+  closed an open unknown and retired the blended `$0.0068` planning rate (`docs/X-API.md §1`).
+- **The corrected re-run cost $0.0000**, inside the 24-hour dedup window.
+
+Cost $0.2400, authorised in advance, appended to the ledger in
+`research/x-api-2026-09-20/cost-ledger.json`.

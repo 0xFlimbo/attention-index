@@ -17,6 +17,14 @@ export interface QuotingAccount {
   description?: string;
   verified_type?: string;
   public_metrics?: { followers_count?: number };
+  /**
+   * X's own parody-account flag, added 2026-09-21 once the OpenAPI spec showed
+   * the field exists. The manual review hit precisely this case: a bio reading
+   * "Certified Fact Checker. Nobel laureate economist." tripped the `economist`
+   * role phrase and was satire. A declared parody account cannot be evidencing a
+   * public role, so it suppresses the role-phrase flag rather than adding one.
+   */
+  parody?: boolean;
 }
 
 export interface ReferencedTweetLike {
@@ -29,8 +37,24 @@ export interface AmplificationLike {
   evidence_url: string;
 }
 
-/** The project's own account never amplifies its own post. */
+/** The measured project's own account never amplifies its own post. */
 export const SELF_ACCOUNT = "@layoffai";
+
+/**
+ * Accounts that *are* the measured project, not third parties amplifying it.
+ *
+ * `@broom0x` is LayoffHedge's founder (maintainer-confirmed, 2026-09-21). His
+ * account quoted a tracked post and the sweep offered him as a discovery, which
+ * he is not: an operator sharing their own project's post is the same act as the
+ * project account doing it, and recording it would overstate the dataset by
+ * counting the subject as its own amplifier.
+ *
+ * The confirmation had to come from the maintainer because it is not publicly
+ * establishable — `layoffhedge.com/about` names no individual, so the only claim
+ * of the role is the account's own bio, and a bio is self-reported. That is why
+ * this is a stored decision rather than a rule the tool could infer.
+ */
+export const SELF_ACCOUNTS: readonly string[] = [SELF_ACCOUNT, "@broom0x"];
 
 /**
  * A following large enough to be worth a look. Not evidence of anything on its
@@ -117,7 +141,7 @@ export function isQuoteOfPost(
  * two must not disagree about whether an account is known.
  */
 export function knownAccountKeys(amplifications: AmplificationLike[]): Set<string> {
-  const known = new Set<string>([SELF_ACCOUNT]);
+  const known = new Set<string>(SELF_ACCOUNTS);
   for (const record of amplifications) {
     if (record.account) known.add(record.account.toLowerCase());
     const handle = record.evidence_url.match(/(?:x|twitter)\.com\/([^/?#]+)/i)?.[1];
@@ -140,9 +164,14 @@ export function signalFlags(user: QuotingAccount): string[] {
   const flags: string[] = [];
   if (user.verified_type === "government") flags.push("government-verified");
 
-  const haystack = `${user.description ?? ""} ${user.name}`.toLowerCase();
-  const matched = ROLE_PHRASES.filter((phrase) => haystack.includes(phrase));
-  if (matched.length > 0) flags.push(`role-phrase: ${matched.slice(0, 3).join(", ")}`);
+  // A declared parody account describes a joke, not a role. Suppressing the
+  // phrase is right rather than merely tidy: the flag's whole meaning is "this
+  // account claims a public role", and a parody account claims nothing.
+  if (!user.parody) {
+    const haystack = `${user.description ?? ""} ${user.name}`.toLowerCase();
+    const matched = ROLE_PHRASES.filter((phrase) => haystack.includes(phrase));
+    if (matched.length > 0) flags.push(`role-phrase: ${matched.slice(0, 3).join(", ")}`);
+  }
 
   if ((user.public_metrics?.followers_count ?? 0) >= LARGE_FOLLOWING) flags.push("large-following");
   return flags;

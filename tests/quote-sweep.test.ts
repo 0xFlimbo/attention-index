@@ -14,6 +14,7 @@ import {
   signalFlags,
   LARGE_FOLLOWING,
   SELF_ACCOUNT,
+  SELF_ACCOUNTS,
 } from "@/lib/sweep/quote-candidates";
 
 const POST_ID = "2047676942128685469";
@@ -62,6 +63,15 @@ describe("knownAccountKeys", () => {
     expect(knownAccountKeys([]).has(SELF_ACCOUNT)).toBe(true);
   });
 
+  it("also holds the project's operator, who is not a third-party amplifier", () => {
+    // @broom0x is LayoffHedge's founder (maintainer-confirmed 2026-09-21). The sweep
+    // offered him as a discovery on the congressional-district post; an operator
+    // sharing their own project's post is the subject, not an amplifier of it.
+    const known = knownAccountKeys([]);
+    for (const self of SELF_ACCOUNTS) expect(known.has(self)).toBe(true);
+    expect(known.has("@broom0x")).toBe(true);
+  });
+
   it("indexes the stored account case-insensitively", () => {
     const known = knownAccountKeys([
       { account: "@RepBrandonGill", evidence_url: "https://x.com/RepBrandonGill/status/1" },
@@ -88,7 +98,7 @@ describe("knownAccountKeys", () => {
     const known = knownAccountKeys([
       { account: null, evidence_url: "https://example.com/article/layoffs" },
     ]);
-    expect(known.size).toBe(1); // only SELF_ACCOUNT
+    expect(known.size).toBe(SELF_ACCOUNTS.length); // only the project's own accounts
   });
 });
 
@@ -171,5 +181,39 @@ describe("signalFlags", () => {
       "large-following",
     ]);
     for (const flag of flags) expect(typeof flag).toBe("string");
+  });
+});
+
+describe("signalFlags and parody accounts", () => {
+  it("suppresses a role phrase on a declared parody account", () => {
+    // The real false positive from the 2026-09-21 review: satire tripping the
+    // `economist` phrase. A parody account claims no role, so the flag is wrong
+    // rather than merely noisy.
+    expect(
+      signalFlags({
+        username: "KamalaLies",
+        name: "Expert, PhD., MD, DDS, Esq.",
+        description: "Certified Fact Checker. Nobel laureate economist. Islamic Scholar",
+        parody: true,
+      }),
+    ).toEqual([]);
+  });
+
+  it("still flags the same account when it is not marked parody", () => {
+    expect(
+      signalFlags({
+        username: "KamalaLies",
+        name: "Expert",
+        description: "Nobel laureate economist",
+      }).some((flag) => flag.startsWith("role-phrase")),
+    ).toBe(true);
+  });
+
+  it("keeps the government flag on a parody account rather than hiding it", () => {
+    // `verified_type` is assigned by the platform, not written by the account,
+    // so parody has no bearing on it. Only the self-described phrase is dropped.
+    expect(
+      signalFlags({ username: "x", name: "Office", verified_type: "government", parody: true }),
+    ).toContain("government-verified");
   });
 });

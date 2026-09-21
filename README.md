@@ -31,7 +31,7 @@ data/media.json           external media and public references
 data/project.json         project metadata (links, disclaimer, last update)
 ```
 
-## Local development
+## Quick start
 
 ```bash
 corepack enable pnpm
@@ -39,14 +39,10 @@ pnpm install
 pnpm dev            # http://localhost:3000
 ```
 
-```bash
-pnpm validate:data          # schema, IDs, dates, URLs, enums, references, evidence
-pnpm check:production-data  # blocks placeholder data from shipping
-pnpm typecheck && pnpm lint && pnpm test && pnpm build
-```
+No database, no API key and no environment file are needed to run the site.
 
-Optional maintenance tools (never part of the production runtime):
-`pnpm enrich:twitter` (needs `X_BEARER_TOKEN` in `.env.local`) and `pnpm import:press`.
+**`docs/USING.md` is the guide**: running it, checking a number against its source, how a record
+gets in, the maintenance tools and what they cost, and how to fork it for a different subject.
 
 ## Contributing
 
@@ -77,6 +73,7 @@ missing.
 
 | File | Contents |
 |---|---|
+| `docs/USING.md` | **start here** — running it, verifying a number, the tools, forking it |
 | `docs/PRODUCT.md` | thesis, scope, audience, routes, success criteria |
 | `docs/DESIGN.md` | tokens, typography, components, motion, accessibility |
 | `docs/HOMEPAGE.md` | homepage sections and approved copy |
