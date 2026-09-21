@@ -16,7 +16,7 @@ import {
 describe("collectUserObjects", () => {
   it("finds profiles under a top-level `users` key", () => {
     // The shape `h1b-sweep.json` uses.
-    const found = collectUserObjects({ users: [{ id: "1", username: "alpha" }] });
+    const found = collectUserObjects({ users: [{ id: "1", username: "alpha", name: "Alpha" }] });
     expect(found.map((user) => user.username)).toEqual(["alpha"]);
   });
 
@@ -24,7 +24,7 @@ describe("collectUserObjects", () => {
     // The shape an expansions response uses.
     const found = collectUserObjects({
       data: [{ id: "99", text: "a tweet", author_id: "1" }],
-      includes: { users: [{ id: "1", username: "beta" }] },
+      includes: { users: [{ id: "1", username: "beta", name: "Beta" }] },
     });
     expect(found.map((user) => user.username)).toEqual(["beta"]);
   });
@@ -32,7 +32,7 @@ describe("collectUserObjects", () => {
   it("finds profiles nested inside a sweep report", () => {
     const found = collectUserObjects({
       swept_at: "2026-09-21",
-      results: [{ candidates: [{ profile: { id: "7", username: "gamma" } }] }],
+      results: [{ candidates: [{ profile: { id: "7", username: "gamma", name: "Gamma" } }] }],
     });
     expect(found.map((user) => user.username)).toEqual(["gamma"]);
   });
@@ -42,9 +42,48 @@ describe("collectUserObjects", () => {
     expect(collectUserObjects({ data: [{ id: "5", text: "hello", author_id: "1" }] })).toEqual([]);
   });
 
+  it("does not mistake an @-mention annotation for a profile", () => {
+    /*
+     * The bug this file failed to catch, found 2026-09-21 (docs/X-API.md §17).
+     *
+     * `entities.mentions[]` carries `{ start, end, id, username }` — the exact
+     * pair the scanner used to treat as proof of a user object. Once the sweep
+     * began requesting `entities`, 75 of these were filed as paid profiles.
+     *
+     * The consequence is not a bad row: the store is read *before spending*, so
+     * a mention under a real account's id tells the sweep that account is
+     * already bought. It is then described with no bio, no follower count and no
+     * `verified_type` — every signal that identifies a public role — and nothing
+     * reports it as missing. Three of the 75 were sitting officeholders.
+     */
+    const page = {
+      data: [
+        {
+          id: "2090076575072981273",
+          text: "@RepChipRoy this is the one https://t.co/x",
+          author_id: "1459185729549045788",
+          entities: {
+            mentions: [{ start: 0, end: 11, id: "1082790600292925440", username: "RepChipRoy" }],
+          },
+        },
+      ],
+    };
+    expect(collectUserObjects(page)).toEqual([]);
+  });
+
+  it("does not let a mention annotation into the store through mergeProfiles", () => {
+    const target = new Map<string, PaidProfile>();
+    const mention = { start: 0, end: 11, id: "1082790600292925440", username: "RepChipRoy" };
+    expect(mergeProfiles(target, [mention as unknown as PaidProfile])).toEqual({
+      added: 0,
+      replaced: 0,
+    });
+    expect(target.size).toBe(0);
+  });
+
   it("does not descend into a profile it has already recognised", () => {
     const found = collectUserObjects({
-      users: [{ id: "1", username: "alpha", public_metrics: { followers_count: 10 } }],
+      users: [{ id: "1", username: "alpha", name: "Alpha", public_metrics: { followers_count: 10 } }],
     });
     expect(found).toHaveLength(1);
   });
@@ -60,7 +99,7 @@ describe("mergeProfiles", () => {
 
   it("adds a profile that is not held yet", () => {
     const target = store();
-    expect(mergeProfiles(target, [{ id: "1", username: "alpha" }])).toEqual({
+    expect(mergeProfiles(target, [{ id: "1", username: "alpha", name: "Alpha" }])).toEqual({
       added: 1,
       replaced: 0,
     });
@@ -70,18 +109,18 @@ describe("mergeProfiles", () => {
   it("keeps the newer reading when both are dated", () => {
     const target = store();
     mergeProfiles(target, [
-      { id: "1", username: "alpha", observed_at: "2026-09-20", public_metrics: { followers_count: 10 } },
+      { id: "1", username: "alpha", name: "Alpha", observed_at: "2026-09-20", public_metrics: { followers_count: 10 } },
     ]);
     mergeProfiles(target, [
-      { id: "1", username: "alpha", observed_at: "2026-09-21", public_metrics: { followers_count: 20 } },
+      { id: "1", username: "alpha", name: "Alpha", observed_at: "2026-09-21", public_metrics: { followers_count: 20 } },
     ]);
     expect(target.get("1")!.public_metrics!.followers_count).toBe(20);
   });
 
   it("never lets an older reading displace a newer one", () => {
     const target = store();
-    mergeProfiles(target, [{ id: "1", username: "alpha", observed_at: "2026-09-21" }]);
-    const result = mergeProfiles(target, [{ id: "1", username: "alpha", observed_at: "2026-09-20" }]);
+    mergeProfiles(target, [{ id: "1", username: "alpha", name: "Alpha", observed_at: "2026-09-21" }]);
+    const result = mergeProfiles(target, [{ id: "1", username: "alpha", name: "Alpha", observed_at: "2026-09-20" }]);
     expect(result.replaced).toBe(0);
     expect(target.get("1")!.observed_at).toBe("2026-09-21");
   });
@@ -90,15 +129,15 @@ describe("mergeProfiles", () => {
     // An undated profile cannot be shown to be the more recent of the two, and
     // `docs/DATA.md §5` will not have a reading replaced by an unknown one.
     const target = store();
-    mergeProfiles(target, [{ id: "1", username: "alpha", observed_at: "2026-09-20" }]);
-    mergeProfiles(target, [{ id: "1", username: "alpha" }]);
+    mergeProfiles(target, [{ id: "1", username: "alpha", name: "Alpha", observed_at: "2026-09-20" }]);
+    mergeProfiles(target, [{ id: "1", username: "alpha", name: "Alpha" }]);
     expect(target.get("1")!.observed_at).toBe("2026-09-20");
   });
 
   it("lets a dated reading replace an undated one", () => {
     const target = store();
-    mergeProfiles(target, [{ id: "1", username: "alpha" }]);
-    const result = mergeProfiles(target, [{ id: "1", username: "alpha", observed_at: "2026-09-21" }]);
+    mergeProfiles(target, [{ id: "1", username: "alpha", name: "Alpha" }]);
+    const result = mergeProfiles(target, [{ id: "1", username: "alpha", name: "Alpha", observed_at: "2026-09-21" }]);
     expect(result.replaced).toBe(1);
   });
 

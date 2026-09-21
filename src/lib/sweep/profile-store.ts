@@ -37,9 +37,32 @@ export interface PaidProfile {
 /**
  * Every user object anywhere in a parsed JSON value.
  *
- * A profile is recognised by carrying both a string `id` and a string
- * `username` — the pair no other object in these payloads has. Tweets carry
- * `id` with `text` or `author_id`; only a user carries `username`.
+ * A profile is recognised by carrying a string `id`, `username` **and `name`**.
+ *
+ * ---------------------------------------------------------------------------
+ * **`id` + `username` is not enough, and assuming it was corrupted the store.**
+ *
+ * This function used to say that pair was "the pair no other object in these
+ * payloads has". It is wrong. A post's `entities.mentions[]` entry is exactly
+ * `{ start, end, id, username }` — one per @-mention in the text — and once the
+ * sweep began requesting `entities`, every raw page filed dozens of them as paid
+ * profiles. 75 had accumulated when this was found on 2026-09-21.
+ *
+ * The crash they caused (`name` undefined, in the legislator matcher) was the
+ * harmless half. The damage is that the store is consulted *before spending*: a
+ * mention annotation sitting under a real account's id makes the sweep believe
+ * that profile is already paid for, so it never buys it, and the account is
+ * described with no bio, no follower count and no `verified_type` — every signal
+ * that identifies a public role, missing, with nothing reported as missing.
+ * `@RepChipRoy`, `@RepKeithSelf` and `@realBrandonGill` were all in the store in
+ * this shape: officeholders the sweep exists to find, silently unbuyable.
+ *
+ * `name` is the discriminator because the API returns `id`, `name` and
+ * `username` as a user's default fields — a real profile always has all three,
+ * and a mention never has `name`. The `start`/`end` rejection is a second,
+ * independent check on the same object, kept because this pair of assumptions
+ * has been wrong once already.
+ * ---------------------------------------------------------------------------
  */
 export function collectUserObjects(value: unknown): PaidProfile[] {
   const found: PaidProfile[] = [];
@@ -52,7 +75,7 @@ export function collectUserObjects(value: unknown): PaidProfile[] {
     if (node === null || typeof node !== "object") return;
 
     const record = node as Record<string, unknown>;
-    if (typeof record.id === "string" && typeof record.username === "string") {
+    if (isUserObject(record)) {
       found.push(record as unknown as PaidProfile);
       // A profile holds no nested profiles; descending further would only find
       // its own `public_metrics`.
@@ -63,6 +86,19 @@ export function collectUserObjects(value: unknown): PaidProfile[] {
 
   visit(value);
   return found;
+}
+
+/**
+ * A user object, as opposed to a mention annotation that happens to carry an id
+ * and a username. Exported so the store can be audited for objects that were
+ * admitted under the older, wrong test.
+ */
+export function isUserObject(record: Record<string, unknown>): boolean {
+  if (typeof record.id !== "string") return false;
+  if (typeof record.username !== "string") return false;
+  // A mention annotation carries the text offsets of the @-handle and no name.
+  if (typeof record.start === "number" || typeof record.end === "number") return false;
+  return typeof record.name === "string";
 }
 
 /**
@@ -81,7 +117,10 @@ export function mergeProfiles(
   let replaced = 0;
 
   for (const profile of incoming) {
-    if (!profile?.id || !profile?.username) continue;
+    // The same test as the collector, not a looser one: this is the other door
+    // into the store, and a mention annotation admitted here would suppress a
+    // purchase exactly as one admitted there does.
+    if (!profile || !isUserObject(profile as unknown as Record<string, unknown>)) continue;
     const held = store.get(profile.id);
     if (!held) {
       store.set(profile.id, profile);
