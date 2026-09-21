@@ -225,12 +225,12 @@ a record could sit in two categories.
 | Category | Who it holds | Test at the time of the act | Records today |
 |---|---|---|---|
 | `government` | officials and official bodies acting in an administrative or enforcement capacity | holds an appointed or civil-service position, or is an agency account | 2 — an Assistant Attorney General, a federal Inspector General |
-| `politics` | elected officeholders, and people whose current public role is political | holds elected office, seeks it, or acts publicly as a political figure or commentator | 7 — five members of Congress, a sitting governor, a former member now commentating for a news network |
-| `journalism` | **individual** reporters, editors, correspondents, columnists | that is their job when they act | **0** |
-| `media` | news **organisations** posting as themselves | the account is the outlet, not a person | 3 |
+| `politics` | elected officeholders, and people whose current public role is political | holds elected office, seeks it, or acts publicly as a political figure or commentator | 8 — five members of Congress, a sitting governor, a former member now commentating for a news network, a network commentator |
+| `journalism` | **individual** reporters, editors, correspondents, columnists | that is their job when they act | 1 — a named outlet's columnist, confirmed against that outlet's own author page |
+| `media` | news **organisations** posting as themselves | the account is the outlet, not a person | 4 |
 | `business` | companies and executives outside technology | acting in that commercial role | **0** |
 | `tech` | technology companies and their executives | acting in that role | 1 |
-| `public_figure` | notable people whose current public role fits none of the above | notable, but not currently political, journalistic, media, business or tech | 3 |
+| `public_figure` | notable people whose current public role fits none of the above | notable, but not currently political, journalistic, media, business or tech | 4 |
 | `other` | anything genuinely outside the seven | — | 0 |
 
 **`government` vs `politics`** is the line that needs stating, because both are public office. The
@@ -255,13 +255,29 @@ Evans      former state legislator, now in business and farming        -> public
 All three carry the office in the `role` string regardless, so nothing is lost by the category: a
 reader sees "Former member of the West Virginia House of Delegates" either way.
 
-**`journalism` and `business` stand at zero, and that is not a gap in the data.**
-`selectCrossoverCategories` omits any category with no records (§10), so an empty category is
-invisible to a reader and costs nothing. They are kept because removing a category from the enum is
-a schema change that would have to be reversed the moment a reporter or a non-tech executive
-appears. What they should *not* attract is discovery spend aimed at filling them: journalists cite
-in prose, which is the full-archive search population, never the quote-post population — so no
-quote-post sweep can fill `journalism` however many posts it covers.
+**~~`journalism` and `business` stand at zero~~ — `journalism` opened on 2026-09-21, and the
+reasoning under it was wrong.**
+
+`business` still stands at zero, and the part that holds is the first half: `selectCrossoverCategories`
+omits any category with no records (§10), so an empty category is invisible to a reader and costs
+nothing. It is kept because removing a category from the enum is a schema change that would have to
+be reversed the moment a non-tech executive appears.
+
+**The part that was wrong:** this said journalists "cite in prose, which is the full-archive search
+population, never the quote-post population — so no quote-post sweep can fill `journalism` however
+many posts it covers." A quote-post sweep filled it. Track B's calibration run surfaced
+`@kylenabecker`, a RedState columnist confirmed against RedState's own author page, **quote-posting**
+a tracked post with an argument of his own — `amp-kyle-becker-2087712833760813122`.
+
+The mistaken step was treating "how an outlet cites" as "how a journalist amplifies". An outlet
+publishes prose that names a source, and that is indeed Track A's population. An individual
+journalist with an X account behaves like any other commentator: he quote-posts. So the two
+populations are not split by *who* the account is, they are split by **which surface the act happens
+on**, and a person can use either.
+
+**What follows for discovery spend:** a sweep aimed at filling a category is still the wrong frame —
+categories are an outcome of what is found, never a target (`CLAUDE.md §3`). But "this track cannot
+reach that population" is a claim about mechanics, and this one did not survive contact.
 
 Follower counts are contextual metadata only, never evidence of impressions.
 

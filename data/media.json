@@ -330,7 +330,7 @@
     "country": "US",
     "provenance": "original",
     "syndicated_from": null,
-    "context": "Second National Pulse citation. Names layoffhedge as the tracker behind the new district-level analysis, carrying the finding that all eight of the fastest-growing H-1B districts sit in Texas.",
+    "context": "Third National Pulse citation. Names layoffhedge as the tracker behind the new district-level analysis, carrying the finding that all eight of the fastest-growing H-1B districts sit in Texas.",
     "related_post_id": null,
     "featured": true,
     "logo": null,
@@ -2058,5 +2058,25 @@
     "notes": null,
     "status": "verified",
     "verified_at": "2026-09-19"
+  },
+  {
+    "id": "media-the-national-pulse-2026-07-03",
+    "publication": "The National Pulse",
+    "title": "H-1B Visa Renewals on Track to Hit Record High Despite Trump Admin's Efforts to Tighten Program",
+    "reference_type": "article",
+    "published_at": "2026-07-03",
+    "url": "https://thenationalpulse.com/2026/07/03/h-1b-visa-renewals-on-track-to-hit-record-high-despite-trump-admins-efforts-to-tighten-program/",
+    "author": null,
+    "country": "US",
+    "provenance": "original",
+    "syndicated_from": null,
+    "context": "Names LayoffHedge as the source of its analysis of USCIS continuing-employment approvals, reporting 273,026 petitions approved in the first nine months of fiscal year 2026.",
+    "related_post_id": null,
+    "featured": true,
+    "logo": null,
+    "archive_url": null,
+    "notes": null,
+    "status": "verified",
+    "verified_at": "2026-09-21"
   }
 ]

@@ -48,7 +48,7 @@ A section must be able to disappear when the evidence is thin.
 
 | Section | Renders when |
 |---|---|
-| Public References | ≥1 verified media record (**shipped in B8; 94 verified across 51 publications as of 2026-09-19, after B14 — the section renders and grows with the dataset, and B19 owns the row cap that growth now needs**) |
+| Public References | ≥1 verified media record (**shipped in B8; 95 verified across 51 publications as of 2026-09-21, after B14 and B10 — the section renders and grows with the dataset, and B19 owns the row cap that growth now needs**) |
 | Amplified By | enough verified amplifications for a real grid; otherwise fold examples into Crossover |
 | Crossover | ≥1 verified amplification; categories only shown if they have records |
 | Token | explicitly enabled; omitted in V1 |

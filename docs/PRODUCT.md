@@ -182,10 +182,19 @@ A perfect dataset is not required. A credible dataset is.
 ## 13. Content minimums before public launch
 
 ```text
-posts           10–20 strong tracked posts   (currently 20 ✔)
-amplifications  5–10 verified examples       (currently 9, 5 verified)
-media           5–10 verified references     (currently 0 — section must stay hidden)
+                minimum before launch          reading on 2026-09-21
+posts           10–20 strong tracked posts     32 verified          ✔
+amplifications  5–10 verified examples         20 verified          ✔
+media           5–10 verified references       95 verified of 104   ✔
 ```
+
+**All three minimums are met and the figures above are a dated reading, not a contract.** The
+parenthetical counts that used to sit here (`20`, `9`, `0`) were written before B10, B13 and B14 and
+were wrong in all three lines by 2026-09-21 — media in particular still said "currently 0 — section
+must stay hidden" long after the section had shipped and grown past a hundred records. Counts that
+live in prose go stale silently; the derived figures on the site recompute from `data/` and
+`tests/data-integration.test.ts` checks them against the files, so **read the number there and treat
+this table as a milestone marker.**
 
 If a category lacks data, **omit the section** rather than fill it weakly.
 Ten credible records beat fifty poorly sourced ones.
