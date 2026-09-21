@@ -60,16 +60,36 @@ export interface LegislatorMatch {
 }
 
 /**
- * Shortest surname allowed to match on name. Three-character surnames in the
- * register — `Lee`, `Kim`, `Cox`, `Fry` — are common enough as words, given
- * names and handle fragments that they carry no signal; they are dropped from
- * *name* matching only, and still match exactly on handle or account id.
+ * Shortest surname allowed to match on name.
  *
- * Four-character surnames like `Ford` are kept, because the real protection is
- * not this floor: a name match requires the **first name too**, as a whole word,
- * so a hit needs an account actually called "Gerald Ford".
+ * **Lowered from 4 to 3 on 2026-09-21, after it hid a sitting congressman.**
+ * The calibration sweep surfaced `@chiproytx` — display name "Chip Roy",
+ * 536,170 followers, bio "Congressman from the Great State of Texas" — and the
+ * register match did not fire, although the register holds `Roy,Chip` exactly.
+ * `Roy` is three characters. Only the bio role-phrase caught him, and the run
+ * was very nearly reported as finding no officeholder at all.
+ *
+ * The floor's original reasoning was that surnames like `Lee`, `Kim`, `Cox` and
+ * `Fry` are too common as ordinary words to carry signal. That reasoning ignores
+ * the check immediately below it: a name match already requires the **first name
+ * too**, as a whole word, so a hit needs an account actually called "Chip Roy",
+ * not one that merely contains "roy". The floor was redundant protection paid
+ * for in recall.
+ *
+ * Measured before changing it, which is the only reason to believe the trade:
+ *
+ * ```text
+ * sitting members with a 3-letter surname   12   Chu, Lee x3, Kim x2, Roy, Fry,
+ *                                                Amo, Min, Pou  — all invisible
+ * new matches across 657 paid profiles       2   both genuinely Chip Roy
+ * false positives                            0
+ * ```
+ *
+ * Two of the twelve are U.S. Senators. Kept at 3 rather than removed entirely so
+ * that a one- or two-character surname cannot match, where the whole-word
+ * protection thins out.
  */
-const MIN_SURNAME_LENGTH = 4;
+const MIN_SURNAME_LENGTH = 3;
 
 /** Lowercase, strip punctuation and honorifics' full stops, collapse whitespace. */
 function normalize(value: string): string {

@@ -104,9 +104,25 @@ describe("matchLegislators", () => {
     expect(matchLegislators({ name: "Chip Royston", username: "chef" }, index)).toEqual([]);
   });
 
-  it("ignores three-character surnames, which carry no signal", () => {
-    // "Lee" is a surname, a given name and a handle fragment all at once.
-    expect(matchLegislators({ name: "Ann Lee", username: "ann" }, index)).toEqual([]);
+  it("matches a three-character surname, because the first name still has to match", () => {
+    /*
+     * The floor used to be four characters and this case asserted the opposite.
+     * It hid `@chiproytx` — display name "Chip Roy", a sitting U.S.
+     * Representative — from the calibration sweep on 2026-09-21, and twelve
+     * sitting members have a three-letter surname (Chu, Lee x3, Kim x2, Roy,
+     * Fry, Amo, Min, Pou), two of them Senators.
+     *
+     * Dropping the floor to 3 added exactly two matches across the 657 profiles
+     * paid for to date, both of them genuinely Chip Roy, and no false positive.
+     */
+    expect(matchLegislators({ name: "Chip Roy", username: "chiproytx" }, index)).toHaveLength(1);
+    expect(matchLegislators({ name: "Ann Lee", username: "ann" }, index)).toHaveLength(1);
+  });
+
+  it("still needs both names, so a bare three-character surname does not match", () => {
+    // The protection is the first-name requirement, never the length floor.
+    expect(matchLegislators({ name: "Bruce Lee", username: "bruce" }, index)).toEqual([]);
+    expect(matchLegislators({ name: "Roy Jones", username: "boxer" }, index)).toEqual([]);
   });
 
   it("keeps a four-character surname, because the first name still has to match", () => {
