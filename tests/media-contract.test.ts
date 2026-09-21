@@ -395,12 +395,45 @@ describe("media contract — real dataset", () => {
     }
   });
 
-  it("matches today's reading: 94 verified — 77 original, 17 republications — across 7 countries", () => {
+  /*
+   * Converted from literals at B10 (docs/WORKPLAN.md, "value-pinned tests").
+   * It pinned `94 / 77 / 17 / 33 / 7`, so B10's first media record turned the
+   * suite red. The literals live on in `tests/frozen-dataset.test.ts` against the
+   * frozen 2026-09-20 fixture; what belongs here is the arithmetic that has to
+   * hold whatever the dataset grows to.
+   *
+   * The relationship that actually matters is the provenance split: every
+   * verified record is either an original or a republication, and the two
+   * partition the total exactly. That is the claim `docs/DATA.md §7` makes and
+   * the one a per-publication count depends on — a record drifting to a third
+   * state, or being counted in both, is the failure this file exists to catch.
+   */
+  it("splits every verified reference into exactly one of original or republication", () => {
     const metrics = getMediaMetrics(references);
-    expect(metrics.verifiedMediaReferenceCount).toBe(94);
-    expect(metrics.originalReferenceCount).toBe(77);
-    expect(metrics.syndicatedReferenceCount).toBe(17);
-    expect(metrics.featuredReferenceCount).toBe(33);
-    expect(metrics.countryCount).toBe(7);
+    const verified = references.filter(
+      (reference) => reference.status === "verified" && reference._placeholder !== true,
+    );
+
+    expect(metrics.verifiedMediaReferenceCount).toBe(verified.length);
+    expect(metrics.originalReferenceCount + metrics.syndicatedReferenceCount).toBe(
+      metrics.verifiedMediaReferenceCount,
+    );
+    expect(metrics.originalReferenceCount).toBe(
+      verified.filter((reference) => reference.provenance === "original").length,
+    );
+    expect(metrics.syndicatedReferenceCount).toBe(
+      verified.filter((reference) => reference.provenance === "syndicated").length,
+    );
+    expect(metrics.featuredReferenceCount).toBe(
+      verified.filter((reference) => reference.featured).length,
+    );
+    expect(metrics.countryCount).toBe(
+      new Set(
+        verified
+          .filter((reference) => reference.provenance === "original")
+          .map((reference) => reference.country)
+          .filter((country): country is string => country !== null),
+      ).size,
+    );
   });
 });

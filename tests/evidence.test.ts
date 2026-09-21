@@ -53,9 +53,25 @@ describe("selectDatasetSummary — real dataset", () => {
     expect(rows.find((row) => row.key === "media")?.count).toBe(expectedMedia);
   });
 
-  it("excludes archived and _placeholder media records — 103 raw records, 94 verified", () => {
-    expect(input.mediaReferences.length).toBe(103);
-    expect(rows.find((row) => row.key === "media")?.count).toBe(94);
+  /*
+   * Converted from literals at B10 (docs/WORKPLAN.md, "value-pinned tests").
+   * It read `103 raw records, 94 verified` and went red the moment a sweep added
+   * one — the failure mode that makes a guard into an obstacle. The literals are
+   * not gone: `tests/frozen-dataset.test.ts` still asserts 103 and 94 against the
+   * frozen 2026-09-20 fixture, where the input cannot drift.
+   *
+   * What is worth asserting against the live file is that the exclusion happens
+   * at all, and that it removes exactly the records it claims to.
+   */
+  it("excludes archived and _placeholder media records rather than counting every row", () => {
+    const excluded = input.mediaReferences.filter((record) => !isVerified(record));
+
+    // A filter with nothing to remove would pass the equality below while
+    // proving nothing, so state that the dataset really does hold both kinds.
+    expect(excluded.length).toBeGreaterThan(0);
+    expect(rows.find((row) => row.key === "media")?.count).toBe(
+      input.mediaReferences.length - excluded.length,
+    );
   });
 
   it("gives every non-zero row a /evidence#<key> href", () => {

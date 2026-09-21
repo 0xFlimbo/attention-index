@@ -163,11 +163,30 @@ describe("selectPublicationReferences — ordering", () => {
 });
 
 describe("selectPublicationReferences — real dataset", () => {
-  it("matches today's known shape: 94 eligible references across 51 publications, top group 17", () => {
+  /*
+   * Converted from literals at B10 (docs/WORKPLAN.md, "value-pinned tests").
+   * `51 groups / 94 references / top group 17` went red on B10's first media
+   * record. `tests/frozen-dataset.test.ts` keeps those numbers against the frozen
+   * 2026-09-20 fixture; the live file is asserted by relationship.
+   *
+   * The invariant: grouping is a partition. Every eligible reference lands in
+   * exactly one group, no reference is dropped, and no group is empty — which is
+   * what a reader is being shown when the rail prints "N references".
+   */
+  it("groups every eligible reference exactly once, under its own publication", () => {
+    const eligible = getMediaReferences().filter(
+      (reference) => reference.status === "verified" && reference._placeholder !== true,
+    );
     const groups = selectPublicationReferences(getMediaReferences());
-    expect(groups).toHaveLength(51);
-    expect(groups.reduce((sum, group) => sum + group.references.length, 0)).toBe(94);
-    expect(groups[0]?.references.length).toBe(17);
+
+    expect(groups.reduce((sum, group) => sum + group.references.length, 0)).toBe(eligible.length);
+    expect(groups).toHaveLength(new Set(eligible.map((reference) => reference.publication)).size);
+    for (const group of groups) {
+      expect(group.references.length).toBeGreaterThan(0);
+      for (const reference of group.references) {
+        expect(reference.publication).toBe(group.publication);
+      }
+    }
   });
 
   /*
@@ -185,16 +204,42 @@ describe("selectPublicationReferences — real dataset", () => {
     }
   });
 
-  it("puts the two groups B14's review found out of place back in count order", () => {
-    const order = selectPublicationReferences(getMediaReferences()).map(
-      (group) => group.publication,
-    );
-    // Inkl (8 references, 0 originals) was at row 43, below thirty-odd rows
-    // printing "1 reference"; Alex Jones Live (3) was below The National
-    // Pulse (2). Both are pinned by position now, not merely by the rail
-    // check above.
-    expect(order.indexOf("Inkl")).toBe(1);
-    expect(order.indexOf("Alex Jones Live")).toBeLessThan(order.indexOf("The National Pulse"));
+  it("orders a group on its reference count alone, not on how many are originals", () => {
+    /*
+     * The B19 defect, stated as the property rather than as two positions.
+     *
+     * It was pinned as `indexOf("Inkl") === 1` and `Alex Jones Live` above
+     * `The National Pulse`. The first still holds; the second was a 3-vs-2
+     * comparison and B10 gave The National Pulse its third reference, making it
+     * a tie and the assertion a statement about the tie-break. That is a real
+     * change in the data, not a regression, and pinning a pair of names was the
+     * wrong way to hold the rule — a dataset-widening batch moves those names.
+     *
+     * What B19 actually fixed: Inkl printed 8 references and sat at row 43,
+     * below thirty-odd rows printing "1 reference", because ordering had been
+     * keyed on originals. So the invariant is that ordering follows the count
+     * the reader is shown, and a group of republications ranks on it exactly
+     * like a group of originals.
+     */
+    const groups = selectPublicationReferences(getMediaReferences());
+
+    // A group with no originals at all, high in the list purely on its count.
+    const inkl = groups.find((group) => group.publication === "Inkl");
+    expect(inkl).toBeDefined();
+    expect(
+      inkl!.references.every((reference) => reference.provenance !== "original"),
+    ).toBe(true);
+    for (const group of groups.slice(groups.indexOf(inkl!) + 1)) {
+      expect(group.references.length).toBeLessThanOrEqual(inkl!.references.length);
+    }
+
+    // And the general rule the rail check states positionally: a larger group
+    // never sits below a smaller one, whatever either is made of.
+    for (const [index, group] of groups.entries()) {
+      for (const later of groups.slice(index + 1)) {
+        expect(later.references.length).toBeLessThanOrEqual(group.references.length);
+      }
+    }
   });
 });
 
