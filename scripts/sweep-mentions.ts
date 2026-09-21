@@ -62,6 +62,7 @@ import {
   type Legislator,
 } from "../src/lib/sweep/legislator-index";
 import { collectUserObjects, mergeProfiles, type PaidProfile } from "../src/lib/sweep/profile-store";
+import { archiveEntry, rawArchivePath } from "../src/lib/sweep/raw-archive";
 
 const ROOT = process.cwd();
 const DATA_DIR = resolve(ROOT, "data");
@@ -192,13 +193,39 @@ class FetchFailure extends Error {
   }
 }
 
-async function fetchJson<T>(url: string, token: string): Promise<T> {
+/**
+ * Every request this script makes, archived before it is parsed.
+ *
+ * `label` is not decoration: it is what the folder tells someone months from
+ * now about whether a question can be answered without paying again. Passing
+ * `billed: false` skips the archive for the metering endpoint, which returns a
+ * balance rather than content and costs nothing.
+ */
+async function fetchJson<T>(
+  url: string,
+  token: string,
+  label: string,
+  billed = true,
+): Promise<T> {
   const response = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
   if (!response.ok) {
     const body = await response.text().catch(() => "");
     throw new FetchFailure(response.status, response.statusText, body.slice(0, 400));
   }
-  return (await response.json()) as T;
+  const body = (await response.json()) as T;
+  // Persist before parsing: a misunderstood request and an absent field look
+  // identical once the response has been read away (docs/X-API.md §15).
+  if (billed && !isDryRun) archiveRaw(url, label, body);
+  return body;
+}
+
+/** Writes one archived response under `research/`, creating the dated folder. */
+function archiveRaw(url: string, label: string, body: unknown): void {
+  const entry = archiveEntry(url, label, body);
+  const file = resolve(RESEARCH_DIR, rawArchivePath(label, entry.fetched_at));
+  mkdirSync(resolve(file, ".."), { recursive: true });
+  writeFileSync(file, `${JSON.stringify(entry, null, 2)}
+`);
 }
 
 /**
@@ -208,7 +235,12 @@ async function fetchJson<T>(url: string, token: string): Promise<T> {
  */
 async function readBalance(token: string): Promise<number | null> {
   try {
-    const body = await fetchJson<{ data?: { total_balance?: number } }>(CREDITS_URL, token);
+    const body = await fetchJson<{ data?: { total_balance?: number } }>(
+      CREDITS_URL,
+      token,
+      "usage-credits",
+      false,
+    );
     return body.data?.total_balance ?? null;
   } catch {
     return null;
@@ -287,10 +319,16 @@ function fullPostText(tweet: ApiTweet): { text: string; truncated: boolean } {
  */
 async function sizeWindow(token: string, since: string): Promise<number> {
   const url = `${COUNTS_URL}?query=${encodeURIComponent(QUERY)}&${since}&granularity=day`;
+  /*
+   * Billed (~$0.01) and therefore archived, which it was not until 2026-09-21.
+   * This runs on every unqualified invocation — the default, cheapest, most
+   * frequent mode — and its answer is the historical record of how big the
+   * mention population was on a given day. That reading cannot be re-taken.
+   */
   const body = await fetchJson<{
     data?: { start: string; tweet_count: number }[];
     meta?: { total_tweet_count?: number };
-  }>(url, token);
+  }>(url, token, "counts-window-sizing");
 
   const total = body.meta?.total_tweet_count ?? 0;
   console.log(`\nwindow holds ${total} post(s)`);
@@ -355,7 +393,7 @@ async function sweep(
      * can be judged without it. Track B pages dozens of times, where the same
      * economy runs the other way (docs/X-API.md §12).
      */
-    const body = await fetchJson<SearchPage>(url, token);
+    const body = await fetchJson<SearchPage>(url, token, `search-all-page-${page + 1}`);
     pages.push(body);
 
     const tweets = body.data ?? [];

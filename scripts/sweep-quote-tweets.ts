@@ -126,6 +126,7 @@ import {
   mergeProfiles,
   type PaidProfile,
 } from "../src/lib/sweep/profile-store";
+import { archiveEntry, rawArchivePath } from "../src/lib/sweep/raw-archive";
 
 const ROOT = process.cwd();
 const DATA_DIR = resolve(ROOT, "data");
@@ -303,9 +304,26 @@ function extractStatusId(url: string): string | null {
  * (401/403 — a tier without access to this endpoint) is reported verbatim and
  * thrown immediately: never retried, never worked around.
  */
+/**
+ * Writes one archived response under `research/`, creating the dated folder.
+ *
+ * Shared shape with `sweep:mentions` via `src/lib/sweep/raw-archive.ts`, so
+ * "keep what you paid for" is a function both tracks call rather than a
+ * convention each re-implements and one of them forgets.
+ */
+function archiveRaw(url: string, label: string, body: unknown): void {
+  if (isDryRun) return;
+  const entry = archiveEntry(url, label, body);
+  const file = resolve(RESEARCH_DIR, rawArchivePath(label, entry.fetched_at));
+  mkdirSync(resolve(file, ".."), { recursive: true });
+  writeFileSync(file, `${JSON.stringify(entry, null, 2)}
+`);
+}
+
 async function fetchJson<T>(
   url: string,
   token: string,
+  label: string | null = null,
 ): Promise<{ body: T; remaining: string | null }> {
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt += 1) {
     let response: Response;
@@ -318,10 +336,11 @@ async function fetchJson<T>(
     }
 
     if (response.ok) {
-      return {
-        body: (await response.json()) as T,
-        remaining: response.headers.get("x-rate-limit-remaining"),
-      };
+      const body = (await response.json()) as T;
+      // Persist before parsing (docs/X-API.md §15). `label: null` is the
+      // metering endpoint, which returns a balance rather than billed content.
+      if (label !== null) archiveRaw(url, label, body);
+      return { body, remaining: response.headers.get("x-rate-limit-remaining") };
     }
 
     const retryable = response.status === 429 || response.status >= 500;
@@ -551,7 +570,7 @@ async function measure(posts: Post[], token: string): Promise<PostSize[]> {
   const url =
     `${LOOKUP_URL}?ids=${ids.join(",")}` +
     `&tweet.fields=public_metrics,created_at,text,note_tweet,entities`;
-  const { body } = await fetchJson<{ data?: ApiTweet[] }>(url, token);
+  const { body } = await fetchJson<{ data?: ApiTweet[] }>(url, token, "tracked-post-metrics");
 
   const sizes: PostSize[] = [];
   for (const tweet of body.data ?? []) {
@@ -651,7 +670,11 @@ async function fetchProfiles(
       `&user.fields=username,name,description,location,verified_type,public_metrics,` +
       `created_at,url,entities,parody,is_identity_verified,verified_followers_count`;
     try {
-      const { body } = await fetchJson<{ data?: ApiUser[] }>(url, token);
+      const { body } = await fetchJson<{ data?: ApiUser[] }>(
+        url,
+        token,
+        `profiles-batch-${index / 100 + 1}`,
+      );
       for (const user of body.data ?? []) {
         profiles.set(user.id, user);
         // Written to the store as it arrives, not at the end: a 402 on the next
@@ -792,7 +815,7 @@ async function sweepPost(
      */
     let page: { body: QuotePage; remaining: string | null };
     try {
-      page = await fetchJson<QuotePage>(url, token);
+      page = await fetchJson<QuotePage>(url, token, `quote-tweets-${statusId}-page-${pagesFetched + 1}`);
     } catch (error) {
       stoppedBy =
         error instanceof FetchFailure

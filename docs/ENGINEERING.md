@@ -223,9 +223,25 @@ external embeds).
   "import:press": "tsx scripts/import-layoffhedge-press.ts",
   "check:media-mentions": "tsx scripts/check-media-mentions.ts",
   "sweep:quotes": "tsx scripts/sweep-quote-tweets.ts",
-  "check:visual": "node scripts/visual-check.mjs"
+  "check:visual": "node scripts/visual-check.mjs",
+  "review:profiles": "tsx scripts/review-paid-profiles.ts",
+  "refetch:truncated": "tsx scripts/refetch-truncated-posts.ts",
+  "probe:fields": "tsx scripts/probe-field-parameter.ts",
+  "sweep:mentions": "tsx scripts/sweep-mentions.ts"
 }
 ```
+
+`check:visual` is the browser review pass — see §16. `check:media-mentions` is the press-queue
+probe — see §17. `sweep:mentions` is the Track A mention sweep — see §18a; verification is a stage
+of both tracks — see §18b; and keeping every billed response is the tools' job — see §18c.
+`sweep:quotes` is the Track B quote-post sweep — see §18. `review:profiles`
+re-reads profiles already paid for and **makes no network request at all** — see §19.
+`refetch:truncated` and `probe:fields` are the two one-off scripts of §20.
+
+**This block is generated from `package.json`, not maintained beside it.** It had drifted by four
+entries — `review:profiles`, `refetch:truncated`, `probe:fields` and `sweep:mentions` all existed
+and none was listed — which is the ordinary fate of a list copied by hand. If you add a script,
+paste the whole `scripts` object again rather than appending a line.
 
 `check:visual` is the browser review pass — see §16. `check:media-mentions` is the press-queue
 probe — see §17. `sweep:quotes` is the quote-post discovery sweep — see §18. `review:profiles`
@@ -579,6 +595,60 @@ her a commentator rather than a journalist, and one rejected for having no masth
 Every candidate, flagged or not, also carries the check that has disqualified the most accounts so
 far: **read the post**. A bare link, a slogan or a reproduction of someone else's article carries no
 act of its own and is archived regardless of who posted it.
+
+---
+
+## 18d. The shared sweep modules
+
+Both discovery tracks are thin scripts over four pure modules in `src/lib/sweep/`, which is what
+makes a rule fixed in one track fixed in both:
+
+| Module | Owns |
+|---|---|
+| `quote-candidates.ts` | who is already known, the role-phrase and following signals, the self-account exclusions, and `verificationClaims` (§18b) |
+| `legislator-index.ts` | the Congress register — CSV parsing, and matching an account by name, handle or account id |
+| `profile-store.ts` | recognising a paid user object and folding readings newest-first, so nothing is bought twice |
+| `raw-archive.ts` | where a billed response goes the moment it arrives (§18c) |
+
+They live in `src/lib` rather than `scripts/` for the same reason
+`src/lib/validation/placeholder.ts` does: they are pure, they are unit-tested without a disk or an
+API, and the decisions they encode are the ones a silent bug would be most expensive in. Two such
+bugs were found on 2026-09-21, both in this directory and both shared by both tracks — a surname
+floor that hid twelve sitting members of Congress, and a profile recogniser that filed @-mentions
+as paid profiles and thereby suppressed real purchases.
+
+---
+
+## 18c. Keeping what you paid for is part of the tools, not a habit
+
+`src/lib/sweep/raw-archive.ts`, used by both discovery scripts.
+
+**Every billed response is written to `research/` before it is parsed.** The
+`fetchJson` helper in each script takes a `label` and archives the body on the way through, so the
+only way to not keep a response is to delete the call. The file lands at
+`research/x-api-<day>/raw/<label>-<hhmmss>.json` and carries when, which endpoint, why, and the
+untouched body.
+
+**Persist before parsing**, because a request that was misunderstood and a field that is genuinely
+absent look identical once the response is read away — and this API answers an unknown field name
+with HTTP 200 and silence (`docs/X-API.md §15–§16`).
+
+**The endpoint is stored as a path, never the full URL.** A query string can carry credentials, and
+§8's rule that a token is never written anywhere includes files nobody intended to publish. Covered
+by a test that asserts a secret in a query cannot reach the archive.
+
+**Why it is a module.** `research/README.md` always said paid data is not disposable and both
+scripts always wrote their main payload there — and it still was not enough, twice:
+
+- **a billed call nobody had covered.** `sweep:mentions` sizes its window with `counts` on every
+  run, the default and most frequent mode, and printed the answer without keeping it. That reading
+  is the historical size of the mention population on a given day and cannot be re-taken.
+- **ad-hoc probes had ad-hoc storage.** On 2026-09-21 five hand-assembled `curl` probes — $0.12 of
+  `counts` and `/2/news/search` calls — spent hours in a session scratchpad that gets wiped.
+
+A convention each caller re-implements is a convention each caller can forget. The metering
+endpoint (`usage/credits`) is the one deliberate exception: it returns a balance rather than billed
+content, and passes `null`.
 
 ---
 
