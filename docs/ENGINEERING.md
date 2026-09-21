@@ -528,6 +528,60 @@ a second time to do the reading the counts exist to enable (added at B14, 2026-0
 
 ---
 
+## 18a. Maintenance tool — `pnpm sweep:mentions` (Track A)
+
+`scripts/sweep-mentions.ts`. **Occasional discovery tool. Never production runtime.**
+
+```bash
+pnpm sweep:mentions                          # size the window with counts (~$0.01) and stop
+pnpm sweep:mentions -- --sweep                # actually fetch, profile and report
+pnpm sweep:mentions -- --since-id <id>        # override the stored high-water mark
+pnpm sweep:mentions -- --start-time <ISO>     # a date window instead of an id
+pnpm sweep:mentions -- --sweep --dry-run      # fetch, report to stdout, write no files
+```
+
+Purpose (`docs/WORKPLAN.md` B10, Track A): a full-archive search over every post whose **text**
+names the account, the brand word or the domain. It is the complement of `sweep:quotes`, and the
+two barely overlap — 0 of the 10 pre-existing records were findable by Track A, because a quote post
+attaches a card rather than text. Track A finds outlets and commentators; Track B finds the
+officeholders.
+
+**Sizing is the default and spending is opt-in.** An unqualified run makes one `counts` request,
+prints what the window holds and what a sweep would cost, and stops. Only `--sweep` bills.
+
+**The incremental state lives in `research/track-a-state.json`** — the `since_id` high-water mark,
+the window covered, and one line per run. It is written only after a successful sweep, from the
+API's own `newest_id`, and only ever forwards: a mark that moves backwards re-buys a paid window,
+and one that moves forwards after a failure silently skips posts nobody has seen.
+
+**Strictly read-only against `data/`,** like every discovery tool here. It reports candidates and
+prints, for each, the claims that must be confirmed **against a source that is not the account** —
+see §18b.
+
+Why it exists as a script at all: it produced five records over two sessions as hand-assembled
+`curl` lines, which is how the field-name bugs in `docs/X-API.md §16` happened. A committed script
+is covered by `tests/api-field-validity.test.ts`; a `curl` line is covered by nothing.
+
+---
+
+## 18b. Verification is a stage of the discovery tracks
+
+Both tracks emit, per candidate, what a human must confirm and where —
+`verificationClaims()` in `src/lib/sweep/quote-candidates.ts`, shared so a rule fixed in one track
+is fixed in both.
+
+It returns **a claim and its test, never a verdict**, because no amount of profile data can
+establish a role. The calibration sweep is the evidence that this has to be mechanical: three
+accounts whose bios claimed a journalistic role split three ways when checked against the outlets —
+one recorded as `journalism`, one recategorised to `politics` because the network's own page calls
+her a commentator rather than a journalist, and one rejected for having no masthead anywhere.
+
+Every candidate, flagged or not, also carries the check that has disqualified the most accounts so
+far: **read the post**. A bare link, a slogan or a reproduction of someone else's article carries no
+act of its own and is archived regardless of who posted it.
+
+---
+
 ## 18. Maintenance tool — `pnpm sweep:quotes`
 
 `scripts/sweep-quote-tweets.ts`. **Occasional discovery tool. Never production runtime.**

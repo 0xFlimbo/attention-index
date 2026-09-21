@@ -15,6 +15,7 @@ import {
   LARGE_FOLLOWING,
   SELF_ACCOUNT,
   SELF_ACCOUNTS,
+  verificationClaims,
 } from "@/lib/sweep/quote-candidates";
 
 const POST_ID = "2047676942128685469";
@@ -215,5 +216,52 @@ describe("signalFlags and parody accounts", () => {
     expect(
       signalFlags({ username: "x", name: "Office", verified_type: "government", parody: true }),
     ).toContain("government-verified");
+  });
+});
+
+describe("verificationClaims", () => {
+  /*
+   * Verification is a stage of the track (maintainer instruction, 2026-09-21),
+   * so the tool emits the claims rather than leaving them to memory. The
+   * calibration sweep is why: of three accounts whose bios claimed a
+   * journalistic role, checking against the outlets recorded one, recategorised
+   * one and rejected one.
+   */
+  it("turns a role-phrase flag into a claim that names where to check it", () => {
+    const claims = verificationClaims(
+      { username: "kylenabecker", name: "Kyle Becker", description: "RedState columnist" },
+      ["role-phrase: columnist", "large-following"],
+    );
+    expect(claims.some((claim) => claim.includes("NOT this account"))).toBe(true);
+    expect(claims.some((claim) => claim.includes("columnist"))).toBe(true);
+  });
+
+  it("asks whether a register name match is the same person or a namesake", () => {
+    // `@RussellFosterTX` matched a historical New York representative named
+    // Foster and is a former candidate for a Texas seat — a coincidence.
+    const claims = verificationClaims(
+      { username: "RussellFosterTX", name: "Russell Foster A New Texas" },
+      ["register-match (name): A. Foster, rep-NY, historical"],
+    );
+    expect(claims.some((claim) => claim.includes("namesake"))).toBe(true);
+  });
+
+  it("always asks for the act to be read, even for an unflagged account", () => {
+    // The check that has disqualified the most accounts: a 1.48M-follower
+    // account was rejected because its post was a slogan and a link.
+    const claims = verificationClaims({ username: "someone", name: "Someone" }, []);
+    expect(claims).toHaveLength(1);
+    expect(claims[0]).toContain("bare link");
+  });
+
+  it("never returns a verdict, only a claim and its test", () => {
+    const claims = verificationClaims(
+      { username: "x", name: "X", verified_type: "government" },
+      ["government-verified"],
+    );
+    // No profile field can establish a role; saying so would be the bug.
+    for (const claim of claims) {
+      expect(claim).not.toMatch(/\bverified\b(?! )|confirmed as|is a journalist/i);
+    }
   });
 });

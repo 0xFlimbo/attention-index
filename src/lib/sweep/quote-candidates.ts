@@ -176,3 +176,62 @@ export function signalFlags(user: QuotingAccount): string[] {
   if ((user.public_metrics?.followers_count ?? 0) >= LARGE_FOLLOWING) flags.push("large-following");
   return flags;
 }
+
+/**
+ * What a human has to confirm before this account can become a record, and
+ * where the confirmation has to come from.
+ *
+ * **Verification is a stage of the track, not a courtesy afterwards**
+ * (maintainer instruction, 2026-09-21). The calibration sweep produced three
+ * accounts whose bios claimed a journalistic role; checking them against the
+ * outlets rather than the bios split them three ways:
+ *
+ * ```text
+ * @kylenabecker    "RedState columnist"   -> RedState's own author page       recorded
+ * @SaraGonzalesTX  "Host on @BlazeTV"     -> Blaze's page says "BlazeTV Host,
+ *                                            political commentator", NOT a
+ *                                            journalist                       recategorised
+ * @BreannaMorello  "Independent Journalist" -> no outlet masthead found       rejected
+ * ```
+ *
+ * One of three survived as claimed. A tool that emitted "3 journalism
+ * candidates" and stopped would have been wrong about two of them, so the
+ * claims are emitted with the candidate and the report is not finished until
+ * they are answered.
+ *
+ * This deliberately returns the **claim and its test**, never a verdict: no
+ * amount of profile data can establish a role, which is the entire point.
+ */
+export function verificationClaims(user: QuotingAccount, flags: readonly string[]): string[] {
+  const claims: string[] = [];
+
+  for (const flag of flags) {
+    if (flag.startsWith("role-phrase:")) {
+      const phrases = flag.slice("role-phrase:".length).trim();
+      claims.push(
+        `bio claims a role (${phrases}) — confirm against a source that is NOT this account: ` +
+          `the named outlet's own author/staff page, a masthead, or a byline archive`,
+      );
+    }
+    if (flag.startsWith("register-match")) {
+      claims.push(
+        "register match is on name only — confirm this is the same person and not a namesake, " +
+          "and that the office was held at the time of the act",
+      );
+    }
+    if (flag === "government-verified") {
+      claims.push(
+        "`verified_type: government` — confirm which office, and that the account is the " +
+          "officeholder rather than an agency or a staff account",
+      );
+    }
+  }
+
+  // Said for every candidate, flagged or not: the act is what is recorded, and
+  // it is the check that has disqualified the most accounts so far.
+  claims.push(
+    "read the post itself — a bare link, a slogan or a reproduction of someone else's article " +
+      "carries no act of its own and is archived regardless of who posted it",
+  );
+  return claims;
+}
