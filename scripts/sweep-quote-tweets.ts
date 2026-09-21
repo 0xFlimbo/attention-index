@@ -245,7 +245,18 @@ interface ApiTweet {
   /** Expanded URLs in the post, so a link is readable without resolving t.co. */
   entities?: Record<string, unknown>;
   referenced_tweets?: ApiReferencedTweet[];
+  /**
+   * The same list under the Post vocabulary. The API mirrors whichever
+   * parameter name was sent, exactly as it does for `note_tweet`/`note_post`,
+   * so both are declared and `referencedPosts()` reads whichever arrived.
+   */
+  referenced_posts?: ApiReferencedTweet[];
   public_metrics?: Record<string, number>;
+}
+
+/** Whichever vocabulary the response came back in. Neither is preferred. */
+function referencedPosts(tweet: ApiTweet): ApiReferencedTweet[] | undefined {
+  return tweet.referenced_tweets ?? tweet.referenced_posts;
 }
 
 interface ApiUser {
@@ -539,7 +550,7 @@ async function measure(posts: Post[], token: string): Promise<PostSize[]> {
    */
   const url =
     `${LOOKUP_URL}?ids=${ids.join(",")}` +
-    `&post.fields=public_metrics,created_at,text,note_post,entities`;
+    `&tweet.fields=public_metrics,created_at,text,note_tweet,entities`;
   const { body } = await fetchJson<{ data?: ApiTweet[] }>(url, token);
 
   const sizes: PostSize[] = [];
@@ -685,7 +696,7 @@ interface SweepResult {
    * anything else means it is not, and the post is worth resuming when the
    * blocker clears.
    */
-  stoppedBy: "end-of-list" | "max-pages" | string;
+  stoppedBy: "end-of-list" | "no-new-posts" | "max-pages" | string;
   candidates: Candidate[];
   /** Untouched response bodies. Written separately, never into the report. */
   rawPages: QuotePage[];
@@ -700,10 +711,31 @@ interface SweepResult {
  *   carries replies inside the quote threads; excluding only retweets left a
  *   51% genuine-quote density, excluding both took it to 99%. Every entry the
  *   filter removes is an entry you do not pay $0.005 to discard.
- * - **No `expansions=author_id`.** `author_id` is a tweet field and arrives
- *   free; the expansion attaches a whole user object per page, and the same
- *   account quoting across ten pages is billed on each one. Profiles are
- *   fetched once, in phase two, for the shortlist only.
+ * - **No `expansions=author_id`.** The expansion attaches a whole user object
+ *   per page and bills a user read for each — measured on the 2026-09-20 ledger,
+ *   which shows 83, 49, 1 and 1 users billed alongside the four enumeration
+ *   pages. `author_id` is instead requested as a plain `tweet.fields` value,
+ *   which costs nothing: billing is per resource returned, never per field.
+ *   Profiles are then bought once, in phase two, for the shortlist only.
+ *
+ * **And that is why this request stays on the `tweet.fields` vocabulary.**
+ * Corrected 2026-09-21, after a run that enumerated a page and reported zero.
+ * The spec (`research/x-api-2026-09-20/openapi.json`) documents this endpoint
+ * with `post.fields`, whose enum holds **neither `author_id` nor
+ * `referenced_posts`** — in the Post vocabulary both are *expansions*, not
+ * fields. So a `post.fields` request cannot ask for either one, and the only way
+ * to obtain them is `expansions=author_id,referenced_posts`, which re-introduces
+ * the per-page user read this phase exists to avoid.
+ *
+ * `tweet.fields` is a legacy alias here — the spec does not list it on this
+ * endpoint — but it is served, and its enum does carry both values. Measured
+ * 2026-09-21 on one page of 2087170419027526094: 92 of 92 entries returned
+ * `author_id` and `referenced_tweets`, 92 of 92 resolved to genuine quotes of
+ * the post, and `includes.users` was empty — no user read billed.
+ *
+ * **If the alias is ever dropped**, the guard below catches it on page one. The
+ * migration is then `post.fields` + `expansions=author_id,referenced_posts`,
+ * and it costs a user read per author at enumeration. Price it before running it.
  */
 async function sweepPost(
   target: PostSize,
@@ -724,11 +756,30 @@ async function sweepPost(
   let knownSkipped = 0;
   let exhausted = false;
   let stoppedBy: SweepResult["stoppedBy"] = "max-pages";
+  /**
+   * Every post id this sweep has already been handed, and how many pages in a
+   * row have added none.
+   *
+   * **The endpoint's pagination does not terminate.** Measured 2026-09-21 on
+   * 2087170419027526094: pages 1–3 delivered 219 distinct posts and all 211
+   * distinct authors, and then every subsequent page returned *the same single
+   * post* — `2087172716323344624`, 23 times — each with a fresh `next_token`.
+   * `next_token` is therefore not a promise that anything is left, and
+   * `end-of-list` may simply never arrive.
+   *
+   * The credit cost of that loop is zero, because a resource already delivered
+   * today is deduplicated. The cost that is real is the **rate limit**: 75
+   * requests per 15 minutes, one burned per spin. An uncapped `--all` run would
+   * have spent its entire window revolving on one post, and `--max-pages` would
+   * have looked like the thing that saved it.
+   */
+  const seenPostIds = new Set<string>();
+  let barrenPages = 0;
 
   while (pagesFetched < maxPages) {
     let url =
       `${quotesUrl(statusId)}?max_results=${PAGE_SIZE}&exclude=retweets,replies` +
-      `&post.fields=created_at,public_metrics,text,note_post,entities`;
+      `&tweet.fields=created_at,public_metrics,text,note_tweet,entities,author_id,referenced_tweets`;
     if (pageToken) url += `&pagination_token=${pageToken}`;
 
     /*
@@ -756,32 +807,42 @@ async function sweepPost(
     const tweets = body.data ?? [];
     entriesSeen += tweets.length;
 
+    // How much of this page was new, which is the only reliable sign of progress.
+    const freshOnThisPage = tweets.filter((tweet) => !seenPostIds.has(tweet.id)).length;
+    for (const tweet of tweets) seenPostIds.add(tweet.id);
+    barrenPages = freshOnThisPage === 0 ? barrenPages + 1 : 0;
+
     /*
      * Stop on page one if the field parameter was ignored.
      *
-     * The request asks for `tweet.fields`, which is what this account was
-     * measured against on 2026-09-20 and what it returns today. The OpenAPI spec
-     * read on 2026-09-21 documents the parameter as **`post.fields`** — the
-     * rename that came with the Post vocabulary. Both work now; if the old name
-     * is ever dropped, the endpoint will not error. It will return entries
-     * without `referenced_tweets`, every one will fail the quote test, and the
-     * sweep will page happily through the whole post reporting zero quotes while
-     * being billed for every entry.
+     * The API does not reject a field name it does not understand: it returns
+     * HTTP 200, `errors: []`, and the field simply absent. So a request in the
+     * wrong vocabulary pages happily through a whole post, bills for every
+     * entry, and reports zero quotes — a silent failure that looks exactly like
+     * a real result.
      *
-     * That is the expensive failure: a silent one that looks like a real result.
-     * One page is the most it can cost.
+     * **This has happened, and the guard is what caught it.** On 2026-09-21 the
+     * request had been moved to `post.fields`, whose enum holds neither
+     * `author_id` nor `referenced_posts`; the first page returned 92 entries
+     * with both absent, every one failed the quote test, and the run reported
+     * "0 quotes of this post" having been billed $0.46. One page is the most
+     * that can cost, which is the whole point of stopping here.
      */
-    const missingRefs = tweets.every((tweet) => tweet.referenced_tweets === undefined);
+    const missingRefs = tweets.every(
+      (tweet) => referencedPosts(tweet) === undefined,
+    );
     const missingAuthors = tweets.every((tweet) => tweet.author_id === undefined);
     if (tweets.length > 0 && (missingRefs || missingAuthors)) {
       stoppedBy =
-        `default fields absent — no entry carried ` +
-        `${[missingRefs && "`referenced_tweets`", missingAuthors && "`author_id`"]
+        `field vocabulary not honoured — no entry carried ` +
+        `${[missingRefs && "`referenced_tweets`/`referenced_posts`", missingAuthors && "`author_id`"]
           .filter(Boolean)
           .join(" or ")}. ` +
-        "Neither is a valid `post.fields` value, so neither can be requested: both arrive as " +
-        "default fields (docs/X-API.md §16). Without them every entry fails the quote test and " +
-        "the sweep bills for a whole post while reporting zero.";
+        "The request asks for them as `tweet.fields` values, a legacy alias on this endpoint " +
+        "(docs/X-API.md §16). If it has been dropped, re-request them as " +
+        "`expansions=author_id,referenced_posts` under `post.fields` — which bills a user read " +
+        "per author, so price it first. Without these two fields every entry fails the quote " +
+        "test and the sweep bills for a whole post while reporting zero.";
       console.error(`  stopped after 1 page — ${stoppedBy}`);
       break;
     }
@@ -789,7 +850,7 @@ async function sweepPost(
     for (const tweet of tweets) {
       // The second filter: `exclude` is server-side and imperfect, so confirm
       // the entry actually quotes *this* post rather than sitting in its thread.
-      if (!isQuoteOfPost(tweet.referenced_tweets, statusId)) continue;
+      if (!isQuoteOfPost(referencedPosts(tweet), statusId)) continue;
       quotesOfThisPost += 1;
       if (!tweet.author_id) continue;
 
@@ -807,14 +868,37 @@ async function sweepPost(
     }
 
     console.log(
-      `  page ${pagesFetched}: ${tweets.length} entries · ${quotesOfThisPost} quotes so far · ` +
-        `${byAuthor.size} distinct authors · rate remaining ${remaining ?? "?"}`,
+      `  page ${pagesFetched}: ${tweets.length} entries (${freshOnThisPage} new) · ` +
+        `${quotesOfThisPost} quotes so far · ${byAuthor.size} distinct authors · ` +
+        `rate remaining ${remaining ?? "?"}`,
     );
 
     pageToken = body.meta?.next_token;
     if (!pageToken) {
       exhausted = true;
       stoppedBy = "end-of-list";
+      break;
+    }
+
+    /*
+     * Stop when a page brings nothing new. See `seenPostIds` above: this
+     * endpoint re-delivers a single post indefinitely rather than ending, so
+     * `next_token` cannot be trusted as the termination condition.
+     *
+     * Two consecutive barren pages rather than one, because a genuinely sparse
+     * page — everything on it filtered out as a retweet or a reply — is an
+     * ordinary occurrence in the middle of a timeline and is not the loop.
+     * Measured on the run above, the loop shows up as *every* page from the
+     * fourth on, so two is ample and costs at most one extra request.
+     */
+    if (barrenPages >= 2) {
+      exhausted = true;
+      stoppedBy = "no-new-posts";
+      console.log(
+        `  stopping: ${barrenPages} consecutive pages added no post this sweep had not ` +
+          `already seen. The endpoint re-issues a page token regardless, so this — not ` +
+          `end-of-list — is what completion looks like here.`,
+      );
       break;
     }
     await sleep(delayMs);
@@ -1103,6 +1187,15 @@ async function main(): Promise<void> {
 }
 
 main().catch((error) => {
+  /*
+   * The stack, not just the message. This tool crashes *after* it has spent
+   * money — on 2026-09-21 it died with a bare
+   * "Cannot read properties of undefined" having already bought 194 profiles,
+   * and the one-line message said nothing about where. The spend is safe (the
+   * profile store is written as each batch arrives), but a run that cannot be
+   * diagnosed has to be repeated, and repeating a paid run is the cost to avoid.
+   */
   console.error(`Unexpected error: ${(error as Error).message}`);
+  if (error instanceof Error && error.stack) console.error(error.stack);
   process.exit(1);
 });

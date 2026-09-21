@@ -38,8 +38,19 @@ import { describe, expect, it } from "vitest";
 const SPEC = resolve(process.cwd(), "research", "x-api-2026-09-20", "openapi.json");
 const SCRIPTS = resolve(process.cwd(), "scripts");
 
-/** Values the API returns by default and which no `*.fields` parameter accepts. */
-const DEFAULT_FIELDS = new Set(["id", "text", "author_id", "referenced_tweets", "username"]);
+/**
+ * Values no `*.fields` parameter accepts anywhere in the spec, because the API
+ * returns them by default.
+ *
+ * **`author_id` and `referenced_tweets` were in this set and did not belong.**
+ * They are documented `tweet.fields` values, so whitelisting them meant the
+ * check waved through `post.fields=author_id` — a value the Post vocabulary
+ * carries as an *expansion*, never a field. That is precisely the silent-200
+ * class this file exists to catch, and on 2026-09-21 it cost a billed page that
+ * reported zero quotes (`docs/X-API.md §16`). Removed: the spec's own enums
+ * already accept both under the vocabulary that has them.
+ */
+const DEFAULT_FIELDS = new Set(["id", "text", "username"]);
 
 interface Spec {
   paths: Record<string, { get?: { parameters?: unknown[] } }>;
@@ -168,6 +179,30 @@ describe.skipIf(spec === null)("every requested API field exists in the OpenAPI 
     }
     const mixed = [...byFile.entries()].filter(([, params]) => params.size > 1);
     expect(mixed.map(([file]) => file)).toEqual([]);
+  });
+
+  it("asks for the author and the quoted reference in a vocabulary that serves them", () => {
+    /*
+     * The quote sweep is worthless without `author_id` (who quoted) and the
+     * referenced-post list (whether it quoted *this* post). Neither is a
+     * default field, and each vocabulary serves them differently: `tweet.fields`
+     * carries both as fields, while the Post vocabulary carries them only as
+     * `expansions=author_id,referenced_posts`. Requesting them the other way
+     * returns HTTP 200 with the fields absent and the page billed.
+     */
+    const usages = collectUsages().filter((u) => u.file === "sweep-quote-tweets.ts");
+    const asked = (value: string, parameter: string): boolean =>
+      usages.some((u) => u.value === value && u.parameter === parameter);
+
+    const hasAuthor = asked("author_id", "tweet.fields") || asked("author_id", "expansions");
+    const hasReference =
+      asked("referenced_tweets", "tweet.fields") || asked("referenced_posts", "expansions");
+
+    expect(
+      { hasAuthor, hasReference },
+      "sweep-quote-tweets.ts must request the author and the quoted reference explicitly — " +
+        "they do not arrive by default",
+    ).toEqual({ hasAuthor: true, hasReference: true });
   });
 
   it("never requests a note field in the wrong dialect", () => {
