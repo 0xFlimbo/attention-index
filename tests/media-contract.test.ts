@@ -25,6 +25,7 @@ function validMedia(overrides: Record<string, unknown> = {}) {
     country: null,
     provenance: "original",
     syndicated_from: null,
+    cited_work: "none",
     context: null,
     related_post_id: null,
     featured: false,
@@ -48,6 +49,7 @@ function makeMediaReference(
     country: null,
     provenance: "original",
     syndicated_from: null,
+    cited_work: "none",
     context: null,
     related_post_id: null,
     featured: false,
@@ -195,6 +197,119 @@ describe("getMediaMetrics — the B13 counting rule", () => {
     expect(empty.featuredReferenceCount).toBe(0);
     expect(empty.countryCount).toBe(0);
     expect(empty.referencesByCountry).toEqual({});
+  });
+});
+
+describe("mediaSchema — the cited work (B16)", () => {
+  it("accepts an undetermined cited work on a needs_review record", () => {
+    const result = mediaSchema.safeParse(
+      validMedia({
+        status: "needs_review",
+        verified_at: null,
+        provenance: null,
+        cited_work: null,
+      }),
+    );
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects a verified record with no cited work — a read article has a known answer", () => {
+    const result = mediaSchema.safeParse(validMedia({ cited_work: null }));
+    expect(result.success).toBe(false);
+  });
+
+  it('accepts "none" on a verified record — the piece used no named work', () => {
+    expect(mediaSchema.safeParse(validMedia({ cited_work: "none" })).success).toBe(true);
+  });
+
+  it("rejects a cited work outside the enum — free text does not aggregate", () => {
+    const result = mediaSchema.safeParse(validMedia({ cited_work: "flagship product" }));
+    expect(result.success).toBe(false);
+  });
+});
+
+describe("getMediaMetrics — the cited-work split (B16)", () => {
+  const references = [
+    makeMediaReference({
+      id: "media-a",
+      publication: "Newsweek",
+      published_at: "2026-01-01",
+      cited_work: "h1b_data",
+    }),
+    makeMediaReference({
+      id: "media-b",
+      publication: "IBTimes UK",
+      published_at: "2026-01-02",
+      cited_work: "layoff_data",
+    }),
+    makeMediaReference({
+      id: "media-c",
+      publication: "The UNN",
+      published_at: "2026-01-03",
+      cited_work: "investigation",
+    }),
+    makeMediaReference({
+      id: "media-d",
+      publication: "HappyGamer",
+      published_at: "2026-01-04",
+      cited_work: "none",
+    }),
+    // A republication of the Newsweek piece: same work, second page.
+    makeMediaReference({
+      id: "media-e",
+      publication: "Inkl",
+      published_at: "2026-01-05",
+      provenance: "syndicated",
+      syndicated_from: "Newsweek",
+      cited_work: "h1b_data",
+    }),
+    makeMediaReference({
+      id: "media-f",
+      publication: "Hidden Press",
+      published_at: "2026-01-06",
+      status: "needs_review",
+      verified_at: null,
+      provenance: null,
+      cited_work: null,
+    }),
+  ];
+  const metrics = getMediaMetrics(references);
+
+  it("counts the cited work over original references only", () => {
+    // media-e cites the same H-1B data as media-a, but it is the same piece
+    // travelling — counting it would report one newsroom's use as two.
+    expect(metrics.originalReferencesByCitedWork).toEqual({
+      h1b_data: 1,
+      layoff_data: 1,
+      investigation: 1,
+      none: 1,
+    });
+  });
+
+  it("splits the original count exactly — every enum member is a bucket", () => {
+    const total = Object.values(metrics.originalReferencesByCitedWork).reduce((a, b) => a + b, 0);
+    expect(total).toBe(metrics.originalReferenceCount);
+  });
+
+  it("keeps a zero for a work nothing cites rather than dropping the key", () => {
+    const onlyNone = getMediaMetrics([
+      makeMediaReference({ id: "media-z", publication: "Z", published_at: "2026-01-01" }),
+    ]);
+    expect(onlyNone.originalReferencesByCitedWork).toEqual({
+      h1b_data: 0,
+      layoff_data: 0,
+      investigation: 0,
+      none: 1,
+    });
+  });
+
+  it("returns a zeroed split for an empty dataset", () => {
+    expect(getMediaMetrics([]).originalReferencesByCitedWork).toEqual({
+      h1b_data: 0,
+      layoff_data: 0,
+      investigation: 0,
+      none: 0,
+    });
   });
 });
 

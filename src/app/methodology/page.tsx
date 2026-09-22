@@ -6,6 +6,8 @@ import { getAttentionMetrics } from "@/lib/metrics/attention";
 import { getAmplificationMetrics } from "@/lib/metrics/amplification";
 import { getMediaMetrics } from "@/lib/metrics/media";
 import { formatCount } from "@/lib/format/number";
+import { formatCitedWork } from "@/lib/format/cited-work";
+import { mediaCitedWorkEnum } from "@/schemas/media.schema";
 import { formatDate, formatDateLong } from "@/lib/format/date";
 import { Navigation } from "@/components/navigation";
 import { Footer } from "@/components/footer";
@@ -69,6 +71,16 @@ export default function MethodologyPage() {
   const mediaNeedsReviewCount = mediaReferences.filter(
     (reference) => reference.status === "needs_review" && reference._placeholder !== true,
   ).length;
+
+  // docs/WORKPLAN.md B16 — the named works, in schema order, each with its own
+  // live count. Built from the enum rather than written out, so adding a work
+  // to the schema puts it in this sentence instead of leaving the page a
+  // member short. `none` has no label and is written by hand below, because
+  // "names no work" is a clause, not the name of a thing.
+  const citedWorkClauses = mediaCitedWorkEnum.options
+    .map((work) => ({ label: formatCitedWork(work), count: mediaMetrics.originalReferencesByCitedWork[work] }))
+    .filter((entry): entry is { label: string; count: number } => entry.label !== null)
+    .map((entry) => `${formatCount(entry.count)} cite ${entry.label}`);
 
   return (
     <div>
@@ -305,6 +317,41 @@ export default function MethodologyPage() {
             featured is not a weaker source or a lesser publication — it means the record does not
             show the article naming the project as a source in its own words. A reference can only
             be featured once it has been verified.
+          </p>
+        </ProseSection>
+
+        <ProseSection id="cited-work" heading="Which work a reference cites">
+          <p className="text-body mt-6 max-w-prose text-ink-soft">
+            A publication that references LayoffHedge is doing one of two things. It is using
+            something LayoffHedge published — the layoff data, the H-1B filings data, an
+            investigation — or it is embedding or quoting an @LayoffAI post and reporting what the
+            post says. Those are different acts, and every verified media record says which one it
+            is. The answer is stored as one of a fixed set of values rather than as free text, so
+            it can be counted rather than read.
+          </p>
+          <p className="text-body mt-6 max-w-prose text-ink-soft">
+            A record names a work only when the record&apos;s own evidence shows the piece using
+            it: the article names or links a dataset, or one of the surfaces built on it, or it
+            names an investigation. Where the evidence shows an embedded post, a quotation, or
+            LayoffHedge named as a source and nothing further, the record says that no work was
+            named. That is a determination, not a blank — it is the conservative default, the same
+            way a reference that is not featured is not thereby a weaker source.
+          </p>
+          <p className="text-body mt-6 max-w-prose text-ink-soft">
+            Counted across the {formatCount(mediaMetrics.originalReferenceCount)} original
+            references — a republication carries the answer of the piece it copies, so counting it
+            too would report one newsroom&apos;s use of a dataset as two —{" "}
+            {citedWorkClauses.join(", ")}, and{" "}
+            {formatCount(mediaMetrics.originalReferencesByCitedWork.none)} name no work beyond the
+            post or the account itself.
+          </p>
+          <p className="text-body mt-6 max-w-prose text-ink-soft">
+            Nothing here describes or rates what LayoffHedge makes. The value is an attribute of a
+            reference that already exists, and the list holds only the works these records give
+            evidence of — something LayoffHedge publishes that no verified reference has cited does
+            not appear on it at all, and neither does any judgement about which work matters. The
+            list is closed on purpose: adding to it is a change to the schema and to this page,
+            made when a record shows a work that has none, never a phrase typed into a record.
           </p>
         </ProseSection>
 

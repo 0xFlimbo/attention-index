@@ -106,5 +106,15 @@ describe("frozen dataset (2026-09-20) — derived figures", () => {
     expect(media.originalReferenceCount + media.syndicatedReferenceCount).toBe(
       media.verifiedMediaReferenceCount,
     );
+    // B16 — the cited-work split, read off the frozen file when the field was
+    // added and re-derived by hand, never pasted from a failing run. It is a
+    // split of the 77 originals, not of the 94 records.
+    expect(media.originalReferenceCount).toBe(77);
+    expect(media.originalReferencesByCitedWork).toEqual({
+      h1b_data: 11,
+      layoff_data: 9,
+      investigation: 4,
+      none: 53,
+    });
   });
 });

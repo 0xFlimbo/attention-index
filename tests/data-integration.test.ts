@@ -52,6 +52,7 @@ interface RawAmplification extends RawRecord {
 interface RawMediaReference extends RawRecord {
   publication: string;
   provenance: string | null;
+  cited_work: string | null;
 }
 
 function readRaw<T>(fileName: string): T[] {
@@ -159,6 +160,19 @@ describe("real dataset — media metrics describe the file on disk", () => {
     expect(media.countryCount).toBe(Object.keys(media.referencesByCountry).length);
     const countryTotal = Object.values(media.referencesByCountry).reduce((a, b) => a + b, 0);
     expect(countryTotal).toBeLessThanOrEqual(media.originalReferenceCount);
+  });
+
+  it("splits the original count by cited work, losing no record (docs/DATA.md §10)", () => {
+    const originals = rawMedia.filter((r) => r.provenance === "original");
+    const summed = Object.values(media.originalReferencesByCitedWork).reduce((a, b) => a + b, 0);
+    expect(summed).toBe(media.originalReferenceCount);
+    for (const [work, count] of Object.entries(media.originalReferencesByCitedWork)) {
+      expect(count).toBe(originals.filter((r) => r.cited_work === work).length);
+    }
+  });
+
+  it("records a cited work on every eligible reference", () => {
+    expect(rawMedia.filter((r) => r.cited_work === null)).toHaveLength(0);
   });
 });
 

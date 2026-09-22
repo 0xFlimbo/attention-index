@@ -1,5 +1,7 @@
 import {
+  mediaCitedWorkEnum,
   mediaReferenceTypeEnum,
+  type MediaCitedWork,
   type MediaReference,
   type MediaReferenceType,
 } from "@/schemas/media.schema";
@@ -29,11 +31,32 @@ export interface MediaMetrics {
    */
   referencesByCountry: Record<string, number>;
   countryCount: number;
+  /**
+   * docs/DATA.md §10 — which of the project's works the reporting cited, over
+   * **original** references only, for the same reason `referencesByCountry`
+   * is: a republication carries the original's cited work, so counting it
+   * would report one newsroom's use of a dataset as two. The name says so,
+   * because this is the one map in this object that does not count every
+   * eligible record and a caller should not have to read the comment to find
+   * that out.
+   *
+   * Every member of the enum is a key, `"none"` included, so the split is
+   * complete over `originalReferenceCount` and can never be read as a count
+   * of records that cite *something*: the keys sum to the original count
+   * exactly, and the schema requires a value on every verified record.
+   */
+  originalReferencesByCitedWork: Record<MediaCitedWork, number>;
 }
 
 /** True for an eligible record that is the publication's own reporting. */
 function isOriginalReference(reference: MediaReference): boolean {
   return reference.provenance === "original";
+}
+
+function emptyCitedWorkCounts(): Record<MediaCitedWork, number> {
+  return Object.fromEntries(
+    mediaCitedWorkEnum.options.map((work) => [work, 0]),
+  ) as Record<MediaCitedWork, number>;
 }
 
 function emptyTypeCounts(): Record<MediaReferenceType, number> {
@@ -54,8 +77,9 @@ function emptyTypeCounts(): Record<MediaReferenceType, number> {
  *     eligible record, including republications. A republication is a real
  *     page a real outlet published, and hiding it from its own publication's
  *     count would make the count disagree with the rows underneath it.
- *   - *how much reporting is there* — `originalReferenceCount` and
- *     `referencesByCountry` count original records only. `IBTimes UK` plus
+ *   - *how much reporting is there* — `originalReferenceCount`,
+ *     `referencesByCountry` and `originalReferencesByCitedWork` count
+ *     original records only (the last added at B16). `IBTimes UK` plus
  *     `Inkl` is one piece of reporting and its republications, so any figure
  *     presented as coverage has to exclude the copies or it inflates
  *     (docs/WORKPLAN.md B13).
@@ -68,6 +92,7 @@ export function getMediaMetrics(mediaReferences: MediaReference[]): MediaMetrics
   const referencesByPublication: Record<string, number> = {};
   const referencesByType = emptyTypeCounts();
   const referencesByCountry: Record<string, number> = {};
+  const originalReferencesByCitedWork = emptyCitedWorkCounts();
   let originalReferenceCount = 0;
   let featuredReferenceCount = 0;
 
@@ -78,6 +103,8 @@ export function getMediaMetrics(mediaReferences: MediaReference[]): MediaMetrics
     if (reference.featured) featuredReferenceCount += 1;
     if (!isOriginalReference(reference)) continue;
     originalReferenceCount += 1;
+    // Non-null on every eligible record by schema, so no bucket is skipped.
+    if (reference.cited_work !== null) originalReferencesByCitedWork[reference.cited_work] += 1;
     if (reference.country !== null) {
       referencesByCountry[reference.country] = (referencesByCountry[reference.country] ?? 0) + 1;
     }
@@ -93,6 +120,7 @@ export function getMediaMetrics(mediaReferences: MediaReference[]): MediaMetrics
     featuredReferenceCount,
     referencesByCountry,
     countryCount: Object.keys(referencesByCountry).length,
+    originalReferencesByCitedWork,
   };
 }
 

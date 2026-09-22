@@ -16,6 +16,7 @@ function makeMediaReference(
     author: null,
     country: null,
     provenance: "original",
+    cited_work: "none",
     syndicated_from: null,
     context: null,
     related_post_id: null,

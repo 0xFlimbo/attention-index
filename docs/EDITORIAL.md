@@ -50,6 +50,13 @@ Use `LayoffHedge published`, `@LayoffAI posted`, `the official account shared`.
 `the tracked dataset contains`, `the available evidence documents`. First person is acceptable only in
 About or contribution docs.
 
+**Naming LayoffHedge's own work** — a media record's `cited_work` (`docs/DATA.md §7`) and every
+sentence built on it describe a thing, never rate it: `the layoff data` · `the H-1B filings data` ·
+`an investigation`. Banned: `flagship product` · `flagship investigation` · `their best-known tool` ·
+`the headline dataset` — each is a judgement about which work matters, and this project makes none.
+The construction is always a fact about a reference (`N references cite the H-1B filings data`),
+never a claim about the work (`the H-1B data is their most cited product`).
+
 Exception: a banned phrase may appear inside a clearly attributed quotation when materially relevant.
 
 ---

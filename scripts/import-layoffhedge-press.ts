@@ -330,6 +330,10 @@ async function main(): Promise<void> {
       // the rest is part of reading the article (docs/WORKPLAN.md B14).
       provenance: syndicatedFrom === null ? null : "syndicated",
       syndicated_from: syndicatedFrom,
+      // Same rule for the cited work (B16): the press card says a piece exists,
+      // never which of LayoffHedge's works it used. Reading that off a card
+      // would be a guess, so it stays undetermined until the article is read.
+      cited_work: null,
       context: context.length > 0 ? context : null,
       related_post_id: null,
       featured: false,

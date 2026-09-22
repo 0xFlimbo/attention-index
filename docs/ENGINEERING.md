@@ -123,7 +123,9 @@ decisions that shape what a maintainer is asked to read are testable without spe
 budget to exercise them (§18).
 
 **`src/lib/format/`** — `number.ts`, `date.ts`, `country.ts` (ISO-2 to a display name, falling
-back to the code), `media-descriptors.ts` (the B13 record attributes as words, shared by the
+back to the code), `cited-work.ts` (the B16 `cited_work` enum as the reader's words, with `none`
+deliberately unlabelled — a reference that names no work is described by the sentence counting it),
+`media-descriptors.ts` (the B13 record attributes as words, shared by the
 Public References panel and the `/evidence` media rows):
 
 ```ts
@@ -295,12 +297,15 @@ tests/frozen-dataset.test.ts     tests/fixtures/dataset-2026-09-20/ — the lite
 The frozen fixture guards the **derivation chain** — schema parse, eligibility rule, pure metric,
 formatted figure — not the dataset. It is re-cut only when a schema migration makes it unparseable,
 and the figures are then re-derived and read by a human, never pasted from the run that failed.
+B18 and B16 are the two migrations so far: B16 added a required `cited_work` to every media
+record, which the fixture's own copies needed before they would parse again.
 
 **The pattern is wider than the one file B10 converted.** A live-data literal still sits in
-`tests/evidence.test.ts`, `tests/media-contract.test.ts` and `tests/public-references.test.ts`
-(media counts — B11's path) and in `tests/attention-grid.test.ts`, `tests/archive.test.ts` and
-`tests/observations.test.ts` (post counts — B12's path). Each goes red on the first record its
-batch adds. Convert them in the batch that moves those records, in the shape above.
+`tests/attention-grid.test.ts`, `tests/archive.test.ts` and `tests/observations.test.ts` (post
+counts — B12's path); each goes red on the first record its batch adds. Convert them in the batch
+that moves those records, in the shape above — B10 converted `tests/evidence.test.ts`,
+`tests/media-contract.test.ts` and `tests/public-references.test.ts` that way and B16 re-ran the
+probe, which is what establishes the list rather than reading it off this paragraph.
 
 ---
 

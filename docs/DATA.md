@@ -297,6 +297,7 @@ Follower counts are contextual metadata only, never evidence of impressions.
   "country": null,                       // ISO-2 of the publication's own newsroom
   "provenance": "original",              // original | syndicated | null (= not determined yet)
   "syndicated_from": null,               // the outlet this piece credits; required iff syndicated
+  "cited_work": "h1b_data",              // layoff_data | h1b_data | investigation | none | null
   "context": "Cites LayoffHedge layoff data.",   // short, factual, never editorializing
   "related_post_id": null,
   "featured": false, "logo": null, "archive_url": null, "notes": null,
@@ -306,7 +307,7 @@ Follower counts are contextual metadata only, never evidence of impressions.
 ```
 
 Required: `id, publication, title, reference_type, published_at, url, status, verified_at`,
-plus `provenance` on every `verified` record.
+plus `provenance` and `cited_work` on every `verified` record.
 
 One record per article. Publication totals (`FORBES — 3 references`) are **derived**, never stored.
 
@@ -314,6 +315,7 @@ One record per article. Publication totals (`FORBES — 3 references`) are **der
 
 Three fields decide what a media record contributes to the derived figures. All three were
 defined in `docs/WORKPLAN.md` B13, before the verification sweep, so no record is visited twice.
+A fourth, `cited_work`, was added at B16 and is specified under it below.
 
 **`country`** — ISO 3166-1 alpha-2 for the country of **the publication's own newsroom**, never
 the country the story is about. `null` when it is not settled by a public, citable statement; a
@@ -342,6 +344,49 @@ post alongside its own reporting. The schema enforces both halves: only a `verif
 only effect is ordering (`§11`). Where a record's stored evidence does not already establish the
 criterion, `featured` stays `false` — `false` is the conservative default and is never a judgement
 about the publication.
+
+### `cited_work` (B16)
+
+Which of the official project's works the piece used. The governing rule, and the reason the
+field is admissible at all: **the work is never the subject of a record, only an attribute of a
+record that already exists** (`docs/WORKPLAN.md` B16). Nothing in this dataset describes a work,
+rates one, or exists because of one.
+
+`media.json` only. An amplification is a quote post, not a use of a work, and putting the field on
+those records would manufacture attributions for them.
+
+A **closed enum**, because free text does not aggregate:
+
+| value | means |
+|---|---|
+| `layoff_data` | the layoff dataset and its `layoffhedge.com` surfaces — company and industry pages, monthly and year-to-date totals, headcount estimates attributed to the site |
+| `h1b_data` | the H-1B / LCA / USCIS visa data and the surfaces built on it — the congressional district map, the ZIP-code lookup, employer rankings, renewal-approval analyses |
+| `investigation` | an original investigation the project published |
+| `none` | the piece used no named work: what the record shows is an @LayoffAI post, a quotation, or the project named as a source, and nothing further |
+| `null` | not determined yet |
+
+The members are the works **these records give evidence of**, not a catalogue of what the project
+ships. A work no verified reference has cited has no member, and adding one is a deliberate edit
+to this table and to `src/schemas/media.schema.ts` — never a value invented inside a record. That
+standing maintenance cost was accepted when the field was.
+
+**`none` is a determination, not a blank**, and it is the conservative default in exactly the
+sense `featured: false` is: it says the record does not show the piece using a named work. It is
+therefore an enum member and not `null`. `null` keeps the meaning it has on `provenance` and
+`verified_at` — *not determined yet* — and is allowed only while a record is `needs_review` or
+`archived`; the schema refuses a `verified` record without a value.
+
+**The rule for choosing one.** A record names a work only where its own stored evidence shows the
+piece using it: the article names or links a dataset or one of the surfaces built on it, or names
+an investigation. Where a piece names a work **and** embeds a post, the work wins — the post is
+the delivery, the work is what was used. An outlet calling the project "a layoff tracker" is
+naming the project, not a work; a figure quoted from inside an embedded post is the post's
+content, not a use of the dataset behind it. Where the evidence does not reach a work, the value
+is `none` rather than the likeliest work.
+
+The field is filled on `verified` records only, for the same reason `country` was at B13:
+`needs_review` and `archived` records feed no metric, and determining it belongs to the pass that
+reads the article.
 
 ---
 
@@ -484,7 +529,7 @@ which is what the batch existed to do.
 ```text
 verifiedMediaReferenceCount · uniquePublicationCount · referencesByPublication · referencesByType
 originalReferenceCount · syndicatedReferenceCount · featuredReferenceCount
-referencesByCountry · countryCount
+referencesByCountry · countryCount · originalReferencesByCitedWork
 ```
 
 **The counting rule (B13).** Two questions are kept apart instead of averaged into one number,
@@ -496,6 +541,7 @@ how many public records are there    verifiedMediaReferenceCount · uniquePublic
                                      -> every eligible record, republications included
 
 how much reporting is there          originalReferenceCount · referencesByCountry · countryCount
+                                     originalReferencesByCitedWork
                                      -> provenance === "original" only
 ```
 
@@ -511,6 +557,13 @@ always, because the schema requires a provenance on every verified record.
 country is unknown is counted in no country. `countryCount` is that map's size — the figure
 behind "references from newsrooms in N countries". `featuredReferenceCount` counts eligible
 records carrying the `/methodology` criterion.
+
+`originalReferencesByCitedWork` (B16) splits `originalReferenceCount` by `cited_work` (`§7`),
+over originals for the same reason `referencesByCountry` is: a republication carries the answer of
+the piece it copies, so counting it too would report one newsroom's use of a dataset as two. Every
+enum member is a key, `none` included, so the keys sum to `originalReferenceCount` exactly and the
+map can never be read as a count of references that cite *something*. The name carries the rule
+because it is the only map in that object that does not count every eligible record.
 
 `/methodology` states every one of these in the reader's words and prints today's values live.
 None of them is on the homepage: `docs/HOMEPAGE.md §11` keeps the Public References section
@@ -637,6 +690,8 @@ unfeatured ones it ties with.
 - every `verified` record carries `verified_at` (nullable only for `needs_review` / `archived`)
 - every `verified` media record carries a `provenance` (nullable only for `needs_review` /
   `archived`)
+- every `verified` media record carries a `cited_work` (`"none"` when the piece used no named
+  work; nullable only for `needs_review` / `archived`)
 - `syndicated_from` is present exactly when `provenance` is `"syndicated"`, and never names the
   record's own `publication`
 - `featured` media records are `verified` and `provenance: "original"` (`§7`)
@@ -679,7 +734,8 @@ exists · date known · category normalized · related post linked when known ·
 **Media** — publication identified, under its standard public form · title accurate · public URL
 exists · date known · reference genuinely concerns LayoffHedge/@LayoffAI · context factual ·
 newsroom `country` filled or deliberately left `null` · `provenance` determined, with
-`syndicated_from` naming the credited outlet when it is a republication · `featured` set only
+`syndicated_from` naming the credited outlet when it is a republication · `cited_work` determined
+from the article, `none` where it names no work rather than the likeliest one · `featured` set only
 where the article itself meets the `/methodology` criterion · unique ID.
 
 ---
