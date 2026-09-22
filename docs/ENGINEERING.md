@@ -1035,7 +1035,7 @@ a candidate is dead weight, and until this existed that could only be noticed by
 reports by hand.
 
 **A cluster was added, run and retired on measurement — `COMPANY_STORIES`.** The query set covered
-the territory of 31 of the 95 verified records; the other 64 carry `cited_work: "none"` and are
+the territory of 31 of the 95 records verified at the time; the other 64 carried `cited_work: "none"` and are
 overwhelmingly one shape, a company's layoffs where an outlet cites this project for a number the
 company has not given (Meta in 23 of them). Four queries were derived from those records' own
 figures and events and run for $0.020: **55 URLs, 45 candidates fetched, 0 brand hits.** The

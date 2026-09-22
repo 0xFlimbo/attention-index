@@ -23,13 +23,13 @@ data/project.json         project metadata (no metrics)
 
 Optional later only if genuinely needed: `people.json`, `organizations.json`, `snapshots/`.
 
-**Current state (2026-09-20, after B10):** 32 posts (all `verified`), 15 amplifications (all
+**Current state (2026-09-22, after B11):** 32 posts (all `verified`), 15 amplifications (all
 `verified` — five added by B10's search sweep, which opened the `media` category at three records),
-103 media references (94 `verified`, 9 `archived`, **no `needs_review` left** — the
-imported press queue has been worked through end to end). Of the 94 verified media records: 77
-original, 17 republications, 33 featured, newsrooms in 7 countries (56 of the 77 originals carry
-a country; the rest are deliberately blank). A dated reading of the dataset, not a target —
-derive, never match.
+108 media references (99 `verified`, 9 `archived`, **no `needs_review` left** — the
+imported press queue has been worked through end to end). Of the 99 verified media records: 80
+original, 19 republications, 36 featured, newsrooms in 7 countries (originals without a settled
+newsroom country are deliberately blank and counted in none). A dated reading of the dataset, not
+a target — derive, never match.
 
 ---
 
@@ -587,7 +587,7 @@ broken by smallest `id` (lexicographic) — the same reasoning as `compareArchiv
 
 `selectMediaReferences(mediaReferences: MediaReference[]): MediaReference[]` — the verified,
 sorted media list `/evidence`'s media section renders directly. No filters, no pagination. With
-today's dataset (103 raw records, 94 verified) this resolves to 94 rows. Provenance does not
+today's dataset (108 raw records, 99 verified) this resolves to 99 rows. Provenance does not
 filter this list: `/evidence` is the ledger where every verified record is auditable, and a
 republication is dropped from the derived coverage figures, never from the page that claims to
 list everything.

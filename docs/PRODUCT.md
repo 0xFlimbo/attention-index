@@ -182,10 +182,10 @@ A perfect dataset is not required. A credible dataset is.
 ## 13. Content minimums before public launch
 
 ```text
-                minimum before launch          reading on 2026-09-21
+                minimum before launch          reading on 2026-09-22
 posts           10–20 strong tracked posts     32 verified          ✔
 amplifications  5–10 verified examples         20 verified          ✔
-media           5–10 verified references       95 verified of 104   ✔
+media           5–10 verified references       99 verified of 108   ✔
 ```
 
 **All three minimums are met and the figures above are a dated reading, not a contract.** The
