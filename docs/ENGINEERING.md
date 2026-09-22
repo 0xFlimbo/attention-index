@@ -229,7 +229,8 @@ external embeds).
   "review:profiles": "tsx scripts/review-paid-profiles.ts",
   "refetch:truncated": "tsx scripts/refetch-truncated-posts.ts",
   "probe:fields": "tsx scripts/probe-field-parameter.ts",
-  "sweep:mentions": "tsx scripts/sweep-mentions.ts"
+  "sweep:mentions": "tsx scripts/sweep-mentions.ts",
+  "sweep:web": "tsx scripts/sweep-web.ts"
 }
 ```
 
@@ -239,6 +240,8 @@ of both tracks — see §18b; and keeping every billed response is the tools' jo
 `sweep:quotes` is the Track B quote-post sweep — see §18. `review:profiles`
 re-reads profiles already paid for and **makes no network request at all** — see §19.
 `refetch:truncated` and `probe:fields` are the two one-off scripts of §20.
+`sweep:web` is the web-search discovery sweep — see §21; it is the only tool here that talks to a
+second paid vendor, and the only one whose default mode makes no request at all.
 
 **This block is generated from `package.json`, not maintained beside it.** It had drifted by four
 entries — `review:profiles`, `refetch:truncated`, `probe:fields` and `sweep:mentions` all existed
@@ -506,19 +509,44 @@ machine — use PowerShell `Get-Process` / `Stop-Process` for cleanup.
 `scripts/check-media-mentions.ts`. **Occasional tool, never production runtime or CI** — it makes
 outbound requests to third-party publishers.
 
-**Strictly read-only.** It reads `data/media.json`, fetches each selected record's `url`, and
-reports whether the page text contains `layoffhedge` or `@LayoffAI`. It never writes to `data/`.
-Promotion stays a human edit, because the tool cannot do the thing that actually matters.
+**Strictly read-only.** It fetches each selected page and reports whether the page's own text
+names this project. It never writes to `data/`. Promotion stays a human edit, because the tool
+cannot do the thing that actually matters.
 
 ```bash
-pnpm check:media-mentions                       # every needs_review record
-pnpm check:media-mentions --id media-forbes-…   # one record
-pnpm check:media-mentions --limit 10 --delay 1500
-pnpm check:media-mentions --no-proxy            # direct requests only
+pnpm check:media-mentions                              # every needs_review record
+pnpm check:media-mentions -- --id media-forbes-…       # one record
+pnpm check:media-mentions -- --urls <file>             # a plain list of URLs in no file yet
+pnpm check:media-mentions -- --limit 10 --delay 1500
+pnpm check:media-mentions -- --no-proxy                # direct requests only
 ```
 
-**A mention is not a verification, and the tool says so every run.** A hit means the string is on
-the page — it could be a sidebar, a related-links rail, an unrelated quote. `docs/WORKPLAN.md`
+**Two inputs, one core (B11).** The tool could only select records *already in* `data/media.json`.
+A discovery sweep starts from URLs that are in no file by definition, and B14 had already paid for
+the gap twice — two throwaway scripts inside the batch, one for five press cards and one for 23
+outlet about-pages, each reimplementing this same direct→proxy fetch. `--urls <file>` reads one URL
+per line, `#` comments and blank lines ignored, anything after the URL taken as the label; the web
+sweep of §21 writes exactly that file. The fetch-and-detect half both modes share is
+`src/lib/sweep/page-probe.ts` and what counts as a mention is `src/lib/sweep/mention-patterns.ts`
+(§18d), so selecting the targets is all the script still does.
+
+**What counts as the name, and why the list grew.** The detector looked for `layoffhedge` and
+`@?layoffai`. Counted over `data/media.json`: `layoffhedge` 83, `layoffai` 99, **`layoff hedge`
+zero** — the spaced form is absent from our data because the official press page never uses it, and
+the open web does. Measured live on 2026-09-22: the yourNEWS piece that names this project four
+times contains **zero** occurrences of the closed form and four of `Layoff Hedge`, so the old
+detector reported the best candidate of the discovery probe as carrying no mention at all. A
+detector calibrated on the press page is calibrated on the sample B11 exists to leave behind.
+
+**Brand forms and weak forms are counted apart, and the report keeps them apart.** `layoffhedge`
+and `layoffai` do not occur by accident. `official layoff` — the X account's display name — and
+"layoff AI" spaced both occur in ordinary layoff reporting, so a page whose only hit is one of
+those is listed as *a reason to read the page*, never as a reference. Each result also carries the
+sentences around its first matches, because the tool's whole claim is that the human reading starts
+from a located mention.
+
+**A mention is not a verification, and the tool says so every run.** A hit means a form of the name
+is on the page — it could be a sidebar, a related-links rail, an unrelated quote. `docs/WORKPLAN.md`
 B14's bar is unchanged: the article itself is read before a record is promoted, and `country`,
 `provenance` and the featured criterion are filled in the same edit (`docs/DATA.md §7`). What the
 tool buys is that the reading starts from a fetched page with a located mention rather than from
@@ -541,8 +569,8 @@ a bare URL.
 Pacing defaults to 3 s between records because the proxy throttles a burst, and a throttled
 response is indistinguishable from a hard block in the report.
 
-The per-record report is written to the gitignored `.cache/media-mentions.json`, and the
-extracted text of every page a run fetched to `.cache/pages/<record-id>.txt` — never into
+The per-target report is written to the gitignored `.cache/media-mentions.json`, and the
+extracted text of every page a run fetched to `.cache/pages/<target-id>.txt` — never into
 canonical JSON. The text is kept because the tool's whole claim is that the reading starts from
 a fetched page with a located mention: storing only the counts made the reader fetch the same URL
 a second time to do the reading the counts exist to enable (added at B14, 2026-09-19).
@@ -605,8 +633,8 @@ act of its own and is archived regardless of who posted it.
 
 ## 18d. The shared sweep modules
 
-Both discovery tracks are thin scripts over four pure modules in `src/lib/sweep/`, which is what
-makes a rule fixed in one track fixed in both:
+The discovery tools are thin scripts over the pure modules in `src/lib/sweep/`, which is what
+makes a rule fixed in one tool fixed in the others:
 
 | Module | Owns |
 |---|---|
@@ -614,6 +642,13 @@ makes a rule fixed in one track fixed in both:
 | `legislator-index.ts` | the Congress register — CSV parsing, and matching an account by name, handle or account id |
 | `profile-store.ts` | recognising a paid user object and folding readings newest-first, so nothing is bought twice |
 | `raw-archive.ts` | where a billed response goes the moment it arrives (§18c) |
+| `mention-patterns.ts` | what counts as this project's name on someone else's page, brand forms apart from weak ones (§17) |
+| `page-probe.ts` | the direct→proxy fetch-and-detect core both input modes of §17 share |
+| `url-list.ts` | the `--urls` file format, and a readable unique id per target |
+| `web-search-results.ts` | normalising a result URL, diffing it against `data/media.json`, and the archive-on-sight verdict (§21) |
+| `web-queries.ts` | the versioned query set of the web sweep, and why each query is worded as it is (§21) |
+| `cost-ledger.ts` | the record of spend — one entry per billed request, the free verification passes beside it, and per-query yield across every run (§21) |
+| `sweep-state.ts` | the web sweep's per-query high-water marks, and the rule that a new or reworded query is swept unrestricted (§21) |
 
 They live in `src/lib` rather than `scripts/` for the same reason
 `src/lib/validation/placeholder.ts` does: they are pure, they are unit-tested without a disk or an
@@ -854,3 +889,199 @@ remainder of a long post — and wrote the result to
 
 Cost $0.2400, authorised in advance, appended to the ledger in
 `research/x-api-2026-09-20/cost-ledger.json`.
+
+---
+
+## 21. Maintenance tool — `pnpm sweep:web`
+
+`scripts/sweep-web.ts`. **Occasional discovery tool. Never production runtime, never CI.**
+B11's discovery half: nothing in this repo queried a search engine before, and that was the only
+genuinely new capability the batch had to build.
+
+```bash
+pnpm sweep:web                               # print the query set and its modelled cost; no request
+pnpm sweep:web -- --sweep                    # run the set — this bills
+pnpm sweep:web -- --sweep --query brand-closed          # one query, by exact label
+pnpm sweep:web -- --sweep --query brand-closed,brand-spaced  # several, comma-separated
+pnpm sweep:web -- --sweep --max-queries 5    # lower the ceiling; nothing can raise it
+pnpm sweep:web -- --sweep --freshness py     # recency filter, vendor's own syntax
+```
+
+**Planning is the default and spending is opt-in.** An unqualified run makes **zero** requests. It
+prints every query, why it is worded that way and what the set would cost. Only `--sweep` bills,
+which mirrors `sweep:mentions` and `sweep:quotes`: a mistyped flag should cost nothing.
+
+**`--query` takes exact labels, and that is a spend control rather than a style.** It matched
+substrings until 2026-09-22, when `--query investigation-trine` also matched
+`investigation-trine-backdoor` and a one-query probe made two requests. An unknown label now spends
+nothing and prints the list of labels instead.
+
+**The instrument is the claim, not the name.** Measured over six probe queries, 2026-09-22: a brand
+query returns the project's own surfaces and outlets already in `data/media.json` — nine results,
+zero candidates — while the claim that travelled ("9 of every 10 new American jobs") returned four
+unknown domains from one query. So the query set is built from the story clusters the dataset
+already records, which are the `cited_work` values of `docs/DATA.md §7`, and the brand queries are
+kept as a **control**: they are how a zero-candidate run is told apart from an index that has never
+heard of this project. Non-English discovery is unproven — a Spanish probe returned pure noise —
+so the one Spanish query sits outside the default set and runs by name.
+
+**The query set is versioned** (`QUERY_SET_VERSION` in `src/lib/sweep/web-queries.ts`) and every
+report records the version. A different query set is a different population; two reports are
+comparable only when the versions match.
+
+**Billing exposure is the thing this design is against.** The vendor withdrew its free plan in
+February 2026: a card is required, $5 of credit arrives monthly (≈1,000 queries at $5/1,000), and
+**no default spending cap is applied**. So the script carries a hard ceiling of 60 queries per run
+that no flag can raise, paces one query at a time, and **aborts on the first non-200 instead of
+retrying**. Set a cap in the vendor dashboard too — a script's ceiling protects against that
+script only.
+
+**The vendor publishes no OpenAPI specification, and that is measured rather than assumed.** Six
+candidate spec paths were probed on 2026-09-22 — every one 404s or 403s — the reference site is an
+application whose HTML embeds no spec URL, and the vendor's own skills repository carries prose
+files rather than a schema. `docs/X-API.md §0`'s rule (read the spec, believe it over our notes) has
+nothing to point at here. The nearest thing is kept instead: dated copies of the vendor's own
+parameter reference under `research/brave-search-2026-09-22/reference/`, and every parameter the
+client sends was checked against them. **`tests/api-field-validity.test.ts` has no equivalent for
+this vendor** — a gap worth knowing about rather than papering over.
+
+**What that check corrected**, since the client was first written blind: `spellcheck` is a boolean
+and is sent as `false` rather than `0` (an unknown *value* is the bug class that cost a paid page on
+the other API); `text_decorations=false`, because the vendor otherwise injects highlight markers
+into `description`, and those are markup inside the text this sweep string-matches;
+`result_filter=web,news`, which keeps the two verticals that can carry an article and drops videos,
+FAQs, discussions and infoboxes; and **the `news` results are parsed as well as the `web` ones**,
+which they were not — a media-citation sweep that reads only `web.results` drops exactly the
+population it exists to find. `count` is capped at 20 because the vendor caps it there, and the
+query set needs no extra parameter for `"exact phrase"` and `-site:` because operators are applied
+by default. `--extra-snippets` is opt-in rather than on: it returns up to five further excerpts per
+result and may be plan-gated, and an unsupported parameter would abort the run on its first query.
+
+**Metering, as measured on 2026-09-22 rather than as expected.** There is no balance endpoint, so
+the meter is what the response itself reports. The headers exist and now have names:
+
+```text
+x-ratelimit-limit      50, 0
+x-ratelimit-policy     50;w=1, 0;w=2592000      50 per second, and a 30-day window reading 0
+x-ratelimit-remaining  49, 0
+x-ratelimit-reset      1, 719977                 seconds to each window's reset
+```
+
+The per-second window behaves as documented. **The monthly window reads `0` limit and `0`
+remaining while requests keep succeeding**, so it does not mean what a depleted counter would mean
+on a metered plan; it is not yet understood and is recorded rather than interpreted. The
+consequence stands either way: **the only true meter is the vendor dashboard**, and the figure the
+script prints is a **model** ($0.005 × requests), labelled as one everywhere it appears.
+
+**The model was checked against the meter on 2026-09-22 and matched**: the dashboard read 21
+requests and ~$0.10 against a ledger of 21 requests and $0.105 modelled. That confirms the unit
+price for this vendor on this plan and nothing more — a model that agrees once is still a model,
+so the check is repeated after any plan change and recorded in the ledger's `verification` block.
+
+**The ledger is the spend record** — `research/brave-search-ledger.json`, written **per request**
+rather than per run, so a run that aborts halfway still records what it spent getting there. One
+entry per billed request: when, endpoint, query-set version, query label, HTTP status, results
+returned, unit price, modelled cost, the quota headers as they read at that moment, and whether
+the entry was written live or reconstructed from `raw/`. `src/lib/sweep/cost-ledger.ts` owns it and
+`summarise()` prints the running total after every sweep. A failed request counts as a request: the
+vendor may well have billed it, and a ledger that drops the calls that went wrong understates spend
+exactly where understating it is most expensive.
+
+**Measured yield, first full sweep (14 queries, $0.070 modelled).** 97 distinct URLs → 13 already
+in `media.json`, 12 own surfaces, 26 archive-on-sight, **46 candidates**. Fetching all 46 through
+§17 — free — left **11 brand hits, of which 5 are pages that genuinely cite the project** and 4
+were link-in-bio/mirror surfaces now in the archive-on-sight list. So the shape of this instrument
+is roughly **$0.07 and one fetch pass per ~5 real candidates**, and the fetch pass is where the
+precision comes from, not the query.
+
+**`--fetch` chains the free verification stage onto the run**, so a sweep ends with "5 pages that
+name this project" instead of "46 candidates". It fetches every candidate from its publisher —
+which costs nothing, the search vendor is not involved — detects the name, prints the hits with
+their surrounding sentence, and records the outcome per query in the ledger's `fetches` array.
+The two stages stay separable on purpose: `check:media-mentions -- --urls` still runs on any list.
+The outcome is appended rather than written back onto the billed entry it belongs to, because a
+spend record is trustworthy exactly to the degree that nothing rewrites it afterwards.
+
+**`--pages N` buys deeper pages, and the measurement says not to.** Only 3 of 13 queries had a
+second page at all; the other 10 were exhausted at page 1. Tested on the two that had one **and**
+had produced real hits: `daily-wire-layoffs` page 2 returned 20 results and 13 new candidates for
+**0 new hits**, `investigation-trine` page 2 the same — 13 new candidates, and its only hit was the
+one page 1 had already found. So the ranking puts the citing pages at the top and depth is
+diminishing returns. The flag stays at **1 page by default**, a page is only ever bought when the
+previous page's `more_results_available` says one exists, and pages count against
+`HARD_QUERY_CAP` rather than queries — the ceiling has to bound the thing that is actually billed.
+
+**`--since-last` is the cadence lever, and the mark belongs to a query rather than a run.**
+`research/web-sweep-state.json` keeps a per-query high-water mark — the label, **the `q` that was
+sent**, and the date it was last swept — and `--since-last` restricts each query to a date window
+opening on its own last sweep. A query the state has never seen, or one whose wording has changed
+since, is swept **unrestricted**: a window applied to a query that has never seen the archive
+reports a clean nothing while skipping everything. That is the conservative direction and it costs
+one full sweep of one query; the other direction costs a silent miss, which this project has
+already had once from a reworded query. Marks move only forwards and only for queries that
+answered 200, the rule `§18a` states for Track A. Verified live: a query swept minutes earlier
+returned 0 results under its own window while a never-swept one returned its usual 4.
+
+**Per-query yield measures itself** — `pnpm sweep:web -- --yield` reads the ledger and prints, per
+query label, runs, results, how many were already records, how many were candidates, **how many
+pages actually named this project** and what the label has cost across every run. It makes no
+request. A label never fetched shows `—` rather than `0`, because zero would retire a query that
+was never checked. Each ledger entry carries the verdict counts
+of its own response and **the `q` actually sent**, because the first yield table showed
+`investigation-trine` aggregated over three different wordings under one label — a row flagged
+`REWORDED` is a sum over different questions and is not a yield. The point of the table is
+retirement: a label that has cost money across several runs and returned neither a known record nor
+a candidate is dead weight, and until this existed that could only be noticed by joining two
+reports by hand.
+
+**A cluster was added, run and retired on measurement — `COMPANY_STORIES`.** The query set covered
+the territory of 31 of the 95 verified records; the other 64 carry `cited_work: "none"` and are
+overwhelmingly one shape, a company's layoffs where an outlet cites this project for a number the
+company has not given (Meta in 23 of them). Four queries were derived from those records' own
+figures and events and run for $0.020: **55 URLs, 45 candidates fetched, 0 brand hits.** The
+queries are not at fault — each returned records already in the file (Forbes, Slay News, Alex Jones
+Live, Geeks + Gamers), so they land on target. **43 of those 64 records carry the reference as an
+embedded @LayoffAI post, against 8 in prose**, and an embed is a client-rendered card frequently
+absent from the served HTML — the wall B14 already hit. A text index cannot reach that population
+in principle. It is the web analogue of `docs/X-API.md §4`'s split: prose citers are findable by
+search, embedders are findable through the post. The cluster stays defined and outside the default
+set, runnable by name, so it reads as *answered* rather than untried.
+
+**What the first full run corrected in the query set, which is why the set is versioned:**
+
+- **A subject query returns the subject.** `"Gurukul Overseas" Trine` returned 19 results, 0 of them
+  ours, mostly the agency's own website; `"H-1B" "zip code" lookup…` returned USCIS and university
+  career pages. Both retired.
+- **An exact figure is the best instrument.** `"273,026" H-1B renewals` returned 7 results of which
+  4 are already records. `"8 of every 10 new American jobs"` — the post's own sentence — returns
+  exactly one page, and it is one of ours.
+- **A precision refinement failed its calibration, and the calibration is why we know.** Replacing
+  the Trine subject query with `"9,123" Trine graduate students` looked strictly better — 5 results,
+  3 known — and **silently dropped the second NewsBreak URL**, one of the two pages the run exists
+  to re-find. Both queries are now in the set. Do not reword a query on reasoning alone; re-run the
+  calibration after every edit.
+
+**Every response is archived before it is parsed**, under `research/brave-search-<day>/raw/`
+(§18c). `rawArchivePath` takes the vendor as its third argument for exactly this reason: two
+vendors' bills do not belong in one folder.
+
+**What it does with the results.** Each URL is normalised to one spelling, diffed against
+`data/media.json`, and sorted into four buckets: the project's own surfaces, pages already in the
+file, **surfaces carrying no reporting of their own** — archive on sight, `docs/WORKPLAN.md` open
+question 14 — and candidates. Three of the first six probe queries returned the third shape, which
+is what makes that rule load-bearing rather than precautionary. A syndicating outlet is *not* in
+that bucket: a syndication of a named outlet's piece is a record under B13's contract.
+
+The run writes `research/brave-search-<day>/sweep-<time>.json` and a
+`candidate-urls-<time>.txt` in exactly the format §17's `--urls` reads, so the handoff to the
+verification stage is a paste and not a transcription.
+
+**Calibration, and it comes before the results are read as findings.** Two pages were confirmed by
+hand on 2026-09-22 and are in no file: the yourNEWS piece of 2026-06-06/07 and the second NewsBreak
+URL, a syndication of The American Bazaar's Trine investigation. Their URLs are kept in
+`research/web-sweep-calibration.txt`. A sweep that does not return them has a problem in its query
+set or its detector, and its other results are not yet a finding about the world.
+
+**Read-only against `data/`, like every discovery tool here.** It reports; a human fetches, opens,
+reads and writes the record. A discovery sweep is exactly where auto-promotion would do the most
+damage.

@@ -112,25 +112,34 @@ does not mean verified by X, audited, or confirmed by LayoffHedge. Records await
 
 ## 5. The maintenance tools
 
-Occasional, run by hand, never part of a build or CI. Full detail in `ENGINEERING.md §16–§20`.
+Occasional, run by hand, never part of a build or CI. Full detail in `ENGINEERING.md §16–§21`.
 
 | Command | What it does | Network | Cost |
 |---|---|---|---|
 | `pnpm import:press` | imports the official press page as `needs_review` candidates | yes | free |
-| `pnpm check:media-mentions` | fetches a stored article and confirms it mentions the project | yes | free |
+| `pnpm check:media-mentions` | fetches an article — one already stored, or any list of URLs — and reports whether the page names the project | yes | free |
 | `pnpm enrich:twitter` | fills post metadata from the X API | yes | **paid** |
 | `pnpm sweep:quotes` | enumerates who quoted a tracked post | yes | **paid** |
+| `pnpm sweep:mentions` | searches the X archive for posts whose text names the project | yes | **paid** |
+| `pnpm sweep:web` | asks a web-search index which pages cite the project, and diffs them against the dataset | yes | **paid** (~$0.005/query) |
 | `pnpm review:profiles` | re-reads profiles already paid for, reports who to look at | **no** | free |
 | `pnpm check:visual` | screenshots the site at three widths | local browser | free |
 
-The paid ones need `X_BEARER_TOKEN` in `.env.local` and spend real money per request. If you are
-forking this, read the cost model before running either: **X bills per resource returned**, so a
-call that returns 500 posts costs 500 reads, and page size saves requests rather than money.
+The paid ones need a credential in `.env.local` — `X_BEARER_TOKEN` for the three X tools,
+`BRAVE_SEARCH_API_KEY` for the web sweep — and spend real money per request. If you are
+forking this, read the cost model before running any of them: **X bills per resource returned**, so
+a call that returns 500 posts costs 500 reads and page size saves requests rather than money, while
+the search vendor bills per query and applies **no default spending cap**.
 
-Two habits worth copying:
+Three habits worth copying:
 
 - **Read `GET /2/usage/credits` before and after every run.** The difference is the exact cost.
-  Nothing else is reliable.
+  Nothing else is reliable. Where a vendor publishes no balance endpoint — the web-search one does
+  not — keep a ledger instead: one line per billed request, written as it happens, and check it
+  against the vendor's own dashboard once so the cost model is confirmed rather than assumed.
+- **Make the cheap mode the default.** Every paid tool here plans, sizes or reports for free and
+  bills only when told to. A mistyped flag should cost nothing, and on a vendor with no spending
+  cap the script carries its own ceiling.
 - **Nothing paid for is thrown away.** Raw API results live outside any cache directory, and every
   profile ever fetched is kept so a later run reuses it instead of buying it again.
 

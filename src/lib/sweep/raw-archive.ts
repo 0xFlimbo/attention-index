@@ -47,11 +47,16 @@ export interface RawArchiveEntry {
  * work, `raw/` beneath it, and a slug that says what the call was for — the
  * folder is read months later by someone deciding whether they can answer a
  * question without paying again, and `response-3.json` does not help them.
+ *
+ * `api` names the vendor whose day this is, and defaults to the one that was
+ * here first. A second paid API arrived at B11 (web search); filing its
+ * responses under `x-api-<day>` would put two vendors' bills in one folder,
+ * which is exactly the confusion `research/README.md` exists to prevent.
  */
-export function rawArchivePath(label: string, fetchedAt: string): string {
+export function rawArchivePath(label: string, fetchedAt: string, api = "x-api"): string {
   const day = fetchedAt.slice(0, 10);
   const time = fetchedAt.slice(11, 19).replace(/:/g, "");
-  return `x-api-${day}/raw/${slugify(label)}-${time}.json`;
+  return `${api}-${day}/raw/${slugify(label)}-${time}.json`;
 }
 
 /** Lowercase, punctuation to hyphens, collapsed, trimmed — a readable file name. */

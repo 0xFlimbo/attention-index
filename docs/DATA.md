@@ -330,6 +330,16 @@ otherwise, and must name a publication other than this record's own. It is a **n
 record id: the crediting is a fact about the article whether or not the original piece happens to
 be in this dataset.
 
+**The tie-breaker, added 2026-09-22 at B11 because the case recurs.** A piece can write its own
+paragraphs, add reporting of its own, and still credit another outlet for the LayoffHedge finding
+it carries — India Today did exactly that with a Newsweek analysis, for an Indian readership. That
+is `syndicated`. **The test is who read the data, not who wrote the paragraphs**, which is §10's
+wording applied directly: a syndicated record is the same reporting travelling, *not a second
+newsroom reading the data*. The distinction from `original` is not how much of the text is new —
+it is whether the outlet went to the work itself or took the finding from someone who had. Three
+records now sit on this reading: `media-times-now-2026-07-04`, `media-ndtv-2026-07-03` and
+`media-india-today-2026-08-14`, all Newsweek's H-1B analysis reaching a new readership.
+
 The `publication` field never carries provenance. `layoffhedge.com/press` labels republications
 as `Inkl (via IBTimes UK)`; the importer splits that suffix
 (`src/lib/validation/publication-name.ts`) so the name stays the outlet's standard public form
