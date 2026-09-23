@@ -98,8 +98,10 @@ discovery  ->  verification  ->  a person writes the record  ->  status: verifie
 - **Verification** means someone opened the source and confirmed it says what the record claims.
   Identity is checked against **independent** sources — an account's own bio is self-reported and
   is never treated as proof.
-- **A person writes the record.** No tool in this repository writes to `data/`. Every maintenance
-  script reports candidates and stops.
+- **A person writes the record.** No tool in this repository verifies a record. The discovery
+  tools report candidates and stop; `import:press` adds only `needs_review` records, which count
+  toward nothing. The one tool that updates verified data, `refresh:metrics`, only appends a dated
+  reading of public counters to posts that are already verified, and prints it before it writes.
 
 That last rule is the important one. A discovery sweep has nothing upstream vouching for its
 results, which is exactly where automatic promotion would do the most damage.
@@ -112,29 +114,30 @@ does not mean verified by X, audited, or confirmed by LayoffHedge. Records await
 
 ## 5. The maintenance tools
 
-Occasional, run by hand, never part of a build or CI. Full detail in `ENGINEERING.md §16–§21`.
+Occasional, run by hand, never part of a build or CI. Full detail in `ENGINEERING.md §16–§22`.
 
 | Command | What it does | Network | Cost |
 |---|---|---|---|
 | `pnpm import:press` | imports the official press page as `needs_review` candidates | yes | free |
 | `pnpm check:media-mentions` | fetches an article — one already stored, or any list of URLs — and reports whether the page names the project | yes | free |
+| `pnpm refresh:metrics` | takes a new reading of every tracked post's public counters and appends it to its history | yes | **paid** (~$0.005/post) |
 | `pnpm enrich:twitter` | fills post metadata from the X API | yes | **paid** |
 | `pnpm sweep:quotes` | enumerates who quoted a tracked post | yes | **paid** |
 | `pnpm sweep:mentions` | searches the X archive for posts whose text names the project | yes | **paid** |
-| `pnpm sweep:web` | asks a web-search index which pages cite the project, and diffs them against the dataset | yes | **paid** (~$0.005/query) |
+| `pnpm sweep:web` | asks a web-search index which pages cite the project, and diffs them against the dataset | yes | **paid** (~$0.005/query; Google News through Serper runs on free credits) |
 | `pnpm review:profiles` | re-reads profiles already paid for, reports who to look at | **no** | free |
 | `pnpm check:visual` | screenshots the site at three widths | local browser | free |
 
-The paid ones need a credential in `.env.local` — `X_BEARER_TOKEN` for the three X tools,
-`BRAVE_SEARCH_API_KEY` for the web sweep — and spend real money per request. If you are
-forking this, read the cost model before running any of them: **X bills per resource returned**, so
-a call that returns 500 posts costs 500 reads and page size saves requests rather than money, while
-the search vendor bills per query and applies **no default spending cap**.
+The paid ones need a credential in `.env.local` — `X_BEARER_TOKEN` for the four X tools,
+`BRAVE_SEARCH_API_KEY` and `SERPER_API_KEY` for the web sweep — and spend real money per request.
+If you are forking this, read the cost model before running any of them: **X bills per resource
+returned**, so a call that returns 500 posts costs 500 reads and page size saves requests rather
+than money, while Brave bills per query and applies **no default spending cap**.
 
 Three habits worth copying:
 
 - **Read `GET /2/usage/credits` before and after every run.** The difference is the exact cost.
-  Nothing else is reliable. Where a vendor publishes no balance endpoint — the web-search one does
+  Nothing else is reliable. Where a vendor publishes no balance endpoint — Brave does
   not — keep a ledger instead: one line per billed request, written as it happens, and check it
   against the vendor's own dashboard once so the cost model is confirmed rather than assumed.
 - **Make the cheap mode the default.** Every paid tool here plans, sizes or reports for free and
@@ -142,6 +145,20 @@ Three habits worth copying:
   cap the script carries its own ceiling.
 - **Nothing paid for is thrown away.** Raw API results live outside any cache directory, and every
   profile ever fetched is kept so a later run reuses it instead of buying it again.
+
+### Refreshing the numbers by hand
+
+Nothing here runs on a schedule. To bring the site up to date:
+
+```bash
+pnpm refresh:metrics                    # what a refresh would read and cost; no request
+pnpm refresh:metrics -- --fetch         # buy the reading and print old beside new; writes nothing
+pnpm refresh:metrics -- --from tracked-post-metrics-<day>.json --write   # append it, free
+```
+
+Then run the checks from §2 ("Check it the way CI does") and commit. The headline numbers move on the next build, each
+still paired with the date it was read. Finding new coverage is a separate step, and every hit is
+read by a person before it becomes a record: `ENGINEERING.md §22` lists the commands in order.
 
 ### If you are the account being measured
 

@@ -35,7 +35,7 @@
  * ---------------------------------------------------------------------------
  *
  * **Cheap mode is the default.** An unqualified run only *sizes* the window
- * with `counts` — one request, ~$0.01 — and prints what a fetch would cost.
+ * with `counts` — $0.01 per 31 days of window — and prints what a fetch would cost.
  * `--sweep` is what spends. This mirrors `sweep:quotes`, where `--measure` is
  * the default for the same reason: a mistyped flag should cost a cent.
  *
@@ -310,29 +310,48 @@ function fullPostText(tweet: ApiTweet): { text: string; truncated: boolean } {
 // ---------------------------------------------------------------------------
 
 /**
- * Size the window before paying to fetch it — one request, ~$0.01.
+ * Size the window before paying to fetch it — $0.01 per 31 days of window.
  *
  * A count is a **price estimate and never a completion check**: on 2026-09-21
  * `counts` reported 28 for the window and the search returned 25 distinct
  * posts. Deleted posts and protected accounts sit in the gap, so a sweep that
  * pages until it reaches the advertised number pages forever (`docs/X-API.md §17`).
+ *
+ * **One response covers at most 31 days** (measured 2026-09-23, at $0.01 a
+ * request). This used to read the first page only, so a window longer than a
+ * month was priced as if it were one month. It now follows `next_token`, up to
+ * MAX_SIZING_PAGES, and says so when it stops short.
  */
+const MAX_SIZING_PAGES = 12;
+
 async function sizeWindow(token: string, since: string): Promise<number> {
-  const url = `${COUNTS_URL}?query=${encodeURIComponent(QUERY)}&${since}&granularity=day`;
+  const base = `${COUNTS_URL}?query=${encodeURIComponent(QUERY)}&${since}&granularity=day`;
   /*
-   * Billed (~$0.01) and therefore archived, which it was not until 2026-09-21.
-   * This runs on every unqualified invocation — the default, cheapest, most
+   * Billed and therefore archived, which it was not until 2026-09-21. This
+   * runs on every unqualified invocation — the default, cheapest, most
    * frequent mode — and its answer is the historical record of how big the
    * mention population was on a given day. That reading cannot be re-taken.
    */
-  const body = await fetchJson<{
-    data?: { start: string; tweet_count: number }[];
-    meta?: { total_tweet_count?: number };
-  }>(url, token, "counts-window-sizing");
+  let total = 0;
+  let pages = 0;
+  let pageToken: string | undefined;
+  const buckets: { start: string; tweet_count: number }[] = [];
+  do {
+    const body = await fetchJson<{
+      data?: { start: string; tweet_count: number }[];
+      meta?: { total_tweet_count?: number; next_token?: string };
+    }>(pageToken ? `${base}&next_token=${pageToken}` : base, token, `counts-window-sizing-page-${pages + 1}`);
+    total += body.meta?.total_tweet_count ?? 0;
+    buckets.push(...(body.data ?? []));
+    pageToken = body.meta?.next_token;
+    pages++;
+  } while (pageToken && pages < MAX_SIZING_PAGES);
 
-  const total = body.meta?.total_tweet_count ?? 0;
-  console.log(`\nwindow holds ${total} post(s)`);
-  for (const bucket of body.data ?? []) {
+  console.log(`\nwindow holds ${total} post(s) — ${pages} counts request(s), $${(pages * 0.01).toFixed(2)}`);
+  if (pageToken) {
+    console.log(`  stopped after ${MAX_SIZING_PAGES} pages: the window is longer and the figure is a floor.`);
+  }
+  for (const bucket of buckets) {
     if (bucket.tweet_count > 0) console.log(`  ${bucket.start.slice(0, 10)}  ${bucket.tweet_count}`);
   }
 

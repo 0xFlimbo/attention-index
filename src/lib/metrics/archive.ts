@@ -7,7 +7,8 @@ import { latestObservation } from "@/lib/metrics/observation";
  * smallest `id` (lexicographic). docs/DATA.md §11 sorts the archive by views
  * descending; this is the tie-break that makes that order reproducible
  * between builds even though nothing else in the data changed — real data
- * genuinely ties (two tracked posts currently sit at 4,500,000 views each).
+ * genuinely ties (until the first API refresh on 2026-09-23, two tracked
+ * posts sat at 4,500,000 views each, both read off X's rounded interface).
  *
  * This is the single shared comparator for "the archive order" — used both
  * to sort the full archive and, in `getAttentionMetrics` (src/lib/metrics/
@@ -88,10 +89,10 @@ const THRESHOLD_DEFINITIONS: ReadonlyArray<{
  * docs/HOMEPAGE.md §10 — "only thresholds that match real records." `ALL`
  * is always offered (even for zero eligible posts, so the UI has something
  * to render); every other threshold is offered only when at least one
- * eligible post meets it (inclusive, `>=`, matching docs/DATA.md §10). With
- * today's dataset (max views 4.5M) this yields `ALL` and `>1M` only — `>5M`
- * and `>10M` have zero records and must not appear, entirely because the
- * data doesn't support them, never a hardcoded list of "current" thresholds.
+ * eligible post meets it (inclusive, `>=`, matching docs/DATA.md §10). On
+ * 2026-09-23 (max views 4,585,209) this yielded `ALL` and `>1M` only — `>5M` and
+ * `>10M` had zero records and did not appear, entirely because the data
+ * didn't support them, never a hardcoded list of "current" thresholds.
  */
 export function selectArchiveThresholds(posts: Post[]): ArchiveThresholdOption[] {
   const eligible = posts.filter(isVerifiedRecord);

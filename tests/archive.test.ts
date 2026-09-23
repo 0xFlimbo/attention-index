@@ -160,9 +160,23 @@ describe("selectArchiveThresholds", () => {
     expect(thresholds).toEqual([{ id: "all", label: "ALL", minViews: null, count: 0 }]);
   });
 
-  it("matches the real dataset: ALL and >1M only, >5M and >10M absent", () => {
+  // By relationship, not literal: a metric refresh can carry a post past 5M,
+  // and the filter should then offer >5M. The literal ["all", "1m"] is checked
+  // against the frozen fixture in tests/frozen-dataset.test.ts.
+  it("offers, on the real dataset, exactly the thresholds some post's latest reading reaches", () => {
+    const posts = getPosts().filter((post) => post.status === "verified" && post._placeholder !== true);
+    const latest = posts.map((post) => latestObservation(post).views);
+    const reached = (floor: number) => latest.some((views) => views >= floor);
+    const expected = [
+      "all",
+      ...(reached(1_000_000) ? ["1m"] : []),
+      ...(reached(5_000_000) ? ["5m"] : []),
+      ...(reached(10_000_000) ? ["10m"] : []),
+    ];
+
     const thresholds = selectArchiveThresholds(getPosts());
-    expect(thresholds.map((option) => option.id)).toEqual(["all", "1m"]);
+    expect(thresholds.map((option) => option.id)).toEqual(expected);
+    expect(thresholds[0]?.count).toBe(posts.length);
   });
 });
 

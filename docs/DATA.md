@@ -159,10 +159,20 @@ artefact, not a decline, and it only becomes a lie if someone plots the two poin
 deliberately does **not** prefer the API reading: doing so would publish a figure that is not the
 most recent one, on a judgement this project has no basis for making.
 
-**Process rule for refreshes.** An automated refresh always appends a reading with
-`source: "api"`, because that is where it reads from. An `interface` reading is only used to seed
-a post the API cannot return. Followed, the series stays homogeneous and the mixed-source hazard
-never arises in practice.
+**Process rule for refreshes.** A refresh is run by hand with `pnpm refresh:metrics`
+(`docs/ENGINEERING.md §22`) and always appends a reading with `source: "api"`, because that is
+where it reads from. An `interface` reading is only used to seed a post the API cannot return.
+Followed, the series stays homogeneous and the mixed-source hazard never arises in practice.
+
+**How an API reading maps onto an observation.** `views` ← `impression_count` · `likes` ←
+`like_count` · `reposts` ← **`retweet_count + quote_count`** · `replies` ← `reply_count` ·
+`bookmarks` ← `bookmark_count` · `observed_at` ← the UTC date the reading was taken. `reposts`
+counts quotes because X's own "Reposts" figure does, and every stored reading was copied from that
+figure. Measured against the paid reading of 2026-09-21, the stored value sits closer to the sum
+than to `retweet_count` alone on 30 of 32 posts, with a median gap of 0.2%; the other two were
+printed as `1.8K` and `1.4K`, which cannot tell the two apart. A counter the reading lacks is
+stored as `null`, never `0`. The mapping lives in `src/lib/metrics/observation-refresh.ts` and is
+tested there.
 
 **The 2026-09-19 backfill.** The 32 existing posts were migrated to a one-element history with
 `source` classified mechanically: a value that is exactly what X's interface would print is
@@ -498,7 +508,8 @@ section shows what exists rather than padding.
 set. `ALL` (`minViews: null`) is always included, even for zero eligible posts. Every other
 threshold (`>1M`, `>5M`, `>10M`, inclusive `>=`, matching the Attention thresholds above) is
 included only when at least one eligible post meets it — a threshold with zero records is never
-offered. With today's dataset (max views 4.5M) this resolves to `ALL` and `>1M` only.
+offered. Read 2026-09-23, after the first API refresh (max views 4,585,209), this resolves to
+`ALL` and `>1M` only — a dated reading; the next refresh can move it.
 
 ### Amplification (`amplifications.json`)
 

@@ -37,6 +37,7 @@ import { getAttentionMetrics } from "@/lib/metrics/attention";
 import { getAmplificationMetrics } from "@/lib/metrics/amplification";
 import { getMediaMetrics } from "@/lib/metrics/media";
 import { selectAttentionGridCells } from "@/lib/metrics/attention-grid";
+import { selectArchiveThresholds } from "@/lib/metrics/archive";
 import { selectCrossoverCategories } from "@/lib/metrics/amplification";
 import { selectPublicationReferences } from "@/lib/metrics/media";
 
@@ -68,6 +69,10 @@ describe("frozen dataset (2026-09-20) — derived figures", () => {
       "OBSERVED VIEWS ACROSS TRACKED POSTS",
     ]);
     expect(cells.map((cell) => cell.value)).toEqual(["17", "32", "4.5M", "43.6M"]);
+  });
+
+  it("offers the archive filters the /archive page was reviewed at: ALL and >1M only", () => {
+    expect(selectArchiveThresholds(frozenPosts).map((option) => option.id)).toEqual(["all", "1m"]);
   });
 
   it("derives the amplification figures the dataset stood at", () => {

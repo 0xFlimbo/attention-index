@@ -59,7 +59,9 @@ it must never gate main metrics, archive rows, source URLs, the disclaimer or me
 │   └── og/
 ├── scripts/         validate-data.ts  check-production-data.ts
 │                    enrich-twitter-posts.ts  import-layoffhedge-press.ts
-│                    check-media-mentions.ts  sweep-quote-tweets.ts  visual-check.mjs
+│                    check-media-mentions.ts  sweep-quote-tweets.ts  sweep-mentions.ts
+│                    sweep-web.ts  review-paid-profiles.ts  refresh-post-metrics.ts
+│                    refetch-truncated-posts.ts  probe-field-parameter.ts  visual-check.mjs
 ├── src/
 │   ├── app/         layout.tsx page.tsx archive/ evidence/ methodology/ about/
 │   ├── components/  layout/ editorial/ data/ archive/ ui/
@@ -230,7 +232,8 @@ external embeds).
   "refetch:truncated": "tsx scripts/refetch-truncated-posts.ts",
   "probe:fields": "tsx scripts/probe-field-parameter.ts",
   "sweep:mentions": "tsx scripts/sweep-mentions.ts",
-  "sweep:web": "tsx scripts/sweep-web.ts"
+  "sweep:web": "tsx scripts/sweep-web.ts",
+  "refresh:metrics": "tsx scripts/refresh-post-metrics.ts"
 }
 ```
 
@@ -241,19 +244,16 @@ of both tracks — see §18b; and keeping every billed response is the tools' jo
 re-reads profiles already paid for and **makes no network request at all** — see §19.
 `refetch:truncated` and `probe:fields` are the two one-off scripts of §20.
 `sweep:web` is the web-search discovery sweep — see §21; it is the only tool here that talks to a
-second paid vendor, and the only one whose default mode makes no request at all.
+second paid vendor. `refresh:metrics` is the manual metric refresh — see §22; it is the one tool
+that appends to `data/`. Both make no request at all in their default mode.
 
 **This block is generated from `package.json`, not maintained beside it.** It had drifted by four
 entries — `review:profiles`, `refetch:truncated`, `probe:fields` and `sweep:mentions` all existed
 and none was listed — which is the ordinary fate of a list copied by hand. If you add a script,
 paste the whole `scripts` object again rather than appending a line.
 
-`check:visual` is the browser review pass — see §16. `check:media-mentions` is the press-queue
-probe — see §17. `sweep:quotes` is the quote-post discovery sweep — see §18. `review:profiles`
-re-reads profiles already paid for and **makes no network request at all** — see §19.
-`refetch:truncated` and `probe:fields` are one-off diagnostics, both already run (§20). None of the
-six is part of the pre-deploy pipeline below: the first must not run alongside a build, and two of
-the rest make outbound requests to third-party services.
+None of the maintenance tools is part of the pre-deploy pipeline below: `check:visual` must not
+run alongside a build, and the rest make outbound requests to third-party services.
 
 Pre-deploy pipeline:
 
@@ -303,12 +303,17 @@ and the figures are then re-derived and read by a human, never pasted from the r
 B18 and B16 are the two migrations so far: B16 added a required `cited_work` to every media
 record, which the fixture's own copies needed before they would parse again.
 
-**The pattern is wider than the one file B10 converted.** A live-data literal still sits in
-`tests/attention-grid.test.ts`, `tests/archive.test.ts` and `tests/observations.test.ts` (post
-counts — B12's path); each goes red on the first record its batch adds. Convert them in the batch
-that moves those records, in the shape above — B10 converted `tests/evidence.test.ts`,
-`tests/media-contract.test.ts` and `tests/public-references.test.ts` that way and B16 re-ran the
-probe, which is what establishes the list rather than reading it off this paragraph.
+**Every live-data test is now in this shape.** B10 converted `tests/evidence.test.ts`,
+`tests/media-contract.test.ts` and `tests/public-references.test.ts`. The last three,
+`tests/attention-grid.test.ts`, `tests/archive.test.ts` and `tests/observations.test.ts`, pinned
+post figures and were converted on 2026-09-23 with `refresh:metrics` (§22). The probe that
+established it applied a real reading to all 32 posts: three tests failed, in `attention-grid` and
+`observations`. `archive` stayed green only because no post had crossed 5M, and was converted
+anyway. After the conversion the suite passed both with the reading applied and without it. Their literals moved to
+the frozen fixture, and one of them became a stronger live check than it was: every frozen
+reading must still head its post's history, which is the append-only rule tested against the file.
+If a new test reads `data/`, write it this way from the start, and re-run the probe (change the
+data, run the suite, restore) rather than trusting this paragraph.
 
 ---
 
@@ -374,10 +379,9 @@ Process: extract the status ID from each URL → fetch → confirm `published_at
 write a neutral archive title, subject, short factual summary and a few tags → validate the record.
 
 **Never touch a stored observation.** Post readings live in `post.observations`, an append-only
-history (`docs/DATA.md §5`, B18): the enrichment pass leaves them alone entirely. A metric refresh
-stays opt-in (`--refresh-metrics`, still unimplemented — B12) and, when it lands, **appends** an
-observation carrying its own `observed_at` and `source: "api"` rather than overwriting the
-previous reading.
+history (`docs/DATA.md §5`, B18): the enrichment pass leaves them alone entirely. Refreshing them
+is a separate tool, `pnpm refresh:metrics` (§22). The `--refresh-metrics` flag this script once
+declared was never implemented; it now stops before any request and points there.
 
 Rules: credentials from `X_BEARER_TOKEN` in `.env.local` only — never committed, logged, placed in
 JSON, or exposed to the browser. Raw API responses go to a gitignored `.cache/twitter-enrichment.json`,
@@ -582,7 +586,7 @@ a second time to do the reading the counts exist to enable (added at B14, 2026-0
 `scripts/sweep-mentions.ts`. **Occasional discovery tool. Never production runtime.**
 
 ```bash
-pnpm sweep:mentions                          # size the window with counts (~$0.01) and stop
+pnpm sweep:mentions                          # size the window with counts ($0.01 per 31 days) and stop
 pnpm sweep:mentions -- --sweep                # actually fetch, profile and report
 pnpm sweep:mentions -- --since-id <id>        # override the stored high-water mark
 pnpm sweep:mentions -- --start-time <ISO>     # a date window instead of an id
@@ -1135,3 +1139,73 @@ is not offered. `src/lib/sweep/web-vendors.ts` holds every difference between th
 **Read-only against `data/`, like every discovery tool here.** It reports; a human fetches, opens,
 reads and writes the record. A discovery sweep is exactly where auto-promotion would do the most
 damage.
+
+---
+
+## 22. Maintenance tool — `pnpm refresh:metrics`, and the manual refresh routine
+
+`scripts/refresh-post-metrics.ts`. Run by hand, never scheduled, never part of a build or CI: B12
+keeps every refresh manual by maintainer decision.
+
+```bash
+pnpm refresh:metrics                                  # plan: no request, no write
+pnpm refresh:metrics -- --fetch                       # buy one reading — ~$0.16 for 32 posts
+pnpm refresh:metrics -- --from <file>                 # show a reading already paid for, free
+pnpm refresh:metrics -- --from <file> --write         # append it to data/posts.json
+```
+
+**What it does.** One `GET /2/tweets?ids=` request per 100 tracked posts returns each post's
+public counters. Each becomes one observation appended to that post's history with
+`source: "api"` and the reading's own UTC date (`docs/DATA.md §5`, which owns the field mapping).
+A post that already holds a reading on or after that date is skipped with the reason printed, so
+re-applying the same reading changes nothing.
+
+**Three steps, and only the last one writes.** The default mode prints the post count, the
+request count, the modelled cost and any reading already paid for that is newer than everything
+stored. `--fetch` buys a reading, meters `GET /2/usage/credits` before and after, archives the raw
+response under `research/x-api-<day>/raw/` and saves the reading to `research/post-metrics/`,
+then prints each post's latest stored figure beside the new one. `--from` prints the same table
+from a saved reading. Only `--write` touches `data/posts.json`: it backs the file up to
+`.cache/backups/`, validates the result against the schema, and keeps the file's formatting and
+line endings, so the diff is the appended lines and nothing else.
+
+**Why this is the one tool that writes to `data/`.** A discovery tool reports candidates, because
+a candidate needs a person to verify it. A reading is a public counter on a post that is already
+verified, and the one judgement in it — which counter maps to which field — is made once, in
+tested code. It still writes nothing it has not printed first.
+
+`sweep:quotes --measure` saves its reading to the same folder in the same shape, so a reading
+bought by either tool can be applied with `--from`.
+
+### The manual refresh routine
+
+Everything the site shows can be brought up to date by hand, in this order. Each step is
+optional and independent; run the ones that are due.
+
+```bash
+# 1. Post metrics — the headline numbers. ~$0.16, X API.
+pnpm refresh:metrics -- --fetch
+pnpm refresh:metrics -- --from tracked-post-metrics-<day>.json --write
+
+# 2. New coverage — discovery only; nothing becomes verified until a person has read the source.
+pnpm sweep:web -- --sweep --since-last --fetch                       # Brave, card, <= $0.065
+pnpm sweep:web -- --vendor serper-news --sweep --since-last --fetch  # Serper, free credits
+pnpm import:press                                                    # official press page, free; adds needs_review records
+pnpm sweep:mentions                                                  # X mentions since the last run: sizes it, $0.01 per 31 days
+pnpm sweep:mentions -- --sweep                                       # ...and fetches it, paid per post
+
+# 3. Before committing any change to data/.
+pnpm validate:data && pnpm check:production-data && pnpm typecheck && pnpm lint && pnpm test && pnpm build
+```
+
+**`sweep:mentions` after a long gap.** It resumes from the `since_id` in
+`research/track-a-state.json`. What window the API applies to a `since_id` given with no
+`start_time` is not documented, and a run cannot find out without paying. So when more than 30 days have passed since that file's `covered_through`, pass the date
+explicitly: `pnpm sweep:mentions -- --start-time <covered_through>T00:00:00Z`, sizing first and
+then with `--sweep`. The sizing follows every 31-day page, so its price is for the whole window.
+
+After step 3, grep the committed docs for figures written by hand (`docs/DATA.md`,
+`docs/HOMEPAGE.md`, `docs/PRODUCT.md` hold dated readings) and re-date any that the change moved.
+The tests need no edit: every test over `data/` asserts relationships, and the literals live in
+the frozen fixture (§9). A metric refresh changes numbers, not layout; whether a change warrants a
+visual pass (`check:visual`, §16) is the maintainer's call.

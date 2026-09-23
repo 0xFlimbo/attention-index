@@ -1,10 +1,10 @@
 /**
- * pnpm enrich:twitter [-- --dry-run] [-- --refresh-metrics]
+ * pnpm enrich:twitter [-- --dry-run]
  *
  * NOTE (B18): post readings live in `post.observations`, an append-only
- * history. This script does not write them today; when `--refresh-metrics`
- * is implemented (B12) it appends one observation with `source: "api"`
- * rather than overwriting the previous reading.
+ * history, and this script never touches them. Refreshing them is
+ * `pnpm refresh:metrics` (docs/ENGINEERING.md §22), which appends one
+ * observation with `source: "api"` rather than overwriting the previous one.
  *
  * One-time / occasional maintenance tool (docs/ENGINEERING.md §12). Never called
  * during `next build`, rendering, or CI.
@@ -339,22 +339,15 @@ function writeCache(payload: unknown): void {
 // ---------------------------------------------------------------------------
 
 async function main(): Promise<void> {
-  const token = loadBearerToken();
-
+  // The flag this script once declared and never implemented. It stops here,
+  // before the token is read, because running the whole enrichment pass by
+  // mistake is a paid request that refreshes nothing.
   if (refreshMetrics) {
-    // Still unimplemented — the refresh itself is docs/WORKPLAN.md B12. What
-    // changed at B18 is that the contract it has to honour now exists, so
-    // B12 has nothing left to invent: a refresh **appends** an observation to
-    // `post.observations`, never replaces one, and the appended reading
-    // carries `source: "api"` because that is where this script reads from.
-    // The stored history must stay chronological and must not gain a second
-    // reading for a date it already holds (docs/DATA.md §5).
-    console.log(
-      "--refresh-metrics was passed, but the refresh itself is not implemented yet " +
-        "(docs/WORKPLAN.md B12). No observation will be appended. The contract it must " +
-        'follow is in docs/DATA.md §5: append, never replace, with source "api".',
-    );
+    console.error("--refresh-metrics moved to its own tool: pnpm refresh:metrics (docs/ENGINEERING.md §22).");
+    process.exit(1);
   }
+
+  const token = loadBearerToken();
 
   // Loaded as raw JSON (not the zod-parsed/normalized shape) so untouched records are
   // written back byte-for-byte identical — schemas below are used only to *validate*,

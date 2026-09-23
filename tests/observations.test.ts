@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { postSchema, type Post, type PostObservation } from "../src/schemas/post.schema";
+import { postSchema, postsFileSchema, type Post, type PostObservation } from "../src/schemas/post.schema";
+import frozenPostsJson from "./fixtures/dataset-2026-09-20/posts.json";
 import { latestObservation } from "../src/lib/metrics/observation";
 import { getAttentionMetrics } from "../src/lib/metrics/attention";
 import { compareArchiveOrder } from "../src/lib/metrics/archive";
@@ -230,19 +231,42 @@ describe("observation history — real dataset", () => {
     }
   });
 
-  it("matches the migration's reading: 32 posts, 31 interface and 1 API", () => {
-    const sources = posts.flatMap((post) => post.observations.map((o) => o.source));
-    expect(posts).toHaveLength(32);
-    expect(sources.filter((source) => source === "interface")).toHaveLength(31);
-    expect(sources.filter((source) => source === "api")).toHaveLength(1);
+  /*
+   * Append-only, checked against the file itself. The frozen fixture holds
+   * every post's history as it stood on 2026-09-20; whatever has been
+   * refreshed since, each of those histories must still begin with exactly
+   * those readings. This is what `pnpm refresh:metrics` promises, and it is
+   * the one assertion here a correct refresh can never break.
+   */
+  it("keeps every frozen reading at the head of its post's history — a refresh appends, never replaces", () => {
+    const frozen = postsFileSchema.parse(frozenPostsJson);
+    for (const frozenPost of frozen) {
+      const live = posts.find((entry) => entry.id === frozenPost.id);
+      expect(live, frozenPost.id).toBeDefined();
+      expect(live!.observations.slice(0, frozenPost.observations.length)).toEqual(frozenPost.observations);
+    }
   });
 
   it("still holds the one API reading the precision rule exists for", () => {
     const post = posts.find((entry) => entry.id === "post-layoffai-2086800985079562516");
-    expect(latestObservation(post!)).toMatchObject({
+    expect(post!.observations).toContainEqual({
       views: 427_443,
+      likes: 5_510,
+      reposts: 2_169,
+      replies: 224,
+      bookmarks: null,
       observed_at: "2026-09-17",
       source: "api",
     });
+  });
+});
+
+describe("observation history — frozen fixture (2026-09-20)", () => {
+  it("matches the migration's reading: 32 posts, 31 interface and 1 API", () => {
+    const frozen = postsFileSchema.parse(frozenPostsJson);
+    const sources = frozen.flatMap((post) => post.observations.map((o) => o.source));
+    expect(frozen).toHaveLength(32);
+    expect(sources.filter((source) => source === "interface")).toHaveLength(31);
+    expect(sources.filter((source) => source === "api")).toHaveLength(1);
   });
 });
