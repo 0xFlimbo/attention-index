@@ -78,6 +78,9 @@ references, required evidence on every `verified` record, and reports placeholde
 placeholder remains, a headline metric would be computed from a non-verified record, or required
 project metadata is missing.
 
+Changed one of the Zod schemas in `src/schemas/`? Run `pnpm generate:schemas` and commit the
+regenerated files in `data/schemas/` — `pnpm test` fails if they're stale.
+
 ## Pull request expectations
 
 ```text

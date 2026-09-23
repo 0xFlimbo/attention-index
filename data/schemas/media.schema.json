@@ -1,0 +1,197 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/0xFlimbo/attention-index/blob/main/data/schemas/media.schema.json",
+  "title": "LayoffHedge Attention Index — media",
+  "description": "External media coverage and public references to the tracked content (docs/DATA.md §7). Generated from src/schemas/media.schema.ts — that Zod schema is authoritative; see docs/DATA.md for the rules this JSON Schema cannot express.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+      },
+      "publication": {
+        "type": "string",
+        "minLength": 1
+      },
+      "title": {
+        "type": "string",
+        "minLength": 1
+      },
+      "reference_type": {
+        "type": "string",
+        "enum": [
+          "article",
+          "newsletter",
+          "podcast",
+          "broadcast",
+          "research",
+          "blog",
+          "other"
+        ]
+      },
+      "published_at": {
+        "type": "string"
+      },
+      "url": {
+        "type": "string",
+        "format": "uri"
+      },
+      "author": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "country": {
+        "anyOf": [
+          {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "provenance": {
+        "anyOf": [
+          {
+            "type": "string",
+            "enum": [
+              "original",
+              "syndicated"
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "syndicated_from": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "cited_work": {
+        "anyOf": [
+          {
+            "type": "string",
+            "enum": [
+              "layoff_data",
+              "h1b_data",
+              "investigation",
+              "none"
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "context": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "related_post_id": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "featured": {
+        "type": "boolean"
+      },
+      "logo": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "archive_url": {
+        "anyOf": [
+          {
+            "type": "string",
+            "format": "uri"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "notes": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "verified",
+          "needs_review",
+          "archived"
+        ]
+      },
+      "verified_at": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "_placeholder": {
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "id",
+      "publication",
+      "title",
+      "reference_type",
+      "published_at",
+      "url",
+      "author",
+      "country",
+      "provenance",
+      "syndicated_from",
+      "cited_work",
+      "context",
+      "related_post_id",
+      "featured",
+      "logo",
+      "archive_url",
+      "notes",
+      "status",
+      "verified_at"
+    ]
+  }
+}

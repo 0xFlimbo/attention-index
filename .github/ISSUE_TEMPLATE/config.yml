@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Contributing guide
+    url: https://github.com/0xFlimbo/attention-index/blob/main/CONTRIBUTING.md
+    about: Record formats, evidence requirements and the pull request workflow.
+  - name: How a record gets in
+    url: https://github.com/0xFlimbo/attention-index/blob/main/docs/USING.md#4-how-a-record-gets-in
+    about: Discovery, verification and how a candidate becomes a public record.

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/0xFlimbo/attention-index/blob/main/data/schemas/project.schema.json",
+  "title": "LayoffHedge Attention Index — project metadata",
+  "description": "Project metadata: labels, links and the methodology version. Never a metric (docs/DATA.md §9). Generated from src/schemas/project.schema.ts — that Zod schema is authoritative.",
+  "type": "object",
+  "properties": {
+    "project_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "short_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "official_project_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "official_x_account": {
+      "type": "string",
+      "pattern": "^@"
+    },
+    "repository_url": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uri"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "methodology_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "disclaimer": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "project_name",
+    "short_name",
+    "official_project_url",
+    "official_x_account",
+    "repository_url",
+    "methodology_version",
+    "disclaimer"
+  ]
+}

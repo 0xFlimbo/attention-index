@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/0xFlimbo/attention-index/blob/main/data/schemas/amplifications.schema.json",
+  "title": "LayoffHedge Attention Index — amplifications",
+  "description": "Public people and organizations that amplified the tracked content (docs/DATA.md §6). Generated from src/schemas/amplification.schema.ts — that Zod schema is authoritative; see docs/DATA.md for the rules this JSON Schema cannot express.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+      },
+      "entity_type": {
+        "type": "string",
+        "enum": [
+          "person",
+          "organization"
+        ]
+      },
+      "entity_name": {
+        "type": "string",
+        "minLength": 1
+      },
+      "role": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "organization": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "category": {
+        "type": "string",
+        "enum": [
+          "government",
+          "politics",
+          "journalism",
+          "media",
+          "business",
+          "tech",
+          "public_figure",
+          "other"
+        ]
+      },
+      "action": {
+        "type": "string",
+        "enum": [
+          "repost",
+          "quote_post",
+          "reply",
+          "mention",
+          "share",
+          "citation",
+          "interview",
+          "other"
+        ]
+      },
+      "date": {
+        "type": "string"
+      },
+      "platform": {
+        "anyOf": [
+          {
+            "type": "string",
+            "enum": [
+              "x",
+              "website",
+              "youtube",
+              "linkedin",
+              "other"
+            ]
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "account": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "evidence_url": {
+        "type": "string",
+        "format": "uri"
+      },
+      "related_post_id": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "follower_count": {
+        "anyOf": [
+          {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "follower_count_observed_at": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "country": {
+        "anyOf": [
+          {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "featured": {
+        "type": "boolean"
+      },
+      "portrait": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "notes": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "verified",
+          "needs_review",
+          "archived"
+        ]
+      },
+      "verified_at": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "_placeholder": {
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "id",
+      "entity_type",
+      "entity_name",
+      "role",
+      "organization",
+      "category",
+      "action",
+      "date",
+      "platform",
+      "account",
+      "evidence_url",
+      "related_post_id",
+      "country",
+      "featured",
+      "portrait",
+      "notes",
+      "status",
+      "verified_at"
+    ]
+  }
+}

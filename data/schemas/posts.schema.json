@@ -1,0 +1,210 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/0xFlimbo/attention-index/blob/main/data/schemas/posts.schema.json",
+  "title": "LayoffHedge Attention Index — posts",
+  "description": "Tracked LayoffHedge / @LayoffAI posts and their observed public metrics (docs/DATA.md §5). Generated from src/schemas/post.schema.ts — that Zod schema is authoritative; see docs/DATA.md for the rules this JSON Schema cannot express.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+      },
+      "platform": {
+        "type": "string",
+        "enum": [
+          "x",
+          "website",
+          "youtube",
+          "linkedin",
+          "other"
+        ]
+      },
+      "account": {
+        "type": "string",
+        "minLength": 1
+      },
+      "published_at": {
+        "type": "string"
+      },
+      "title": {
+        "type": "string",
+        "minLength": 1
+      },
+      "subject": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "summary": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "url": {
+        "type": "string",
+        "format": "uri"
+      },
+      "status": {
+        "type": "string",
+        "enum": [
+          "verified",
+          "needs_review",
+          "archived"
+        ]
+      },
+      "featured": {
+        "type": "boolean"
+      },
+      "tags": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "observations": {
+        "minItems": 1,
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "views": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "likes": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "reposts": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "replies": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "bookmarks": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "observed_at": {
+              "type": "string"
+            },
+            "source": {
+              "type": "string",
+              "enum": [
+                "api",
+                "interface"
+              ]
+            }
+          },
+          "required": [
+            "views",
+            "likes",
+            "reposts",
+            "replies",
+            "bookmarks",
+            "observed_at",
+            "source"
+          ]
+        }
+      },
+      "screenshot": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "notes": {
+        "anyOf": [
+          {
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "verified_at": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "_placeholder": {
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "id",
+      "platform",
+      "account",
+      "published_at",
+      "title",
+      "subject",
+      "summary",
+      "url",
+      "status",
+      "featured",
+      "tags",
+      "observations",
+      "screenshot",
+      "notes",
+      "verified_at"
+    ]
+  }
+}

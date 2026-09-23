@@ -1,0 +1,56 @@
+name: Correct a record
+description: Report a record in data/ that is missing, wrong or out of date.
+title: "[correction]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form to flag a problem with an existing record in `data/posts.json`,
+        `data/amplifications.json` or `data/media.json`. See `CONTRIBUTING.md` for the
+        record formats and evidence bar this project works to.
+  - type: input
+    id: record-id
+    attributes:
+      label: Record id
+      description: The record's `id` field, e.g. `post-layoffai-2099180586858393814`.
+      placeholder: post-layoffai-2099180586858393814
+    validations:
+      required: true
+  - type: textarea
+    id: what-is-wrong
+    attributes:
+      label: What is wrong
+      description: Describe the problem with the record in your own words.
+    validations:
+      required: true
+  - type: input
+    id: current-value
+    attributes:
+      label: Current value
+      description: What the record currently says (leave blank if the record does not exist yet).
+    validations:
+      required: false
+  - type: input
+    id: correct-value
+    attributes:
+      label: Correct value
+      description: What the record should say instead.
+    validations:
+      required: true
+  - type: input
+    id: evidence-url
+    attributes:
+      label: Public evidence URL
+      description: >-
+        A link a stranger can open that supports the correct value. Corrections without a
+        public source are not merged.
+      placeholder: https://
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirm-public
+    attributes:
+      label: Confirmation
+      options:
+        - label: The evidence URL above is public and does not require a login to view.
+          required: true

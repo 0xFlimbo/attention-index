@@ -1,0 +1,57 @@
+name: Propose a new record
+description: Suggest a post, amplification or media reference that is missing from the dataset.
+title: "[new record]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form to propose a record that does not yet exist in `data/`. See
+        `CONTRIBUTING.md` for the record formats and evidence bar this project works to.
+  - type: dropdown
+    id: file
+    attributes:
+      label: Which file does this belong in
+      options:
+        - posts.json — a public post by @LayoffAI
+        - amplifications.json — a repost, quote post, mention, citation or interview
+        - media.json — an article, newsletter, podcast, broadcast or other external coverage
+    validations:
+      required: true
+  - type: input
+    id: public-url
+    attributes:
+      label: Public URL of the post or article
+      description: A link a stranger can open, with no login required.
+      placeholder: https://
+    validations:
+      required: true
+  - type: textarea
+    id: what-it-shows
+    attributes:
+      label: What it shows
+      description: What the linked page contains, in your own words.
+    validations:
+      required: true
+  - type: input
+    id: date
+    attributes:
+      label: Date
+      description: The date of the post, article or event (ISO format if possible, e.g. 2026-09-15).
+    validations:
+      required: false
+  - type: textarea
+    id: why-it-belongs
+    attributes:
+      label: Why it belongs
+      description: >-
+        Which @LayoffAI post it amplifies, cites or references, or which LayoffHedge data it
+        refers to.
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirm-public
+    attributes:
+      label: Confirmation
+      options:
+        - label: The URL above is public and does not require a login to view.
+          required: true

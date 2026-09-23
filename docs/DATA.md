@@ -29,6 +29,14 @@ Optional later only if genuinely needed: `people.json`, `organizations.json`, `s
 The live counts for every file are derived, never restated here — see the selectors in `§10`, the
 figures printed on `/methodology`, and the ledger on `/evidence`.
 
+**JSON Schema.** `data/schemas/posts.schema.json`, `amplifications.schema.json`,
+`media.schema.json` and `project.schema.json` mirror the four files above so anyone can validate
+the JSON with any JSON Schema draft 2020-12 validator, without TypeScript. They are generated from
+the Zod schemas in `src/schemas/` by `pnpm generate:schemas` and checked by
+`tests/json-schema-export.test.ts`, which fails if a committed file differs from what the Zod
+schemas produce right now — the Zod schemas stay the single source of truth, never hand-edited.
+Some rules a Zod refinement enforces have no JSON Schema equivalent; `§12` lists every one.
+
 ---
 
 ## 2. Formatting rules
@@ -754,6 +762,33 @@ would be computed from non-verified records, or when required project metadata i
 
 Implementation: Zod schemas in `src/schemas/` mirroring this document exactly. If code and this
 doc diverge, decide the intended behavior and update both — never leave the mismatch.
+
+**What the generated JSON Schema cannot express.** `data/schemas/*.schema.json` (see `§1`) is a
+weaker contract than the Zod schemas above: a JSON Schema validator alone will accept records that
+`pnpm validate:data` rejects. Every rule above that a JSON Schema cannot encode:
+
+- the ISO date/timestamp shape and real-calendar-date check on every date field (`isoDateString`)
+  — a generated schema types the field as a plain string and accepts any value
+- the `post-` / `amp-` / `media-` id prefix — the generated `pattern` only checks the shared
+  lowercase-hyphenated shape, not the per-file prefix
+- `_placeholder: true` requires `status: "needs_review"`
+- a `verified` record requires a non-null `verified_at`
+- two observations on one post never share `observed_at`, and observations are stored oldest first
+  — no cross-item uniqueness-by-field or ordering keyword exists in JSON Schema
+- ids are unique within a file — same reason
+- `follower_count` present requires `follower_count_observed_at` present
+- a `verified` media record requires a non-null `provenance`
+- a `verified` media record requires a non-null `cited_work`
+- `syndicated_from` is present exactly when `provenance` is `"syndicated"`, and never equals the
+  record's own `publication`
+- `featured` media records are `verified` and `provenance: "original"`
+- `related_post_id` references an existing post — this is a cross-*file* check
+  (`amplifications.json` / `media.json` against `posts.json`'s id set), so no single file's JSON
+  Schema could express it even in principle
+
+All of these stay enforced by `pnpm validate:data` (Zod). A generated schema's `format: "uri"` is,
+per the JSON Schema spec, an annotation rather than an assertion unless a validator opts into the
+format-assertion vocabulary — most do, but don't assume it.
 
 ---
 

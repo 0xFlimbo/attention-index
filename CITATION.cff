@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: >-
+  If you use this dataset or cite a figure derived from it, please cite it
+  using the metadata in this file.
+type: dataset
+title: "LayoffHedge Attention Index"
+authors:
+  - alias: 0xFlimbo
+version: 1.0.0
+date-released: "2026-09-23"
+url: "https://attention-index-theta.vercel.app"
+repository-code: "https://github.com/0xFlimbo/attention-index"
+license:
+  - MIT
+  - CC-BY-4.0
+abstract: >-
+  A static, source-linked dataset and website documenting the public
+  attention, amplification and media crossover of LayoffHedge, built from
+  publicly verifiable posts, reposts, citations and press references. Every
+  figure is derived at build time from the records in this repository, each
+  of which links to the public source it was read from.
+keywords:
+  - open data
+  - dataset
+  - public attention
+  - media coverage
+  - layoffs

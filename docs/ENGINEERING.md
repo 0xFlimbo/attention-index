@@ -57,8 +57,8 @@ it must never gate main metrics, archive rows, source URLs, the disclaimer or me
 /
 ├── README.md  CONTRIBUTING.md  LICENSE
 ├── docs/            USING PRODUCT DESIGN HOMEPAGE DATA ENGINEERING EDITORIAL TOOLS PROVIDERS
-├── data/            posts.json amplifications.json media.json project.json
-├── scripts/         validate-data.ts  check-production-data.ts
+├── data/            posts.json amplifications.json media.json project.json  schemas/
+├── scripts/         validate-data.ts  check-production-data.ts  generate-json-schemas.ts
 │                    enrich-twitter-posts.ts  import-layoffhedge-press.ts
 │                    check-media-mentions.ts  sweep-quote-tweets.ts  sweep-mentions.ts
 │                    sweep-web.ts  review-paid-profiles.ts  refresh-post-metrics.ts
@@ -224,6 +224,7 @@ cannot drift out of sync the way a copy of the JSON block used to.
 | `test` | Vitest | this doc, §9 |
 | `validate:data` | Zod-validate every file in `data/` | `docs/DATA.md` |
 | `check:production-data` | production gate — rejects visible placeholders and metrics derived from anything but verified records | `docs/DATA.md §12` |
+| `generate:schemas` | regenerate `data/schemas/*.schema.json` from the Zod schemas | `docs/DATA.md §1, §12` |
 | `refresh:metrics` | buy a new reading of tracked posts' public counters | `docs/TOOLS.md §3` |
 | `enrich:twitter` | fill post/amplification metadata from tweet text | `docs/TOOLS.md §4` |
 | `import:press` | seed `data/media.json` from the official press page | `docs/TOOLS.md §5` |

@@ -1,7 +1,10 @@
 {
   "name": "layoffhedge-attention-index",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": ">=20.9.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -11,6 +14,7 @@
     "test": "vitest run",
     "validate:data": "tsx scripts/validate-data.ts",
     "check:production-data": "tsx scripts/check-production-data.ts",
+    "generate:schemas": "tsx scripts/generate-json-schemas.ts",
     "enrich:twitter": "tsx scripts/enrich-twitter-posts.ts",
     "import:press": "tsx scripts/import-layoffhedge-press.ts",
     "check:media-mentions": "tsx scripts/check-media-mentions.ts",

@@ -41,7 +41,7 @@ or by them.
 
 ## 2. Run it locally
 
-Requires Node 20+ and `pnpm` (`corepack enable pnpm`).
+Requires Node 20.9+ and `pnpm` (`corepack enable pnpm`).
 
 ```bash
 git clone https://github.com/0xFlimbo/attention-index
@@ -81,6 +81,9 @@ This is the part that matters, and it is meant to be easy.
    which is the point.
 4. Recompute a headline figure: every derived number is a pure function in `src/lib/metrics/`,
    with tests in `tests/`. `pnpm test` recomputes them from the JSON on disk.
+
+Working in another language? `data/schemas/` has a JSON Schema for each data file, generated from
+the same validation rules, so you can check the JSON without touching TypeScript.
 
 Found something wrong? See §6.
 
