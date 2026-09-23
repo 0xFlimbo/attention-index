@@ -40,6 +40,7 @@ import { selectAttentionGridCells } from "@/lib/metrics/attention-grid";
 import { selectArchiveThresholds } from "@/lib/metrics/archive";
 import { selectCrossoverCategories } from "@/lib/metrics/amplification";
 import { selectPublicationReferences } from "@/lib/metrics/media";
+import { latestObservationDate, dataLastUpdated } from "@/lib/metrics/last-updated";
 
 const frozenPosts = postsFileSchema.parse(frozenPostsJson);
 const frozenAmplifications = amplificationsFileSchema.parse(frozenAmplificationsJson);
@@ -121,5 +122,12 @@ describe("frozen dataset (2026-09-20) — derived figures", () => {
       investigation: 4,
       none: 53,
     });
+  });
+
+  it("derives the last-update dates the dataset stood at", () => {
+    // Re-derived by hand from the frozen files, same rule as every other
+    // literal in this suite — never pasted from a failing run.
+    expect(latestObservationDate(frozenPosts)).toBe("2026-09-19");
+    expect(dataLastUpdated(frozenPosts, frozenAmplifications, frozenMedia)).toBe("2026-09-19");
   });
 });

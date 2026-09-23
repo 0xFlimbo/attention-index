@@ -28,7 +28,7 @@ Static-first: local JSON → validation → derived metrics → static build. No
 data/posts.json           tracked @LayoffAI posts and observed public metrics
 data/amplifications.json  public people and organizations that amplified the content
 data/media.json           external media and public references
-data/project.json         project metadata (links, disclaimer, last update)
+data/project.json         project metadata (links, disclaimer, methodology version)
 ```
 
 ## Quick start

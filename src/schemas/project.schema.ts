@@ -1,9 +1,11 @@
 import { z } from "zod";
-import { absoluteUrlString, isoDateString } from "./shared";
+import { absoluteUrlString } from "./shared";
 
 /**
  * docs/DATA.md §9 — project metadata only. Never a metric: labels, links,
- * last-update date, methodology version, disclaimer.
+ * methodology version, disclaimer. No last-update date here — that used to
+ * be a hand-typed field and is now derived from the dataset itself
+ * (`src/lib/metrics/last-updated.ts`, docs/DATA.md §10).
  */
 export const projectSchema = z.object({
   project_name: z.string().min(1),
@@ -11,7 +13,6 @@ export const projectSchema = z.object({
   official_project_url: absoluteUrlString,
   official_x_account: z.string().regex(/^@/, 'must start with "@"'),
   repository_url: absoluteUrlString.nullable(),
-  data_last_updated: isoDateString,
   methodology_version: z.string().min(1),
   disclaimer: z.string().min(1),
 });

@@ -5,6 +5,7 @@ import { getPosts, getAmplifications, getMediaReferences, getProjectMetadata } f
 import { getAttentionMetrics } from "@/lib/metrics/attention";
 import { getAmplificationMetrics } from "@/lib/metrics/amplification";
 import { getMediaMetrics } from "@/lib/metrics/media";
+import { dataLastUpdated } from "@/lib/metrics/last-updated";
 import { formatCount } from "@/lib/format/number";
 import { formatCitedWork } from "@/lib/format/cited-work";
 import { mediaCitedWorkEnum } from "@/schemas/media.schema";
@@ -64,6 +65,9 @@ export default function MethodologyPage() {
   const attention = getAttentionMetrics(posts);
   const amplificationMetrics = getAmplificationMetrics(amplifications);
   const mediaMetrics = getMediaMetrics(mediaReferences);
+  // docs/DATA.md §9, §10 — derived, not a hand-typed project field. `null`
+  // only when the dataset holds no verified record anywhere.
+  const lastUpdated = dataLastUpdated(posts, amplifications, mediaReferences);
 
   // Records held at `needs_review` are real rows in the dataset, just not yet
   // public — stating how many exist is honest, not a fabricated number, and
@@ -179,8 +183,9 @@ export default function MethodologyPage() {
           </ul>
           <p className="text-body mt-6 max-w-prose text-ink-soft">
             Only records marked <strong className="text-ink">verified</strong>, and not marked as
-            a development placeholder, feed any number shown on this website. As of{" "}
-            {formatDateLong(project.data_last_updated)}, {formatCount(mediaMetrics.verifiedMediaReferenceCount)}{" "}
+            a development placeholder, feed any number shown on this website.{" "}
+            {lastUpdated !== null && <>As of {formatDateLong(lastUpdated)}, </>}
+            {formatCount(mediaMetrics.verifiedMediaReferenceCount)}{" "}
             of the {formatCount(mediaReferences.length)} imported media records are verified and
             visible on this site; {formatCount(mediaNeedsReviewCount)} remain at{" "}
             {/*
@@ -428,8 +433,8 @@ export default function MethodologyPage() {
         </ProseSection>
 
         <p className="text-metadata mt-16 text-ink-soft">
-          Methodology version {project.methodology_version} · Data last updated{" "}
-          {formatDate(project.data_last_updated)}
+          Methodology version {project.methodology_version}
+          {lastUpdated !== null && <> · Data last updated {formatDate(lastUpdated)}</>}
         </p>
       </main>
       <Footer project={project} />

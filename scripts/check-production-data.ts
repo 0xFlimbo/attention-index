@@ -20,6 +20,7 @@ import { getProjectMetadata } from "../src/lib/data/project";
 import { getAttentionMetrics } from "../src/lib/metrics/attention";
 import { getAmplificationMetrics } from "../src/lib/metrics/amplification";
 import { getMediaMetrics } from "../src/lib/metrics/media";
+import { dataLastUpdated } from "../src/lib/metrics/last-updated";
 import { findVisiblePlaceholders } from "../src/lib/validation/placeholder";
 
 const DATA_DIR = resolve(process.cwd(), "data");
@@ -51,7 +52,21 @@ for (const file of ["posts.json", "amplifications.json", "media.json"]) {
 }
 
 try {
-  const attention = getAttentionMetrics(getPosts());
+  const posts = getPosts();
+  const amplifications = getAmplifications();
+  const mediaReferences = getMediaReferences();
+
+  // docs/DATA.md §9, §10 — no hand-typed date to require any more; a
+  // production build with verified data anywhere must be able to derive one.
+  if (dataLastUpdated(posts, amplifications, mediaReferences) === null) {
+    hasErrors = true;
+    console.error(
+      "dataLastUpdated derives to null — no verified, non-placeholder record anywhere " +
+        "carries an observation or a verified_at date",
+    );
+  }
+
+  const attention = getAttentionMetrics(posts);
   const expectedPosts = countEligible("posts.json");
   if (attention.trackedPostCount !== expectedPosts) {
     hasErrors = true;
@@ -61,7 +76,7 @@ try {
     );
   }
 
-  const amplification = getAmplificationMetrics(getAmplifications());
+  const amplification = getAmplificationMetrics(amplifications);
   const expectedAmps = countEligible("amplifications.json");
   if (amplification.verifiedAmplificationCount !== expectedAmps) {
     hasErrors = true;
@@ -71,7 +86,7 @@ try {
     );
   }
 
-  const media = getMediaMetrics(getMediaReferences());
+  const media = getMediaMetrics(mediaReferences);
   const expectedMedia = countEligible("media.json");
   if (media.verifiedMediaReferenceCount !== expectedMedia) {
     hasErrors = true;
@@ -91,7 +106,6 @@ try {
     ["project_name", project.project_name],
     ["short_name", project.short_name],
     ["disclaimer", project.disclaimer],
-    ["data_last_updated", project.data_last_updated],
     ["methodology_version", project.methodology_version],
   ];
   for (const [field, value] of requiredNonEmpty) {

@@ -28,11 +28,17 @@ import { ExternalArrow } from "./external-arrow";
  * `VIEW DATA` exactly — external once `repositoryUrl` is published
  * (`${repositoryUrl}/tree/main/data`, `↗`), falling back to an internal
  * `/evidence` (`→`) only while there is no repository to point at.
+ *
+ * `lastUpdated` is `latestObservationDate(posts)` (src/lib/metrics/
+ * last-updated.ts) — the date of the observation behind the headline number
+ * above it, derived, never a hand-typed project field. `null` only when the
+ * dataset holds no eligible post; the `LAST UPDATED` element is omitted
+ * rather than printing an invented date.
  */
 interface PrimaryAttentionMetricProps {
   totalObservedViews: number;
   trackedPostCount: number;
-  lastUpdated: string;
+  lastUpdated: string | null;
   repositoryUrl: string | null;
 }
 
@@ -95,7 +101,7 @@ export function PrimaryAttentionMetric({
       </p>
 
       <div className="text-metadata mt-10 flex flex-wrap gap-x-8 gap-y-3 text-ink-soft">
-        <span>LAST UPDATED {formatDate(lastUpdated)}</span>
+        {lastUpdated !== null && <span>LAST UPDATED {formatDate(lastUpdated)}</span>}
         {repositoryUrl !== null ? (
           <a
             href={`${repositoryUrl}/tree/main/data`}

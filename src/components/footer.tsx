@@ -1,5 +1,7 @@
 import Link from "next/link";
 import type { Project } from "@/schemas/project.schema";
+import { getAmplifications, getMediaReferences, getPosts } from "@/lib/data";
+import { dataLastUpdated } from "@/lib/metrics/last-updated";
 import { formatDate } from "@/lib/format/date";
 import { ExternalArrow } from "./external-arrow";
 
@@ -24,12 +26,22 @@ import { ExternalArrow } from "./external-arrow";
  * the fold on every route. No `scroll-margin-top` is needed — globals.css
  * scopes that rule to `section[id]`, and nothing above the footer needs to
  * stay visible when the footer itself is the anchor.
+ *
+ * `LAST DATA UPDATE` reads `dataLastUpdated` (src/lib/metrics/last-updated.ts),
+ * not a project field — this Server Component loads posts, amplifications and
+ * media directly (the loaders are cheap, module-cached reads, docs/DATA.md
+ * §10) rather than adding three props every one of the five routes that
+ * render this footer would otherwise have to drill through. `null` only when
+ * the dataset holds no verified record anywhere; the whole stamp is omitted
+ * rather than printing an invented date.
  */
 interface FooterProps {
   project: Project;
 }
 
 export function Footer({ project }: FooterProps) {
+  const lastUpdated = dataLastUpdated(getPosts(), getAmplifications(), getMediaReferences());
+
   return (
     <footer id="site-footer" className="border-t border-line bg-bg-soft">
       {/*
@@ -110,11 +122,13 @@ export function Footer({ project }: FooterProps) {
           </nav>
         </div>
 
-        <p className="text-metadata text-ink-soft lg:shrink-0 lg:text-right">
-          LAST DATA UPDATE
-          <br />
-          <span className="font-bold text-ink">{formatDate(project.data_last_updated)}</span>
-        </p>
+        {lastUpdated !== null && (
+          <p className="text-metadata text-ink-soft lg:shrink-0 lg:text-right">
+            LAST DATA UPDATE
+            <br />
+            <span className="font-bold text-ink">{formatDate(lastUpdated)}</span>
+          </p>
+        )}
       </div>
 
       <div aria-hidden="true" className="h-0.5 w-full bg-accent" />

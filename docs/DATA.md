@@ -427,15 +427,16 @@ docs keeps resolving — do not renumber the sections below it.
   "official_project_url": "https://layoffhedge.com",
   "official_x_account": "@LayoffAI",
   "repository_url": null,
-  "data_last_updated": "2026-09-16",
   "methodology_version": "1.1",
   "disclaimer": "Independent community project. Not affiliated with or endorsed by LayoffHedge."
 }
 ```
 
-Labels, links, last update, methodology version, disclaimer. **Never calculated metrics.**
+Labels, links, methodology version, disclaimer. **Never calculated metrics.**
 `repository_url: null` must degrade gracefully in the UI (hide/disable GitHub CTAs).
-Update `data_last_updated` whenever production data changes.
+
+No last-update date lives here: it is derived from the records themselves (§10, "Last-update
+selectors"), so it cannot drift from the data it describes.
 
 ---
 
@@ -630,6 +631,43 @@ this system.
 ### Crossover
 Descriptive counts and real examples only. **Never invent** Crossover Score, Influence Score,
 Attention Quality Score or similar pseudo-precision.
+
+### Last-update selectors (`src/lib/metrics/last-updated.ts`)
+
+The site's dates are derived like its numbers ("store the evidence, derive the number"). Two pure
+functions, both returning an ISO date (`YYYY-MM-DD`, truncated from a
+full timestamp when a source record carries one) or `null` when nothing eligible exists to date.
+On `null`, the UI omits the date element rather than printing something invented, and the sitemap
+omits `lastModified` for every route.
+
+```text
+latestObservationDate(posts: Post[]): string | null
+
+  input:   posts
+  filter:  verified, non-placeholder posts only (isVerifiedRecord)
+  value:   the latest observed_at across those posts' observation histories
+           (one read per post, via latestObservation — same rule §10's Attention
+           section uses)
+  null:    no eligible post has an observation (cannot happen once one exists)
+  used by: the Primary Attention Metric's LAST UPDATED (docs/HOMEPAGE.md §5) —
+           it is the date of the headline views figure sitting above it
+
+dataLastUpdated(posts: Post[], amplifications: Amplification[], media: MediaReference[]): string | null
+
+  input:   posts, amplifications, media
+  filter:  verified, non-placeholder records only, in all three files
+  value:   the latest of latestObservationDate(posts) and every verified_at on
+           an eligible record across the three files
+  null:    no eligible record anywhere carries an observation or a verified_at
+  used by: the footer's LAST DATA UPDATE (docs/HOMEPAGE.md §14), /methodology's
+           two dated statements, and the sitemap's lastModified
+```
+
+A record being verified counts as "the dataset changed" even on a day no post was re-observed,
+and a fresh observation counts even on a day nothing new was verified — `dataLastUpdated` is
+always the later of the two, never one or the other. `pnpm check:production-data` fails a
+production build whose dataset would derive `dataLastUpdated` to `null` — a site with no verified
+data anywhere is not a state that should ship silently.
 
 ### Dataset summary selector (`src/lib/metrics/dataset.ts`)
 

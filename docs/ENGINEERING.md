@@ -1208,4 +1208,6 @@ After step 3, grep the committed docs for figures written by hand (`docs/DATA.md
 `docs/HOMEPAGE.md`, `docs/PRODUCT.md` hold dated readings) and re-date any that the change moved.
 The tests need no edit: every test over `data/` asserts relationships, and the literals live in
 the frozen fixture (§9). A metric refresh changes numbers, not layout; whether a change warrants a
-visual pass (`check:visual`, §16) is the maintainer's call.
+visual pass (`check:visual`, §16) is the maintainer's call. There is no date field to update by
+hand anywhere in this routine — the footer, `/methodology` and the sitemap all read a date derived
+from the refreshed data itself (`dataLastUpdated`, docs/DATA.md §10).

@@ -109,7 +109,10 @@ LAST UPDATED [DATE]        SOURCE DATA →        METHODOLOGY →
 ```
 
 Mostly empty section built around one very large derived number (`totalObservedViews`) and
-`trackedPostCount`. Values come from the metrics layer — never hardcoded in JSX.
+`trackedPostCount`. Values come from the metrics layer — never hardcoded in JSX. `LAST UPDATED`
+reads `latestObservationDate(posts)` (docs/DATA.md §10) — the date of the observation behind the
+headline number, not a project field — and the element is omitted entirely if that selector
+returns `null`.
 
 Label is exactly `OBSERVED VIEWS` / `OBSERVED VIEWS ACROSS TRACKED POSTS`. Never "impressions" or "reach".
 
@@ -483,7 +486,9 @@ SEP 16 2026
 ```
 
 Cream or soft cream, thin top divider, optional red bottom rule, compact. No newsletter signup.
-`LAST DATA UPDATE` reads `project.json.data_last_updated`.
+`LAST DATA UPDATE` reads `dataLastUpdated(posts, amplifications, media)` (docs/DATA.md §10) — the
+`Footer` Server Component loads the three files itself rather than the value being drilled through
+every route that renders it. Omitted entirely when that selector returns `null`.
 
 `ABOUT` was added to this list at the B5 sign-off: §3 fixes the navigation at
 `ATTENTION / CROSSOVER / ARCHIVE / SOURCES / GITHUB ↗`, so without it `/about` is a route with no

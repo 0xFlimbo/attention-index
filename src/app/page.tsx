@@ -1,6 +1,7 @@
 import { getPosts, getAmplifications, getMediaReferences, getProjectMetadata } from "@/lib/data";
 import { getAttentionMetrics } from "@/lib/metrics/attention";
 import { selectAttentionGridCells } from "@/lib/metrics/attention-grid";
+import { latestObservationDate } from "@/lib/metrics/last-updated";
 import { Navigation } from "@/components/navigation";
 import { HeroStatement } from "@/components/hero-statement";
 import { PrimaryAttentionMetric } from "@/components/primary-attention-metric";
@@ -36,7 +37,7 @@ export default function Home() {
         <PrimaryAttentionMetric
           totalObservedViews={attention.totalObservedViews}
           trackedPostCount={attention.trackedPostCount}
-          lastUpdated={project.data_last_updated}
+          lastUpdated={latestObservationDate(posts)}
           repositoryUrl={project.repository_url}
         />
         <StatGrid cells={gridCells} />

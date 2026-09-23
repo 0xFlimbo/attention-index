@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
-import { getProjectMetadata } from "@/lib/data";
+import { getAmplifications, getMediaReferences, getPosts } from "@/lib/data";
+import { dataLastUpdated } from "@/lib/metrics/last-updated";
 import { SITE_URL } from "@/lib/site-url";
 
 /**
@@ -10,15 +11,17 @@ import { SITE_URL } from "@/lib/site-url";
  * route table) — no `/methodology#anchor`-style entries, no route that
  * doesn't exist.
  *
- * `lastModified` uses `project.json.data_last_updated` for every route: it is
- * the one dated fact this project keeps about "when the content changed",
- * and every route's content (headline metrics, archive, evidence, even the
- * static prose pages, which quote live-derived numbers in `/methodology`)
- * depends on the dataset that date describes.
+ * `lastModified` uses `dataLastUpdated` (src/lib/metrics/last-updated.ts) for
+ * every route: it is the one dated fact this project keeps about "when the
+ * content changed", derived from the dataset rather than a hand-typed project
+ * field, and every route's content (headline metrics, archive, evidence, even
+ * the static prose pages, which quote live-derived numbers in `/methodology`)
+ * depends on the dataset that date describes. `lastModified` is omitted
+ * entirely for every route when the dataset holds no eligible record to date.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
-  const project = getProjectMetadata();
-  const lastModified = new Date(project.data_last_updated);
+  const lastUpdated = dataLastUpdated(getPosts(), getAmplifications(), getMediaReferences());
+  const lastModified = lastUpdated === null ? undefined : new Date(lastUpdated);
 
   const routes: Array<{ path: string; priority: number }> = [
     { path: "/", priority: 1 },
@@ -30,7 +33,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   return routes.map(({ path, priority }) => ({
     url: `${SITE_URL}${path}`,
-    lastModified,
+    ...(lastModified !== undefined && { lastModified }),
     changeFrequency: "weekly",
     priority,
   }));

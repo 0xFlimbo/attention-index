@@ -24,6 +24,7 @@ import { getPosts, getAmplifications, getMediaReferences, getProjectMetadata } f
 import { getAttentionMetrics } from "@/lib/metrics/attention";
 import { getAmplificationMetrics } from "@/lib/metrics/amplification";
 import { getMediaMetrics } from "@/lib/metrics/media";
+import { latestObservationDate, dataLastUpdated } from "@/lib/metrics/last-updated";
 
 // ---------------------------------------------------------------------------
 // The files, read as a reader would read them — no schema, no loader, no metric.
@@ -181,5 +182,30 @@ describe("real dataset — project metadata", () => {
     const project = getProjectMetadata();
     expect(project.disclaimer).toMatch(/independent/i);
     expect(project.repository_url).toBe("https://github.com/0xFlimbo/attention-index");
+  });
+});
+
+describe("real dataset — derived last-update dates (docs/DATA.md §10)", () => {
+  const posts = getPosts();
+  const amplifications = getAmplifications();
+  const mediaReferences = getMediaReferences();
+  const observationDate = latestObservationDate(posts);
+  const updatedDate = dataLastUpdated(posts, amplifications, mediaReferences);
+
+  it("is non-null on a dataset that holds verified records", () => {
+    expect(rawPosts.length).toBeGreaterThan(0);
+    expect(observationDate).not.toBeNull();
+    expect(updatedDate).not.toBeNull();
+  });
+
+  it("is a well-formed ISO date", () => {
+    expect(observationDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(updatedDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  });
+
+  it("is never earlier than the date of the headline views figure", () => {
+    // dataLastUpdated is the later of latestObservationDate and every
+    // verified_at across all three files — it can equal it, never precede it.
+    expect(updatedDate! >= observationDate!).toBe(true);
   });
 });

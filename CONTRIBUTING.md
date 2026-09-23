@@ -18,7 +18,7 @@ exactly how the maintainer works locally.
 | A public post by @LayoffAI with a view count | `data/posts.json` | `post-` |
 | A repost, quote post, reply, mention, citation or interview by a named person or organization | `data/amplifications.json` | `amp-` |
 | An article, newsletter, podcast, broadcast or other external coverage | `data/media.json` | `media-` |
-| Project-wide metadata (official links, disclaimer, last-updated date) | `data/project.json` | — |
+| Project-wide metadata (official links, disclaimer, methodology version) | `data/project.json` | — |
 
 Read `docs/DATA.md` for the full schema of the file you're editing before you add a field —
 it is the single owner of the data contract, and this file does not repeat it.
