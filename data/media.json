@@ -2266,5 +2266,26 @@
     "notes": "Found by the B11 web sweep, query h1b-district-map. Syndicated rather than original on docs/DATA.md §10's test: the piece did not read the data, it read Newsweek and says so in the sentence carrying the name. Same shape and same Newsweek cluster as media-times-now-2026-07-04 and media-ndtv-2026-07-03, both already classified syndicated at B14.",
     "status": "verified",
     "verified_at": "2026-09-22"
+  },
+  {
+    "id": "media-queerty-2026-05-04",
+    "publication": "Queerty",
+    "title": "MAGA mouthpiece Ben Shapiro’s empire is crumbling right before our eyes as Tr*mp loyalty backfires",
+    "reference_type": "article",
+    "published_at": "2026-05-04",
+    "url": "https://www.queerty.com/mouthpiece-ben-shapiros-empire-is-crumbling-right-before-our-eyes-as-trmp-loyalty-backfires-20260504/",
+    "author": "Alex Reimer",
+    "country": "US",
+    "provenance": "original",
+    "syndicated_from": null,
+    "cited_work": "layoff_data",
+    "context": "Calls layoffhedge.com an industry tracker and uses its estimate that 100 roles were cut to test a disputed claim that The Daily Wire cut half its staff, linking layoffhedge.com/company/daily-wire and giving the figure as roughly 50% of the company’s workforce.",
+    "related_post_id": null,
+    "featured": true,
+    "logo": null,
+    "archive_url": null,
+    "notes": "Found by the Serper /news sweep of 2026-09-23, query daily-wire-layoffs, page 2; returned by no Brave response. Date read off the page’s own Published Time, 2026-05-04T16:00:00-07:00, and the byline. An opinion piece; the reference is in the outlet’s own prose with a direct link. country US: the page states “A Q.Digital Company” and “Queerty is a federally registered trademark of Q.Digital, Inc.”, and Q.Digital’s own site states its address as 584 Castro Street, San Francisco, CA — the publisher’s stated address, the same basis as American Renaissance’s.",
+    "status": "verified",
+    "verified_at": "2026-09-23"
   }
 ]

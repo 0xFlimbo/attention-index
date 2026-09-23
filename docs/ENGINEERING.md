@@ -531,7 +531,7 @@ sweep of §21 writes exactly that file. The fetch-and-detect half both modes sha
 (§18d), so selecting the targets is all the script still does.
 
 **What counts as the name, and why the list grew.** The detector looked for `layoffhedge` and
-`@?layoffai`. Counted over `data/media.json`: `layoffhedge` 83, `layoffai` 99, **`layoff hedge`
+`@?layoffai`. Counted over `data/media.json` as it stood when B11 began: `layoffhedge` 83, `layoffai` 99, **`layoff hedge`
 zero** — the spaced form is absent from our data because the official press page never uses it, and
 the open web does. Measured live on 2026-09-22: the yourNEWS piece that names this project four
 times contains **zero** occurrences of the closed form and four of `Layoff Hedge`, so the old

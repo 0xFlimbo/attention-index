@@ -48,7 +48,7 @@ A section must be able to disappear when the evidence is thin.
 
 | Section | Renders when |
 |---|---|
-| Public References | ≥1 verified media record (**shipped in B8; 99 verified across 55 publications as of 2026-09-22, after B14, B10 and B11 — the section renders and grows with the dataset, and B19 owns the row cap that growth now needs**) |
+| Public References | ≥1 verified media record (**shipped in B8; 100 verified across 56 publications as of 2026-09-23, after B14, B10 and B11 — the section renders and grows with the dataset, and B19 owns the row cap that growth now needs**) |
 | Amplified By | enough verified amplifications for a real grid; otherwise fold examples into Crossover |
 | Crossover | ≥1 verified amplification; categories only shown if they have records |
 | Token | explicitly enabled; omitted in V1 |
@@ -354,7 +354,7 @@ Both are computed on render and neither is written down anywhere:
 
 ```text
 References from newsrooms in 7 countries.
-Showing 12 of 55 publications; every reference is listed on the evidence page.
+Showing 12 of 56 publications; every reference is listed on the evidence page.
 ```
 
 The country figure is `countryCount` (`docs/DATA.md §10`, original references only) — the same
