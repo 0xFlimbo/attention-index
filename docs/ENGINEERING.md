@@ -905,6 +905,7 @@ pnpm sweep:web -- --sweep --query brand-closed          # one query, by exact la
 pnpm sweep:web -- --sweep --query brand-closed,brand-spaced  # several, comma-separated
 pnpm sweep:web -- --sweep --max-queries 5    # lower the ceiling; nothing can raise it
 pnpm sweep:web -- --sweep --freshness py     # recency filter, vendor's own syntax
+pnpm sweep:web -- --vendor serper-news --sweep --since-last --fetch   # Google News, alongside Brave
 ```
 
 **Planning is the default and spending is opt-in.** An unqualified run makes **zero** requests. It
@@ -1081,6 +1082,55 @@ hand on 2026-09-22 and are in no file: the yourNEWS piece of 2026-06-06/07 and t
 URL, a syndication of The American Bazaar's Trine investigation. Their URLs are kept in
 `research/web-sweep-calibration.txt`. A sweep that does not return them has a problem in its query
 set or its detector, and its other results are not yet a finding about the world.
+
+**Two indexes, side by side — `--vendor serper-news`.** Google's index was put to the same
+questions through Serper on 2026-09-23, to test whether it holds citations Brave's does not.
+Neither index contains the other on this project's long tail:
+- Of Brave's six real or calibration finds, Google returned one.
+- Google **News** returned one citing publication that no Brave response ever held.
+- Google **web** search returned nothing Brave lacked except noise.
+
+So Brave's web search stays the default, Serper's `/news` runs alongside it, and Google web search
+is not offered. `src/lib/sweep/web-vendors.ts` holds every difference between the vendors, and
+`tests/web-vendors.test.ts` pins them.
+
+- **Contract.** `POST https://google.serper.dev/news`, key in `X-API-KEY`, JSON body
+  `{q, gl, hl, num, page, autocorrect, tbs}`. **Serper publishes no documentation and no OpenAPI
+  specification**: `/docs`, `/openapi.json` and `/api-docs` return 404. The request shape and the
+  credit rules were read out of the vendor's own playground bundle, of which dated copies are kept
+  locally.
+- **Free, and only while free.** 2,500 card-free credits, 1 per request. `GET /account` returns
+  the balance and costs nothing. Before a run, the sweep reads the balance and refuses when it
+  cannot cover the worst case (queries × pages). Running out is therefore a refusal rather than a
+  bill, and topping the account up is a maintainer's decision, not a flag.
+- **Metered, unlike Brave.** Every response carries `credits`, and each ledger row records it as
+  `creditsInBody`. The balance lags a charge by seconds, so the run reads it again after a settled
+  wait and prints the difference. On the first 27 requests the two agreed exactly.
+- **Ten results a page.** The free tier answers `num` above 10 with HTTP 400 ("Query pattern not
+  allowed for free accounts"), at no cost. `--pages` therefore defaults to **2** for this vendor,
+  on the one measurement there is: its only real find was on page 2. Serper has no
+  `more_results_available`. A second page is bought only after a full first one, and it can still
+  come back empty, as it did once, at the cost of a credit.
+- **`--since-last` works, but coarser than on Brave.** Google's custom date range
+  (`tbs=cdr:1,cd_min:…,cd_max:…`) is accepted and echoed back by `/news`, and then ignored.
+  Measured: a one-day window returned articles four months old, while `qdr:w` on the same query
+  returned only that day's article. So the range is **rounded up** to the smallest fixed bucket
+  that contains it: past week, month or year. A gap longer than a year sweeps unrestricted.
+  Rounding up costs a few old results, which the dedupe absorbs. Rounding down would skip pages
+  silently.
+- **Some query patterns are refused on the free tier.** `"@LayoffAI"` and `"layoffhedge.com"`
+  both answer HTTP 400, "Query pattern not allowed for free accounts", at no cost, while the bare
+  token `layoffhedge` is accepted. The vendor lists the refused labels with the measurement behind
+  each, and they are skipped before any request, so a run never aborts halfway on them.
+- **An aborted run exits non-zero**, on both vendors. A scheduled run has no one reading its
+  console.
+- **A query set version names the questions, not the index.** The same `q` keeps its
+  `QUERY_SET_VERSION` on both vendors. Each vendor has its own ledger
+  (`research/serper-ledger.json`), its own raw folder (`research/serper-<day>/raw/news-<label>-…`)
+  and its own state file (`research/web-sweep-state-serper-news.json`). Sharing a state file would
+  let one index's date apply a window to a query the other index has never swept, and that window
+  would report a clean nothing while skipping the archive. `--yield` counts only the vendor's own
+  endpoint.
 
 **Read-only against `data/`, like every discovery tool here.** It reports; a human fetches, opens,
 reads and writes the record. A discovery sweep is exactly where auto-promotion would do the most

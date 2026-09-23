@@ -4,6 +4,16 @@
  *                [-- --pages N]   # up to N pages per query, only where one exists
  * pnpm sweep:web -- --sweep --fetch   # chain the free verification stage onto the run
  * pnpm sweep:web -- --yield            # per-query yield from the ledger; no request
+ * pnpm sweep:web -- --vendor serper-news [...]   # Google News through Serper, alongside Brave
+ *
+ * **Two indexes, side by side** (`src/lib/sweep/web-vendors.ts`). Brave's web
+ * search is the default. `--vendor serper-news` puts the same query set to
+ * Google News through Serper, which the 2026-09-23 experiment showed reaches
+ * pages Brave does not (and misses most of what Brave finds). Serper runs on
+ * card-free credits: the run reads the balance first and refuses to start when
+ * it cannot cover the requests it may make. Each vendor keeps its own ledger,
+ * raw folder and `--since-last` state; everything below applies to both unless
+ * it names one.
  *
  * **B11's discovery half** (docs/WORKPLAN.md B11, docs/ENGINEERING.md §21):
  * ask a web-search index which pages name this project or carry the claims its
@@ -93,26 +103,25 @@ import {
   planFreshness,
   type SweepState,
 } from "../src/lib/sweep/sweep-state";
+import {
+  SERPER_API,
+  WEB_VENDORS,
+  readSerperNews,
+  serperCredits,
+  serperNewsBody,
+  serperTbs,
+  webVendor,
+} from "../src/lib/sweep/web-vendors";
 
 const ROOT = process.cwd();
 const DATA_DIR = resolve(ROOT, "data");
 const RESEARCH_DIR = resolve(ROOT, "research");
-/**
- * Accumulating across every run, never a dated snapshot: it is the record of
- * spend, and `research/README.md` calls that the one class of file here that
- * can never be regenerated.
- */
-const LEDGER_FILE = resolve(RESEARCH_DIR, "brave-search-ledger.json");
-/** Per-query high-water marks, so a repeat sweep does not re-buy the archive. */
-const STATE_FILE = resolve(RESEARCH_DIR, "web-sweep-state.json");
 
 const SEARCH_URL = "https://api.search.brave.com/res/v1/web/search";
-/** $5 per 1,000 web-search queries, vendor pricing page, 2026-09-22. */
-const PRICE_PER_QUERY = 0.005;
 /**
  * No flag raises this. It is the ceiling on what one mistake can cost: at
- * $0.005 a query, a full run of the ceiling is $0.30 and the monthly credit
- * absorbs it many times over.
+ * Brave's $0.005 a query, a full run of the ceiling is $0.30 and the monthly
+ * credit absorbs it many times over.
  */
 const HARD_QUERY_CAP = 60;
 /** The base plan is one query per second; a burst is a 429, which aborts. */
@@ -134,12 +143,30 @@ const flagValue = (name: string): string | null => {
   return index === -1 ? null : (args[index + 1] ?? null);
 };
 
+const vendorArg = flagValue("vendor");
+const unknownVendor = webVendor(vendorArg) === null;
+const vendor = webVendor(vendorArg) ?? WEB_VENDORS["brave-web"];
+/**
+ * Accumulating across every run, never a dated snapshot: it is the record of
+ * spend, and `research/README.md` calls that the one class of file here that
+ * can never be regenerated. One per vendor.
+ */
+const LEDGER_FILE = resolve(RESEARCH_DIR, vendor.ledgerFile);
+/** Per-query high-water marks, one file per vendor and endpoint. */
+const STATE_FILE = resolve(RESEARCH_DIR, vendor.stateFile);
+const PRICE_PER_QUERY = vendor.unitPriceUsd;
+
 const doSweep = args.includes("--sweep");
 const queryFilter = flagValue("query");
 const maxQueries = Math.min(Number(flagValue("max-queries") ?? HARD_QUERY_CAP), HARD_QUERY_CAP);
-/** Brave's web search returns at most 20 results per query. */
-const resultCount = Math.min(Number(flagValue("count") ?? 20), 20);
-/** Optional recency filter: `pd`/`pw`/`pm`/`py` or `YYYY-MM-DDtoYYYY-MM-DD`. */
+/** Brave's web search returns at most 20 results per query; Serper's free tier 10. */
+const resultCount = Math.min(Number(flagValue("count") ?? vendor.pageSize), vendor.pageSize);
+/**
+ * Optional recency filter in the vendor's own syntax: Brave `pd`/`pw`/`pm`/`py`
+ * or `YYYY-MM-DDtoYYYY-MM-DD`; Serper `qdr:d`/`qdr:w`/… or the same range,
+ * which is rounded up to a `qdr` bucket because `/news` ignores Google's own
+ * custom range (`serperTbs`).
+ */
 const freshness = flagValue("freshness");
 const extraSnippets = args.includes("--extra-snippets");
 /** Reads the ledger and prints per-query yield. Makes no request. */
@@ -164,8 +191,12 @@ const fetchDelayMs = Number(flagValue("fetch-delay") ?? 2_000);
  * `daily-wire-layoffs` and `investigation-trine` reported more. A page is only
  * bought when the previous page's `more_results_available` says one exists, so
  * raising this cannot pay for empty pages — the vendor caps `offset` at 9.
+ *
+ * Serper's `/news` defaults to 2, on the one measurement there is: its only
+ * real find was on page 2. It has no "more results" flag, so a second page is
+ * bought only after a full first one — which can still come back empty.
  */
-const maxPages = Math.min(Number(flagValue("pages") ?? 1), 10);
+const maxPages = Math.min(Number(flagValue("pages") ?? vendor.defaultPages), 10);
 /**
  * Restrict each query to what is new since that query was last swept.
  *
@@ -181,15 +212,15 @@ const sinceLast = args.includes("--since-last");
 // Credentials
 // ---------------------------------------------------------------------------
 
-/** Reads the key from .env.local without ever logging it. */
+/** Reads the vendor's key from .env.local without ever logging it. */
 function loadSearchKey(): string {
   const envPath = resolve(ROOT, ".env.local");
   if (!existsSync(envPath)) {
-    console.error(".env.local not found. Create it from .env.example and set BRAVE_SEARCH_API_KEY.");
+    console.error(`.env.local not found. Create it from .env.example and set ${vendor.keyName}.`);
     process.exit(1);
   }
   for (const line of readFileSync(envPath, "utf-8").split(/\r?\n/)) {
-    const match = line.match(/^BRAVE_SEARCH_API_KEY=(.*)$/);
+    const match = line.match(new RegExp(`^${vendor.keyName}=(.*)$`));
     if (match) {
       const key = match[1]?.trim() ?? "";
       if (key.length > 0) return key;
@@ -197,7 +228,7 @@ function loadSearchKey(): string {
     }
   }
   console.error(
-    "BRAVE_SEARCH_API_KEY is missing or empty in .env.local.\n" +
+    `${vendor.keyName} is missing or empty in .env.local.\n` +
       "This script never registers an account and never buys anything: add the key by hand,\n" +
       "set a spending cap in the vendor dashboard first, then run it again.",
   );
@@ -269,7 +300,7 @@ function printMeter(label: string, headers: Record<string, string>): void {
 function appendLedger(entry: ReturnType<typeof ledgerEntry>): void {
   const ledger: Ledger = existsSync(LEDGER_FILE)
     ? (JSON.parse(readFileSync(LEDGER_FILE, "utf-8")) as Ledger)
-    : emptyLedger("brave-search");
+    : emptyLedger(vendor.vendor);
   ledger.entries.push(entry);
   mkdirSync(RESEARCH_DIR, { recursive: true });
   writeFileSync(LEDGER_FILE, `${JSON.stringify(ledger, null, 2)}
@@ -280,7 +311,7 @@ function appendLedger(entry: ReturnType<typeof ledgerEntry>): void {
 function appendFetchOutcomes(outcomes: FetchOutcome[]): void {
   const ledger: Ledger = existsSync(LEDGER_FILE)
     ? (JSON.parse(readFileSync(LEDGER_FILE, "utf-8")) as Ledger)
-    : emptyLedger("brave-search");
+    : emptyLedger(vendor.vendor);
   ledger.fetches = [...(ledger.fetches ?? []), ...outcomes];
   writeFileSync(LEDGER_FILE, `${JSON.stringify(ledger, null, 2)}
 `);
@@ -289,10 +320,107 @@ function appendFetchOutcomes(outcomes: FetchOutcome[]): void {
 /** Writes one archived response under `research/`, creating the dated folder. */
 function archiveRaw(url: string, label: string, body: unknown): string {
   const entry = archiveEntry(url, label, body);
-  const file = resolve(RESEARCH_DIR, rawArchivePath(label, entry.fetched_at, "brave-search"));
+  const file = resolve(RESEARCH_DIR, rawArchivePath(label, entry.fetched_at, vendor.vendor));
   mkdirSync(resolve(file, ".."), { recursive: true });
   writeFileSync(file, `${JSON.stringify(entry, null, 2)}\n`);
   return file;
+}
+
+/**
+ * One `/news` request through Serper — the same contract as the Brave request
+ * below: archived before it is parsed, one ledger row, verdicts counted.
+ *
+ * `offset` stays zero-based like Brave's so the ledger reads the same way;
+ * Serper's `page` is 1-based. The row also carries `creditsInBody`, the
+ * vendor's own statement of what the request cost: this vendor *is* metered
+ * per request, and the settled balance before and after the run confirms it.
+ */
+async function runSerperNewsQuery(
+  query: SweepQuery,
+  key: string,
+  known: Set<string>,
+  offset: number,
+  freshnessOverride: string | null,
+): Promise<QueryOutcome> {
+  const request = serperNewsBody(query.q, offset + 1, serperTbs(freshnessOverride ?? freshness));
+  const url = `${SERPER_API}${vendor.endpoint}`;
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { "x-api-key": key, "content-type": "application/json" },
+    body: JSON.stringify(request),
+  });
+
+  const headers = meterHeaders(response.headers);
+  const text = await response.text();
+  let body: unknown;
+  try {
+    body = JSON.parse(text) as unknown;
+  } catch {
+    body = { unparseable_body: text.slice(0, 2_000) };
+  }
+  // The request body goes into the archive too: it carries no credential, and
+  // it is the only record of the `tbs` window a `--since-last` run sent.
+  archiveRaw(url, `${vendor.rawLabelPrefix}-${query.label}${offset > 0 ? `-p${offset + 1}` : ""}`, {
+    request,
+    headers,
+    status: response.status,
+    body,
+  });
+
+  const { items, morePossible } = readSerperNews(body);
+  const classified = response.ok
+    ? items.map((item) =>
+        classifyResult(
+          {
+            title: item.title ?? "",
+            url: item.link ?? "",
+            description: item.snippet,
+            age: item.date,
+            query: query.q,
+            queryLabel: query.label,
+          },
+          known,
+        ),
+      )
+    : [];
+
+  const entry = {
+    ...ledgerEntry({
+      at: new Date().toISOString(),
+      vendor: vendor.vendor,
+      endpoint: vendor.endpoint,
+      querySetVersion: QUERY_SET_VERSION,
+      queryLabel: query.label,
+      q: query.q,
+      offset,
+      httpStatus: response.status,
+      resultCount: classified.length,
+      unitPriceUsd: PRICE_PER_QUERY,
+      headers,
+      verdicts: countByVerdict(classified),
+    }),
+    creditsInBody: serperCredits(body),
+  };
+  appendLedger(entry);
+
+  return {
+    query,
+    httpStatus: response.status,
+    moreAvailable: response.ok && morePossible,
+    headers,
+    results: classified,
+    ...(response.ok ? {} : { error: text.slice(0, 300) }),
+  };
+}
+
+/** The settled credit balance. Free to read; it lags a charge by seconds. */
+async function serperBalance(key: string): Promise<number> {
+  const response = await fetch(`${SERPER_API}/account`, { headers: { "x-api-key": key } });
+  const body = (await response.json()) as { balance?: unknown };
+  if (!response.ok || typeof body.balance !== "number") {
+    throw new Error(`Serper /account answered ${response.status}`);
+  }
+  return body.balance;
 }
 
 /**
@@ -309,6 +437,9 @@ async function runQuery(
   offset = 0,
   freshnessOverride: string | null = null,
 ): Promise<QueryOutcome> {
+  if (vendor.id === "serper-news") {
+    return runSerperNewsQuery(query, key, known, offset, freshnessOverride);
+  }
   /*
    * Checked parameter by parameter against the vendor's own reference on
    * 2026-09-22 (`research/brave-search-2026-09-22/reference/`), because this
@@ -440,12 +571,22 @@ function knownUrls(): Set<string> {
 // ---------------------------------------------------------------------------
 
 function printPlan(queries: SweepQuery[]): void {
-  console.log(`query set ${QUERY_SET_VERSION} · ${queries.length} queries · ${resultCount} results each`);
   console.log(
-    `modelled cost ${(queries.length * PRICE_PER_QUERY).toFixed(3)} USD ` +
-      `(${queries.length} × $${PRICE_PER_QUERY}) — a model, not a meter` +
-      `${maxPages > 1 ? `, and up to ${maxPages}× that if every query has ${maxPages} pages` : ""}\n`,
+    `${vendor.id} (${vendor.vendor} ${vendor.endpoint}) · query set ${QUERY_SET_VERSION} · ` +
+      `${queries.length} queries · ${resultCount} results each · up to ${maxPages} page(s)`,
   );
+  if (vendor.unitPriceUsd === 0) {
+    console.log(
+      `up to ${queries.length * maxPages} credit(s), 1 per request — card-free credits, $0 billed; ` +
+        "the run reads the balance first and refuses if it cannot cover this\n",
+    );
+  } else {
+    console.log(
+      `modelled cost ${(queries.length * PRICE_PER_QUERY).toFixed(3)} USD ` +
+        `(${queries.length} × $${PRICE_PER_QUERY}) — a model, not a meter` +
+        `${maxPages > 1 ? `, and up to ${maxPages}× that if every query has ${maxPages} pages` : ""}\n`,
+    );
+  }
   for (const query of queries) {
     console.log(`  ${query.label.padEnd(30)} [${query.cluster}]`);
     console.log(`    q: ${query.q}`);
@@ -460,7 +601,7 @@ function writeReport(
   const now = new Date().toISOString();
   const day = now.slice(0, 10);
   const time = now.slice(11, 19).replace(/:/g, "");
-  const dir = resolve(RESEARCH_DIR, `brave-search-${day}`);
+  const dir = resolve(RESEARCH_DIR, `${vendor.vendor}-${day}`);
   mkdirSync(dir, { recursive: true });
 
   const report = resolve(dir, `sweep-${time}.json`);
@@ -469,6 +610,7 @@ function writeReport(
     `${JSON.stringify(
       {
         swept_at: now,
+        vendor: vendor.id,
         query_set_version: QUERY_SET_VERSION,
         queries: outcomes.map((outcome) => ({
           label: outcome.query.label,
@@ -495,7 +637,7 @@ function writeReport(
     [
       `# Web sweep ${now} · query set ${QUERY_SET_VERSION}`,
       `# ${candidates.length} candidate(s). Fetch with:`,
-      `#   pnpm check:media-mentions -- --urls research/brave-search-${day}/candidate-urls-${time}.txt`,
+      `#   pnpm check:media-mentions -- --urls research/${vendor.vendor}-${day}/candidate-urls-${time}.txt`,
       "# A hit is not a verification. Open and read the article before writing a record.",
       "",
       ...candidates.map((result) => `${result.url}  ${result.host}`),
@@ -574,6 +716,26 @@ async function sweep(queries: SweepQuery[], key: string): Promise<void> {
   }
   const windowFor = (label: string): string | null =>
     plan.find((row) => row.label === label)?.freshness ?? null;
+
+  /*
+   * Serper runs only while it is free. The account holds card-free credits, so
+   * running out is an error rather than a bill — but a run that stops halfway
+   * leaves half the marks unmoved and a report nobody can compare, so it
+   * refuses up front when the balance cannot cover the worst case.
+   */
+  let balanceBefore: number | null = null;
+  if (vendor.id === "serper-news") {
+    balanceBefore = await serperBalance(key);
+    const worstCase = queries.length * maxPages;
+    if (balanceBefore < worstCase) {
+      console.error(
+        `Credit balance ${balanceBefore} cannot cover up to ${worstCase} request(s). Nothing requested.\n` +
+          "This vendor is used only while it is free: topping it up is the maintainer's decision.",
+      );
+      process.exit(1);
+    }
+    console.log(`credit balance ${balanceBefore} — this run uses at most ${worstCase}\n`);
+  }
   /** Only the queries that actually answered 200 may advance their mark. */
   const succeeded: SweepQuery[] = [];
 
@@ -634,6 +796,15 @@ async function sweep(queries: SweepQuery[], key: string): Promise<void> {
 
   const last = outcomes.at(-1);
   if (last !== undefined) printMeter("meter after ", last.headers);
+  if (balanceBefore !== null) {
+    // /account lags a charge by seconds (measured 2026-09-23); read it settled.
+    await sleep(10_000);
+    const balanceAfter = await serperBalance(key);
+    console.log(
+      `  credit balance ${balanceBefore} → ${balanceAfter}: ` +
+        `${balanceBefore - balanceAfter} credit(s) metered for ${outcomes.length} request(s)`,
+    );
+  }
 
   const classified = dedupeResults(outcomes.flatMap((outcome) => outcome.results));
   const counts = countByVerdict(classified);
@@ -663,7 +834,7 @@ async function sweep(queries: SweepQuery[], key: string): Promise<void> {
     const candidates = classified.filter((entry) => entry.verdict === "candidate");
     const day = new Date().toISOString().slice(0, 10);
     const time = new Date().toISOString().slice(11, 19).replace(/:/g, "");
-    const dir = resolve(RESEARCH_DIR, `brave-search-${day}`);
+    const dir = resolve(RESEARCH_DIR, `${vendor.vendor}-${day}`);
     const probed = await verifyCandidates(candidates, dir, time);
 
     const byUrl = new Map(probed.map((result) => [result.url, result]));
@@ -743,8 +914,11 @@ async function sweep(queries: SweepQuery[], key: string): Promise<void> {
     );
     console.log(`  ${LEDGER_FILE}`);
     console.log(
-      "  Modelled, not metered: the vendor publishes no balance endpoint, so the dashboard's\n" +
-        "  own usage figure is the only true meter. Compare it against the request count above.",
+      vendor.id === "serper-news"
+        ? "  Metered: each row carries the credits the response itself reported, and the\n" +
+            "  settled balance above is the check on their sum."
+        : "  Modelled, not metered: the vendor publishes no balance endpoint, so the dashboard's\n" +
+            "  own usage figure is the only true meter. Compare it against the request count above.",
     );
   }
 
@@ -756,11 +930,19 @@ async function sweep(queries: SweepQuery[], key: string): Promise<void> {
       "record. A result with no reporting of its own is archived on sight.",
   );
   console.log(
-    "\nCalibration: a full run must re-find the two pages confirmed by hand on\n" +
-      "2026-09-22 — the yourNEWS 2026-06-07 piece and the NewsBreak syndication of\n" +
-      "The American Bazaar's Trine investigation. A sweep that misses them has a\n" +
-      "problem in the query set or the detector, not a finding about the world.",
+    vendor.id === "serper-news"
+      ? "\nCalibration: a full run must re-find the Queerty piece of 2026-05-04 on\n" +
+          "daily-wire-layoffs. The Brave calibration pages do not apply here: the NewsBreak\n" +
+          "syndication is not in Google's index, and Google News does not return yourNEWS\n" +
+          "for its own claim query (both measured 2026-09-23)."
+      : "\nCalibration: a full run must re-find the two pages confirmed by hand on\n" +
+          "2026-09-22 — the yourNEWS 2026-06-07 piece and the NewsBreak syndication of\n" +
+          "The American Bazaar's Trine investigation. A sweep that misses them has a\n" +
+          "problem in the query set or the detector, not a finding about the world.",
   );
+
+  // A scheduled run has no one reading its console: an abort must fail the job.
+  if (aborted) process.exitCode = 1;
 }
 
 /**
@@ -777,8 +959,11 @@ function printYield(): void {
     return;
   }
   const ledger = JSON.parse(readFileSync(LEDGER_FILE, "utf-8")) as Ledger;
-  const rows = yieldByQuery(ledger.entries, ledger.fetches ?? []);
-  const total = summarise(ledger.entries);
+  // A yield is comparable only within one endpoint: Serper's ledger also holds
+  // the experiment's Google web requests, which are a different population.
+  const entries = ledger.entries.filter((entry) => entry.endpoint === vendor.endpoint);
+  const rows = yieldByQuery(entries, ledger.fetches ?? []);
+  const total = summarise(entries);
 
   console.log(
     `ledger: ${total.requests} request(s) · $${total.modelledCostUsd.toFixed(3)} modelled · ` +
@@ -809,6 +994,10 @@ function printYield(): void {
 }
 
 async function main(): Promise<void> {
+  if (unknownVendor) {
+    console.error(`Unknown vendor: ${vendorArg ?? ""}. Available: ${Object.keys(WEB_VENDORS).join(", ")}`);
+    process.exit(1);
+  }
   if (showYield) {
     printYield();
     return;
@@ -824,7 +1013,16 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  const queries = selection.queries.slice(0, maxQueries);
+  // A query the vendor is known to refuse is skipped here, before any request:
+  // left in, its 400 would abort the run halfway (measured 2026-09-23).
+  const refused = selection.queries.filter((query) => query.label in vendor.refusedLabels);
+  for (const query of refused) {
+    console.log(`skipped on ${vendor.id}: ${query.label} — ${vendor.refusedLabels[query.label]}`);
+  }
+  if (refused.length > 0) console.log("");
+  const queries = selection.queries
+    .filter((query) => !(query.label in vendor.refusedLabels))
+    .slice(0, maxQueries);
   if (queries.length === 0) {
     console.log("No query selected. Run without --query to see the whole set.");
     return;
@@ -834,7 +1032,11 @@ async function main(): Promise<void> {
 
   if (!doSweep) {
     console.log("\nPlanning only — no request was made and nothing was billed.");
-    console.log("Add --sweep to run it. Set a spending cap in the vendor dashboard first.");
+    console.log(
+      vendor.unitPriceUsd === 0
+        ? "Add --sweep to run it."
+        : "Add --sweep to run it. Set a spending cap in the vendor dashboard first.",
+    );
     return;
   }
 
