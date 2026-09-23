@@ -1,6 +1,6 @@
 /**
  * What counts as this project's name on somebody else's page
- * (`src/lib/sweep/mention-patterns.ts`, `docs/ENGINEERING.md §17`).
+ * (`src/lib/sweep/mention-patterns.ts`, `docs/TOOLS.md §6`).
  *
  * The case that made this a module is asserted first: the detector was
  * calibrated on `data/media.json`, which comes from the official press page,

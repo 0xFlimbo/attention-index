@@ -31,7 +31,11 @@ coverage/
 
 # Paid API data and research working files. NOT a cache - see research/README.md.
 # Raw third-party dumps holding hundreds of public profiles; the verified records go to data/.
-/research/
+# research/README.md itself is the one tracked file in this directory - a file inside an ignored
+# directory cannot be re-included, so the rule below is /research/* + a negated exception rather
+# than the single /research/ line this used to be.
+/research/*
+!/research/README.md
 
 # Design direction images supplied at the start: LayoffHedge's own branded graphics.
 # Kept on disk as reference, never redistributed from this repository.

@@ -1,7 +1,6 @@
 # DESIGN.md
 
 Owns: visual identity, tokens, typography, layout, component styling, motion, accessibility.
-(Consolidated from `DESIGN_SYSTEM.md`, kept in `docs/archive/`.)
 
 Visual direction: warm cream, near-black type, selective warm red, large editorial headlines, thin
 rules, simple infographics.
@@ -106,15 +105,14 @@ font-family: "Manrope", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI"
 /* record id */   font-size: 12px; line-height: 1.4; letter-spacing: .06em;   /* metadata, NOT uppercased */
 ```
 
-`record id` (`.text-record-id`, added in B5) is the metadata scale with the uppercasing removed,
+`record id` (`.text-record-id`) is the metadata scale with the uppercasing removed,
 paired with the mono stack wherever a record's `id` is printed verbatim — today `/evidence`.
-It also carries any other metadata-scale value whose exact casing is part of the value: B6 uses it
-for `official_x_account` on `/about`, where the surrounding `.text-metadata` list would otherwise
+It also carries any other metadata-scale value whose exact casing is part of the value, such as
+`official_x_account` on `/about`, where the surrounding `.text-metadata` list would otherwise
 inherit `@LayoffAI` down to `@LAYOFFAI`, a handle that is not the account's name. That case is why
 the class sets `text-transform: none` **explicitly** rather than just leaving it unset: on
-`/evidence` it replaces `.text-metadata` on the same element, so omission was enough, but as a
-child of a `.text-metadata` element an unset property inherits the ancestor's `uppercase`. Caught
-at the B6 visual review, after a first fix that applied the class and assumed that was sufficient.
+`/evidence` it replaces `.text-metadata` on the same element, so omission is enough there, but as a
+child of a `.text-metadata` element an unset property inherits the ancestor's `uppercase`.
 It is **not** an inline-code style: inside body prose (18–24px) its 12px would render a field name
 at half the size of the text around it, so `/methodology` uses the bare `font-mono` utility there.
 `docs/DATA.md §2` defines ids as lowercase, and an id transformed on screen is one a reader cannot
@@ -232,7 +230,7 @@ Optional desktop hover preview; mobile taps to expand inline.
 
 ### Media reference row
 
-One row per publication (`MediaReferenceRow`, added B8), same flat/full-width/`border-b
+One row per publication (`MediaReferenceRow`), same flat/full-width/`border-b
 border-line`/no-card contract as the archive row above. Summary line: publication name plus its
 derived reference count (`N references` / `1 reference`). A native `<details>` expansion lists
 each eligible reference with its title, reference-type label, `published_at`, author and context
@@ -245,17 +243,17 @@ linkable on its own (`/#media-newsweek-2026-08-12`) — the same id `/evidence` 
 `.media-reference-entry` gives those targets the sticky-nav scroll offset `section[id]` already
 gets.
 
-**The row is unchanged at B19; the section around it is capped.** The summary line still carries
+**The row itself is unchanged; the section around it is capped.** The summary line still carries
 only the publication name and its derived count — the right rail stays `shrink-0
-whitespace-nowrap`, so the option of printing the original count beside the total was rejected
-again for B13's reason: anything added there widens a fixed column and is the first thing to
-overflow at 390px. The row band is capped at `HOMEPAGE_PUBLIC_REFERENCE_ROW_COUNT` (12) instead,
-with two lines of derived supporting copy above it (`docs/HOMEPAGE.md §11`), which keeps the flat
-ledger reading as a ledger at fifty-one records instead of twelve.
+whitespace-nowrap`, so printing the original count beside the total is rejected for the same
+reason: anything added there widens a fixed column and is the first thing to overflow at 390px.
+The row band is capped at `HOMEPAGE_PUBLIC_REFERENCE_ROW_COUNT` (12) instead, with two lines of
+derived supporting copy above it (`docs/HOMEPAGE.md §11`), which keeps a much longer list still
+reading as a flat ledger rather than a wall of rows.
 
 ### Closing line
 
-The homepage coda (`ClosingLine`, added B15 — `docs/HOMEPAGE.md §13`). Cream, `container-editorial
+The homepage coda (`ClosingLine` — `docs/HOMEPAGE.md §13`). Cream, `container-editorial
 section-padding`, no new device: a section-register heading, one body paragraph at `max-w-prose`,
 and a single `.text-metadata` external CTA. Deliberately **not** a poster callout and **not** the
 red block — the full red device is capped at 1–2 uses per page and the Narrative Break has spent
@@ -307,12 +305,12 @@ Mobile: `LH / ATTENTION INDEX     MENU` opening a simple drawer or full-screen p
 
 ### Prose section
 
-The titled section of a long-form prose page (`/methodology`, `/about`) — `ProseSection`,
-added in B6. Below `lg` it is a heading stacked above its body. From `lg` up it becomes a
+The titled section of a long-form prose page (`/methodology`, `/about`) — `ProseSection`. Below
+`lg` it is a heading stacked above its body. From `lg` up it becomes a
 side-head on the §5 twelve-column grid: heading in columns 1–4, body in 5–11, twelfth column
 left as trailing margin. Both pages had shipped their prose hard-left in a ~870px column
-against 1440, the "narrow column beside a void" §5 rules out and the same defect corrected at
-the B2 hero, the B4 Crossover diagram and the B5 Evidence panel and footer.
+against 1440, the "narrow column beside a void" §5 rules out — the same defect corrected elsewhere
+in the hero, the Crossover diagram and the Evidence panel and footer.
 
 The body takes seven columns rather than eight on purpose: at eight it is ~904px, wide enough
 that the children's `max-w-prose` stops binding (65 `ch`, and `ch` measures the wide `0`), and
@@ -372,14 +370,13 @@ easing: cubic-bezier(0.22, 1, 0.36, 1);
 hidden base state waiting for an animation to reveal it. Animate `transform` instead, so the
 content is legible from the first frame and stays legible if the animation never runs. This is the
 same rule as "comprehension must never depend on motion", applied to the CSS rather than to the
-reduced-motion query (maintainer decision, 2026-09-18).
+reduced-motion query.
 
 **Count what the visitor can see.** A mount-triggered animation on a section below the first
 viewport has finished before anyone scrolls to it: it costs a hidden base state and returns
-nothing. Either give it a real scroll trigger or remove it. At B9 the section reveal and the
-Crossover line draw were removed on exactly this ground, taking the homepage motion budget from
-five effects to three: the staggered hero line reveal, the one-time number count, and the mobile
-nav panel transition.
+nothing. Either give it a real scroll trigger or remove it. The section reveal and the Crossover
+line draw were removed on exactly this ground, leaving the homepage motion budget at three effects:
+the staggered hero line reveal, the one-time number count, and the mobile nav panel transition.
 
 **Number ticker** — runs once on viewport entry, 1.2–1.8s, no rerun, no casino rolling,
 final value static.
@@ -435,11 +432,10 @@ clear the large-text bar (3:1) only, so neither may carry metadata-scale (12px) 
 copy — use `ink-soft`, or `accent-ink` when that small copy has to be red. Inside the red
 narrative block, every string stays at large-text size (≥24px, or ≥18.66px bold).
 
-**Resolved at B9 (maintainer decision, 2026-09-18): two reds, split by role.** The B2 checkpoint
-had accepted the section eyebrow (§6: 13px/700 in `--color-accent`, 3.41:1) as a deliberate
-exception. The B9 audit found the same failure a second time, undocumented, on the navigation's
-`hover:text-accent` at `.text-metadata` size (12px), and found that the single-token fix this
-section used to propose does not work: **#C0322D measures 4.90:1 on cream but only 2.97:1 on
+**Two reds, split by role.** The section eyebrow (§6: 13px/700 in `--color-accent`, 3.41:1) is a
+deliberate exception to the 4.5:1 normal-text bar. The same failure recurs, undocumented, on the
+navigation's `hover:text-accent` at `.text-metadata` size (12px); the obvious fix — one token used
+everywhere — does not work: **#C0322D measures 4.90:1 on cream but only 2.97:1 on
 `--color-panel-dark` (#1E1E1E)**, where `--color-accent` currently sits at 4.26:1 and carries
 `VERIFY THEM.`. The two surfaces pull opposite ways — cream wants a darker red, the dark panel a
 lighter one — and a scan at constant hue and saturation leaves a feasible window only two points

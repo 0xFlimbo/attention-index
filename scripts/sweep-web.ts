@@ -15,7 +15,7 @@
  * raw folder and `--since-last` state; everything below applies to both unless
  * it names one.
  *
- * **The web-search discovery half** (docs/ENGINEERING.md §21):
+ * **The web-search discovery half** (docs/TOOLS.md §10):
  * ask a web-search index which pages name this project or carry the claims its
  * work produced, diff every returned URL against `data/media.json`, and hand a
  * human a queue of pages to read. Nothing in this repo queried a search engine
@@ -66,7 +66,7 @@
  *
  * Credentials: `BRAVE_SEARCH_API_KEY` is read from `.env.local` and travels in
  * the `X-Subscription-Token` header. It is never logged, echoed or written
- * anywhere, including into the archive (`docs/ENGINEERING.md §8`).
+ * anywhere, including into the archive (`docs/TOOLS.md §1`).
  * ---------------------------------------------------------------------------
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
@@ -201,7 +201,7 @@ const maxPages = Math.min(Number(flagValue("pages") ?? vendor.defaultPages), 10)
  * Restrict each query to what is new since that query was last swept.
  *
  * This is the cadence lever the periodic manual refresh routine
- * (docs/ENGINEERING.md §22) needs: the first sweep pays for the back
+ * (docs/TOOLS.md §2) needs: the first sweep pays for the back
  * catalogue, every later one pays only for the delta. A query the state has
  * never seen — new, or reworded since — is swept unrestricted anyway, because
  * a window applied to a query that has never seen the archive reports a clean
@@ -429,7 +429,7 @@ async function serperBalance(key: string): Promise<number> {
  * reads a field off them: a request that was misunderstood and a field that is
  * genuinely absent look identical once the response has been parsed away, and
  * this is the first call this project has ever made to this vendor
- * (`docs/ENGINEERING.md §18c`).
+ * (`docs/TOOLS.md §1`).
  */
 async function runQuery(
   query: SweepQuery,

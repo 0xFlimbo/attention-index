@@ -1,7 +1,6 @@
 # PRODUCT.md
 
 Owns: thesis, scope, audience, information architecture, success criteria.
-(Consolidated from the original `PRODUCT_SPEC.md`, kept in `docs/archive/`.)
 
 ---
 
@@ -110,6 +109,10 @@ follower analytics · token analytics · wallet · payments · comments · votin
 localization · advanced search · network graphs · complex charts
 ```
 
+**Reddit is out of scope** — not a source, not a surface, not a record type. A subscriber count is
+a cumulative stock figure, the same shape as the follower counts this project already excludes, and
+no schema enum carries a Reddit member.
+
 ---
 
 ## 8. Data constraints that shape the product
@@ -181,20 +184,14 @@ A perfect dataset is not required. A credible dataset is.
 
 ## 13. Content minimums before public launch
 
-```text
-                minimum before launch          reading on 2026-09-22
-posts           10–20 strong tracked posts     32 verified          ✔
-amplifications  5–10 verified examples         20 verified          ✔
-media           5–10 verified references       100 verified of 109   ✔
-```
+| | minimum before launch |
+|---|---|
+| posts | 10–20 strong tracked posts |
+| amplifications | 5–10 verified examples |
+| media | 5–10 verified references |
 
-**All three minimums are met and the figures above are a dated reading, not a contract.** The
-parenthetical counts that used to sit here (`20`, `9`, `0`) were written before B10, B13 and B14 and
-were wrong in all three lines by 2026-09-21 — media in particular still said "currently 0 — section
-must stay hidden" long after the section had shipped and grown past a hundred records. Counts that
-live in prose go stale silently; the derived figures on the site recompute from `data/` and
-`tests/data-integration.test.ts` checks them against the files, so **read the number there and treat
-this table as a milestone marker.**
+All three minimums are met. The live counts are derived, never restated here: they are printed on
+the site (`/evidence`, `/methodology`).
 
 If a category lacks data, **omit the section** rather than fill it weakly.
 Ten credible records beat fifty poorly sourced ones.

@@ -100,6 +100,21 @@ Git history is the audit trail for every correction — prefer `status: "archive
 record when its history matters (for example, a value that was once believed correct and later
 corrected); delete only when a record was erroneous, a duplicate, or never valid.
 
+## Code conventions
+
+These apply to any code change, not only data:
+
+- Small components, pure metric functions, typed data, obvious names, flat composition — no giant
+  `page.tsx`, no premature abstraction, no deep prop drilling.
+- Descriptive file names that say what the thing is: `hero-statement.tsx`, `stat-grid.tsx`,
+  `archive-row.tsx`, `attention.ts`, `post.schema.ts`. Never `widget.tsx`, `utils2.ts`,
+  `section-new.tsx`.
+- Server Components by default; add `"use client"` only where interaction genuinely requires it.
+- Design tokens are centralized in `src/app/globals.css` — no brand hex values scattered across
+  components.
+- Comment only non-obvious intent: a metric's definition, a data caveat, an accessibility
+  decision. Code that just restates itself in prose is not a comment worth keeping.
+
 ## Licensing of contributions
 
 By opening a pull request you agree that your contribution is licensed under the same terms as

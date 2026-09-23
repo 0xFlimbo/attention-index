@@ -1,7 +1,7 @@
 /**
  * The decisions the web sweep makes before a human spends time on a result
  * (`src/lib/sweep/web-search-results.ts`, `src/lib/sweep/url-list.ts`,
- * `src/lib/sweep/web-queries.ts`, `docs/ENGINEERING.md §21`).
+ * `src/lib/sweep/web-queries.ts`, `docs/TOOLS.md §10`).
  *
  * All of it is pure, and none of it promotes anything: the sweep reports, a
  * human writes the record. What these tests protect is the two ways a sweep

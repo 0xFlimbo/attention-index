@@ -1,5 +1,5 @@
 /**
- * The record of spend (`src/lib/sweep/cost-ledger.ts`, `docs/ENGINEERING.md §21`).
+ * The record of spend (`src/lib/sweep/cost-ledger.ts`, `docs/TOOLS.md §10`).
  *
  * `research/README.md` calls the X work's cost ledger the one file there that
  * can **never** be regenerated: the responses it paid for cannot reconstruct

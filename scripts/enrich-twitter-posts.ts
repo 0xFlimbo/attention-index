@@ -1,13 +1,27 @@
 /**
- * pnpm enrich:twitter [-- --dry-run]
+ * pnpm enrich:twitter                       # plan: ids, requests, modelled cost — no request, no token
+ * pnpm enrich:twitter -- --dry-run          # no --fetch: same plan as above
+ * pnpm enrich:twitter -- --fetch            # buy the lookup, report, write data/ (with backups)
+ * pnpm enrich:twitter -- --fetch --dry-run  # buy the lookup, report, write nothing
  *
  * NOTE: post readings live in `post.observations`, an append-only
  * history, and this script never touches them. Refreshing them is
- * `pnpm refresh:metrics` (docs/ENGINEERING.md §22), which appends one
+ * `pnpm refresh:metrics` (docs/TOOLS.md §3), which appends one
  * observation with `source: "api"` rather than overwriting the previous one.
  *
- * One-time / occasional maintenance tool (docs/ENGINEERING.md §12). Never called
+ * One-time / occasional maintenance tool (docs/TOOLS.md §4). Never called
  * during `next build`, rendering, or CI.
+ *
+ * **Planning is the default and spending is opt-in**, as every other paid
+ * tool here (docs/TOOLS.md §1). An unqualified run — or `--dry-run` without
+ * `--fetch` — reads no token and sends no request: it validates data/*.json,
+ * counts the posts and amplification evidence urls that carry a tweet id, and
+ * prints the batch count and a modelled cost, via
+ * `src/lib/metrics/enrichment-plan.ts`. The cost model is a certain floor —
+ * post reads at $0.005 each (docs/PROVIDERS.md §2.2) — plus a ceiling: the
+ * `expansions=author_id` user read at $0.010 per *distinct author returned*,
+ * stated as at most one per id, since the real count is only known once the
+ * API answers. `--fetch` is what actually bills.
  *
  * Fetches public tweet data for the posts already in `data/posts.json` and the
  * amplification evidence URLs in `data/amplifications.json` via the X API v2
@@ -30,8 +44,14 @@
  * A tweet the API cannot return (deleted/protected/not found) is flagged, never
  * guessed.
  *
- * Credentials: `X_BEARER_TOKEN` is read from `.env.local` and is never logged,
- * echoed, or written anywhere, including in error output.
+ * Every billed response is archived to `research/x-api-<day>/raw/`
+ * (docs/TOOLS.md §1) through `src/lib/sweep/raw-archive.ts` before anything
+ * reads a field off it — one file per batch, the same module and layout
+ * `refresh:metrics` and `sweep:mentions` use.
+ *
+ * Credentials: `X_BEARER_TOKEN` is read from `.env.local`, only when `--fetch`
+ * is passed, and is never logged, echoed, or written anywhere, including in
+ * error output.
  */
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
@@ -42,11 +62,13 @@ import {
   amplificationsFileSchema,
   type Amplification,
 } from "../src/schemas/amplification.schema";
+import { planEnrichment } from "../src/lib/metrics/enrichment-plan";
+import { archiveEntry, rawArchivePath } from "../src/lib/sweep/raw-archive";
 
 const ROOT = process.cwd();
 const DATA_DIR = resolve(ROOT, "data");
 const CACHE_DIR = resolve(ROOT, ".cache");
-const CACHE_FILE = resolve(CACHE_DIR, "twitter-enrichment.json");
+const RESEARCH_DIR = resolve(ROOT, "research");
 const X_API_URL = "https://api.x.com/2/tweets";
 const TWEET_FIELDS = "created_at,text,public_metrics,referenced_tweets,entities,note_tweet";
 /*
@@ -67,11 +89,12 @@ const MAX_RETRIES = 4;
 // ---------------------------------------------------------------------------
 
 const args = process.argv.slice(2);
+const doFetch = args.includes("--fetch");
 const isDryRun = args.includes("--dry-run");
 const refreshMetrics = args.includes("--refresh-metrics");
 
 // ---------------------------------------------------------------------------
-// Stage B — human-authored post copy (docs/ENGINEERING.md §12)
+// Stage B — human-authored post copy (docs/TOOLS.md §4)
 //
 // Written by reading each post's fetched tweet text (full text via `note_tweet`
 // where the tweet was longer than the classic 280-character view). Never
@@ -329,9 +352,17 @@ function backupDataFiles(): string {
   return backupDir;
 }
 
-function writeCache(payload: unknown): void {
-  mkdirSync(CACHE_DIR, { recursive: true });
-  writeFileSync(CACHE_FILE, JSON.stringify(payload, null, 2));
+/**
+ * Archives one batch's raw response before anything reads a field off it
+ * (docs/TOOLS.md §1). `X_API_URL` alone is enough to build the endpoint path
+ * this stores — the archive drops the query string regardless, since the
+ * query carries the ids and, on other calls, the token.
+ */
+function archiveBatch(label: string, body: TweetLookupResponse): void {
+  const entry = archiveEntry(X_API_URL, label, body);
+  const rawFile = resolve(RESEARCH_DIR, rawArchivePath(label, entry.fetched_at));
+  mkdirSync(resolve(rawFile, ".."), { recursive: true });
+  writeFileSync(rawFile, `${JSON.stringify(entry, null, 2)}\n`);
 }
 
 // ---------------------------------------------------------------------------
@@ -343,11 +374,9 @@ async function main(): Promise<void> {
   // before the token is read, because running the whole enrichment pass by
   // mistake is a paid request that refreshes nothing.
   if (refreshMetrics) {
-    console.error("--refresh-metrics moved to its own tool: pnpm refresh:metrics (docs/ENGINEERING.md §22).");
+    console.error("--refresh-metrics moved to its own tool: pnpm refresh:metrics (docs/TOOLS.md §3).");
     process.exit(1);
   }
-
-  const token = loadBearerToken();
 
   // Loaded as raw JSON (not the zod-parsed/normalized shape) so untouched records are
   // written back byte-for-byte identical — schemas below are used only to *validate*,
@@ -369,13 +398,50 @@ async function main(): Promise<void> {
     .map((amp) => extractStatusId(amp.evidence_url))
     .filter((id): id is string => id !== null);
 
+  // Plan mode: the default, and also `--dry-run` given without `--fetch`. No
+  // token is read and no request is made — this returns before either happens.
+  if (!doFetch) {
+    if (isDryRun) {
+      console.log("--dry-run without --fetch has nothing to skip: this already is the plan mode.\n");
+    }
+    const plan = planEnrichment(postIds, ampIds);
+    console.log("enrich:twitter — plan only. No request is made and no token is read.\n");
+    console.log(`  tracked posts with a status id                  ${plan.postIdCount} of ${posts.length}`);
+    console.log(
+      `  amplification evidence urls with a status id   ${plan.amplificationIdCount} of ${amplifications.length}`,
+    );
+    console.log(`  total ids                                       ${plan.totalIdCount}`);
+    console.log(`  requests a fetch would make (batches of <=100)  ${plan.requestCount}`);
+    console.log(`  modelled cost — post reads                      $${plan.postReadCost.toFixed(3)}`);
+    console.log(
+      `  modelled cost — author user reads (upper bound, <=1 per id)  $${plan.maxUserReadCost.toFixed(3)}`,
+    );
+    console.log(`  modelled cost — total (upper bound)             $${plan.maxCost.toFixed(3)}`);
+    console.log("\n  To run this for real: pnpm enrich:twitter -- --fetch");
+    return;
+  }
+
+  const token = loadBearerToken();
+
   console.log(`Fetching ${postIds.length} post tweet(s) and ${ampIds.length} amplification evidence tweet(s)...`);
 
   let postsResponses: TweetLookupResponse[];
   let ampsResponses: TweetLookupResponse[];
   try {
-    postsResponses = await Promise.all(chunk(postIds, 100).map((batch) => fetchTweetBatch(batch, token)));
-    ampsResponses = await Promise.all(chunk(ampIds, 100).map((batch) => fetchTweetBatch(batch, token)));
+    postsResponses = await Promise.all(
+      chunk(postIds, 100).map(async (batch, index) => {
+        const body = await fetchTweetBatch(batch, token);
+        archiveBatch(`enrich-twitter-posts-batch-${index + 1}`, body);
+        return body;
+      }),
+    );
+    ampsResponses = await Promise.all(
+      chunk(ampIds, 100).map(async (batch, index) => {
+        const body = await fetchTweetBatch(batch, token);
+        archiveBatch(`enrich-twitter-amplifications-batch-${index + 1}`, body);
+        return body;
+      }),
+    );
   } catch (error) {
     if (error instanceof FetchFailure) {
       console.error(`\nX API request failed: HTTP ${error.status} ${error.statusText}`);
@@ -390,13 +456,6 @@ async function main(): Promise<void> {
     }
     process.exit(1);
   }
-
-  writeCache({
-    fetched_at: new Date().toISOString(),
-    posts: postsResponses,
-    amplifications: ampsResponses,
-  });
-  console.log(`Cached raw API responses to ${CACHE_FILE} (gitignored, never merged into canonical data).`);
 
   const tweetsById = new Map<string, ApiTweet>();
   const usersById = new Map<string, ApiUser>();
@@ -635,7 +694,9 @@ async function main(): Promise<void> {
   const ampsChanged = JSON.stringify(amplifications) !== JSON.stringify(updatedAmplifications);
 
   if (isDryRun) {
-    console.log(`\n--dry-run: no files written. posts changed: ${postsChanged}; amplifications changed: ${ampsChanged}.`);
+    console.log(
+      `\n--fetch --dry-run: no files written. posts changed: ${postsChanged}; amplifications changed: ${ampsChanged}.`,
+    );
     return;
   }
 

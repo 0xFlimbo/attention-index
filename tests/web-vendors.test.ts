@@ -1,6 +1,6 @@
 /**
  * The two indexes `pnpm sweep:web` can ask (`src/lib/sweep/web-vendors.ts`,
- * `docs/ENGINEERING.md §21`).
+ * `docs/TOOLS.md §10`).
  *
  * What is pinned here is what was measured on 2026-09-23 and would cost a
  * credit or a silent miss to get wrong: the free tier's page size, the date

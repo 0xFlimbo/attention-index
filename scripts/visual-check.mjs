@@ -18,7 +18,7 @@
  *   4. close   — browser first, then the server, then verify the port is free.
  *
  * Browser review also only runs in a session the maintainer has agreed to
- * (docs/ENGINEERING.md §16). This script does not ask for
+ * (docs/TOOLS.md §11). This script does not ask for
  * that consent — the operator has it before running the command.
  *
  * Usage:

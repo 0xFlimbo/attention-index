@@ -1,8 +1,6 @@
 # HOMEPAGE.md
 
 Owns: homepage structure, per-section layout/interaction, and the **approved copy deck**.
-(Consolidated from `HOMEPAGE_SPEC.md` + the copy sections of `CONTENT_GUIDELINES.md`,
-both kept in `docs/archive/`.)
 
 The homepage is a **scroll-driven editorial story backed by verifiable data**, not a dashboard.
 
@@ -25,11 +23,9 @@ The homepage is a **scroll-driven editorial story backed by verifiable data**, n
 11 Footer
 ```
 
-Build order differs from display order — see `docs/WORKPLAN.md`.
-
 Anchors: `#top #attention #crossover #amplified #archive #references #evidence #project`.
 
-`#project` is the closing line (`§13`, B15). Like every other section anchor it exists for
+`#project` is the closing line (`§13`). Like every other section anchor it exists for
 deep-linking and for review captures, not for navigation — `§3` fixes the nav at five entries.
 
 Rhythm rule: alternate large editorial statements → data blocks → archive/database views →
@@ -48,7 +44,7 @@ A section must be able to disappear when the evidence is thin.
 
 | Section | Renders when |
 |---|---|
-| Public References | ≥1 verified media record (**shipped in B8; 100 verified across 56 publications as of 2026-09-23, after B14, B10 and B11 — the section renders and grows with the dataset, and B19 owns the row cap that growth now needs**) |
+| Public References | ≥1 verified media record — the section renders and grows with the dataset; a row cap keeps it readable at scale (§11) |
 | Amplified By | enough verified amplifications for a real grid; otherwise fold examples into Crossover |
 | Crossover | ≥1 verified amplification; categories only shown if they have records |
 | Token | explicitly enabled; omitted in V1 |
@@ -116,13 +112,12 @@ returns `null`.
 
 Label is exactly `OBSERVED VIEWS` / `OBSERVED VIEWS ACROSS TRACKED POSTS`. Never "impressions" or "reach".
 
-**`SOURCE DATA` / `METHODOLOGY` glyph, corrected at B9.** This section originally shipped both
-with `↗`, copied verbatim from the sketch above before `docs/DESIGN.md §6` hardened into a
-sitewide rule — established by `EvidenceBlock`, `ViralArchive` and `PublicReferences` — that `↗`
-marks a genuinely external destination and `→` marks an internal route. `METHODOLOGY` always
-resolves to `/methodology`, on this site, so it is `→`. `SOURCE DATA` follows `EvidenceBlock`'s
-`VIEW DATA` exactly: `↗` to `${repository_url}/tree/main/data` once the repository is public,
-falling back to an internal `→` to `/evidence` only while `repository_url` is `null`.
+**`SOURCE DATA` / `METHODOLOGY` glyph.** `↗` marks a genuinely external destination and `→` marks
+an internal route (`docs/DESIGN.md §6`), a rule shared with `EvidenceBlock`, `ViralArchive` and
+`PublicReferences`. `METHODOLOGY` always resolves to `/methodology`, on this site, so it is `→`.
+`SOURCE DATA` follows `EvidenceBlock`'s `VIEW DATA` exactly: `↗` to
+`${repository_url}/tree/main/data` once the repository is public, falling back to an internal `→`
+to `/evidence` only while `repository_url` is `null`.
 
 Motion: one count-up on viewport entry, 1.2–1.8s, once, static afterwards, disabled under
 reduced motion. The static layout must look complete with animation off.
@@ -151,9 +146,7 @@ Cells are **selected by data availability**, in this priority order, showing exa
 
 Rule: never render a threshold cell whose value is `0`. Fall through to the next available metric.
 What today's dataset resolves to is stated once, in `docs/DATA.md §10`, which owns the sample
-values — this section draws the shape and deliberately prints no count of its own. It carried
-`20 posts, max 4.5M` until B10, by which time the dataset held 32: the same drift `§12` was
-restructured to prevent, fixed here the same way.
+values — this section draws the shape and deliberately prints no count of its own.
 
 Desktop 2×2; mobile 1 column (2×2 only if labels stay comfortably readable).
 Flat, border-led, low radius, no shadows, strongly typographic.
@@ -287,7 +280,7 @@ The homepage shows the strongest rows; `/archive` shows all verified posts.
 
 ---
 
-## 11. Public References (08) — shipped in B8
+## 11. Public References (08)
 
 ```text
 05 / PUBLIC REFERENCES
@@ -312,27 +305,26 @@ never hover-only on mobile. Expanding it lists every eligible reference for that
 its title, reference-type label, `published_at`, author when present, context when present, and
 its own `VIEW SOURCE ↗` link. **No row-level `↗`**: a publication with more than one reference has
 no single correct destination, so the link lives on each reference inside the panel instead of on
-the summary line (a deviation from this section's original sketch above, made deliberately at B8 —
-see `docs/WORKPLAN.md` "Decisions already made"). Never a wall of logos as the only content.
+the summary line — a deliberate deviation from this section's original sketch above. Never a wall
+of logos as the only content.
 
 **No marquee.** The homepage's motion budget (`globals.css`) is deliberately exactly three effects,
-and `CLAUDE.md` requires restrained motion; the marquee this section's spec originally allowed is
-left to B9, which owns the motion audit, rather than added ad hoc here.
+in keeping with the project's restrained-motion principle; no marquee ships despite this section's
+original sketch allowing one.
 
-### B13 — prominence, without a badge
+### Prominence, without a badge
 
 **Row order carries it.** Groups are ordered by five factual keys, owned by `docs/DATA.md §11`:
 total reference count, original reference count, featured reference count, most recent
 `published_at`, publication name. A publication that did its own reporting leads one that only
 republished someone else's piece, and a featured publication leads the unfeatured ones it ties
-with. Never a computed rank. (B19 moved the total count to key 1; the keys and the reason are
-`docs/DATA.md §11`'s.)
+with. Never a computed rank. The keys and the reason are `docs/DATA.md §11`'s.
 
-**The summary line is unchanged.** Publication name on the left, `N references` on the right,
-same as B8. Nothing was added to that right rail: it is `shrink-0 whitespace-nowrap`, so
+**The summary line is unchanged.** Publication name on the left, `N references` on the right.
+Nothing was added to that right rail: it is `shrink-0 whitespace-nowrap`, so
 anything put there widens a fixed column and is the first thing to overflow at 390px.
 
-**The panel states the facts in words.** Each reference's metadata line now reads
+**The panel states the facts in words.** Each reference's metadata line reads
 `<type> · <date> · By <author> · <newsroom country> · Republished from <outlet> · Names
 LayoffHedge as a source`, with every part after the date omitted when it does not apply. No star,
 no badge, no icon — `docs/DESIGN.md` has no decorative iconography anywhere in the system, and
@@ -340,40 +332,38 @@ the official press page's star is a press kit's grammar, which is the one thing 
 index must not borrow. A featured reference prints its **criterion** rather than the word
 "featured", which is more informative and reads as a fact instead of a rank.
 
-**The section still has no figure of its own.** The B13 country and provenance metrics live on
-`/methodology` and, per record, on `/evidence`; the standing decision that this section keeps no
-dominant number (`docs/WORKPLAN.md`, "Decisions already made") was not reopened.
+**The section still has no figure of its own.** The country and provenance metrics live on
+`/methodology` and, per record, on `/evidence`; this section keeps no dominant number of its own.
 
-### B19 — the section at fifty-one rows
+### The row cap
 
 **Capped at `HOMEPAGE_PUBLIC_REFERENCE_ROW_COUNT` (12), with the existing `OPEN EVIDENCE →`
-underneath.** B14 took the list from 12 publications to 51 and fifty-one flat rows at the foot of
-the homepage is a different object from twelve. The constant is `docs/DATA.md §10`'s, next to
-`HOMEPAGE_ARCHIVE_ROW_COUNT`, and it is a count rather than a rule about the data. The cap only
-hides rows; `/evidence` still lists every verified record.
+underneath.** As the underlying list grows well past a dozen publications, dozens of flat rows at
+the foot of the homepage would be a different object from twelve. The constant is
+`docs/DATA.md §10`'s, next to `HOMEPAGE_ARCHIVE_ROW_COUNT`, and it is a count rather than a rule
+about the data. The cap only hides rows; `/evidence` still lists every verified record.
 
 **Two derived sentences of supporting copy, below the approved paragraph and above the rows.**
 Both are computed on render and neither is written down anywhere:
 
 ```text
-References from newsrooms in 7 countries.
-Showing 12 of 56 publications; every reference is listed on the evidence page.
+References from newsrooms in N countries.
+Showing 12 of N publications; every reference is listed on the evidence page.
 ```
 
 The country figure is `countryCount` (`docs/DATA.md §10`, original references only) — the same
 value `/methodology` prints in the reader's words. It is a **sentence, never a stat cell**: the
 standing decision that this section carries no dominant number holds, and a display-size numeral
 here would compete with the Primary Attention Metric. The second sentence exists because a silent
-cap drops thirty-nine publications without a word; saying what is shown and what is not is the
+cap drops publications without a word; saying what is shown and what is not is the
 same "show the source" contract the rest of the page keeps. Each sentence is omitted when it has
 nothing true to say — no record carries a country, or the list is short enough that nothing is
 capped — and both numbers print with the singular when they are `1`.
 
-Each figure is joined to the noun after it by a **non-breaking space**. B19's visual review found
-the 390px line breaking as `References from newsrooms in 7` / `countries.`, which leaves a
-numeral at the end of a line with nothing to read it against. It binds the number to its unit
-only; the rest of the sentence wraps normally, so it cannot widen the paragraph. `/methodology`
-prints the country figure in its own prose and carries the same binding, so the two cannot drift.
+Each figure is joined to the noun after it by a **non-breaking space**, so a narrow viewport cannot
+break the line between a number and its unit and leave the numeral stranded at the end of a line
+with nothing to read it against. `/methodology` prints the country figure in its own prose and
+carries the same binding, so the two cannot drift.
 
 ---
 
@@ -412,10 +402,10 @@ Treatment: **dark panel inside a cream section** (`--color-panel-dark`) — cont
 
 ---
 
-## 13. Closing line (10) — shipped in B15
+## 13. Closing line (10)
 
-One factual statement and one link to the project this site measures, which until B15 was
-reachable only from the footer and `/about`. Approved copy:
+One factual statement and one link to the project this site measures, otherwise reachable only
+from the footer and `/about`. Approved copy:
 
 ```text
 ATTENTION CAME FIRST.
@@ -427,12 +417,11 @@ OFFICIAL LAYOFFHEDGE ↗
 ```
 
 **It is information, not a recommendation.** No imperative verb, no community recruitment, no
-token, no purchase path (`docs/WORKPLAN.md`, `Decisions already made` item (c)). "Join the
-community" is an implied endorsement, which `CLAUDE.md §3` bans by name, and this site grows by
-being cited rather than by converting readers. The second sentence says where the destination is;
-it never suggests going there.
+token, no purchase path. An imperative like "join the community" reads as an implied endorsement,
+which this site avoids everywhere; it grows by being cited rather than by converting readers. The
+second sentence says where the destination is; it never suggests going there.
 
-Three calls made at the B15 plan, with the maintainer:
+Three deliberate calls, worth keeping explicit:
 
 - **`OFFICIAL LAYOFFHEDGE ↗`, not `OFFICIAL PROJECT ↗`.** The batch title used the latter, but
   the footer (`§14`) and `/about` already ship the former for this exact URL, and
@@ -452,9 +441,8 @@ homepage budget is exactly three effects and this adds none.
 
 ### If a token section is ever enabled
 
-Kept here by the standing decision that `§13` holds this copy for later (`docs/WORKPLAN.md`,
-`Decisions already made`). It is **not** shipped, and B15 did not revive it — the closing line
-above deliberately takes only the one line of it that is a statement about attention.
+Kept here for later, not shipped. The closing line above deliberately takes only the one line of
+it that is a statement about attention.
 
 ```text
 THE MOVEMENT
@@ -490,12 +478,12 @@ Cream or soft cream, thin top divider, optional red bottom rule, compact. No new
 `Footer` Server Component loads the three files itself rather than the value being drilled through
 every route that renders it. Omitted entirely when that selector returns `null`.
 
-`ABOUT` was added to this list at the B5 sign-off: §3 fixes the navigation at
-`ATTENTION / CROSSOVER / ARCHIVE / SOURCES / GITHUB ↗`, so without it `/about` is a route with no
-inbound link anywhere on the site. `GITHUB ↗` renders only while `project.json.repository_url` is
-non-null. `DATA` is external and resolves to `${repository_url}/tree/main/data`, the raw records
-themselves; it falls back to `/archive` only if `repository_url` is ever `null` again, which is
-where it stood in from the B5 sign-off until the repository was published on 2026-09-18.
+`ABOUT` is in this list because §3 fixes the navigation at
+`ATTENTION / CROSSOVER / ARCHIVE / SOURCES / GITHUB ↗`, so without a footer entry `/about` is a
+route with no inbound link anywhere on the site. `GITHUB ↗` renders only while
+`project.json.repository_url` is non-null. `DATA` is external and resolves to
+`${repository_url}/tree/main/data`, the raw records themselves, falling back to `/archive` only if
+`repository_url` is `null`.
 
 ---
 

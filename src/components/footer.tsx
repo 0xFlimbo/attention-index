@@ -21,7 +21,7 @@ import { ExternalArrow } from "./external-arrow";
  * against a dataset without a repository.
  *
  * `id="site-footer"` exists so `pnpm check:visual --anchor site-footer` can
- * reach it: docs/ENGINEERING.md §16 makes a URL fragment the only way to
+ * reach it: docs/TOOLS.md §11 makes a URL fragment the only way to
  * review a below-the-fold region without `fullPage`, and the footer is below
  * the fold on every route. No `scroll-margin-top` is needed — globals.css
  * scopes that rule to `section[id]`, and nothing above the footer needs to

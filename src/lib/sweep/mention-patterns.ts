@@ -98,7 +98,7 @@ const EXCERPT_LIMIT = 5;
  * string is on the page, and the sentence around it is the first thing that
  * can tell them whether the page is citing this project or listing it in a
  * sidebar. It still is not a verification — the article is opened and read
- * before anything is promoted (`docs/ENGINEERING.md §17`).
+ * before anything is promoted (`docs/TOOLS.md §6`).
  */
 export function detectMentions(text: string): MentionReport {
   const byPattern: Record<string, number> = {};

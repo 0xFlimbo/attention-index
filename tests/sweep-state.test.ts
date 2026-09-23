@@ -1,6 +1,6 @@
 /**
  * The web sweep's high-water marks (`src/lib/sweep/sweep-state.ts`,
- * `docs/ENGINEERING.md §21`).
+ * `docs/TOOLS.md §10`).
  *
  * Same two failure modes Track A's `since_id` has — a mark that moves
  * backwards re-buys a paid window, a mark that moves after a failure hides one

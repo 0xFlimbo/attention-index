@@ -1,7 +1,6 @@
 # DATA.md
 
 Owns: canonical JSON contract, enums, validation rules, derived metrics.
-(Consolidated from `DATA_MODEL.md`, kept in `docs/archive/`.)
 
 Canonical rule:
 
@@ -9,6 +8,10 @@ Canonical rule:
 
 Never store a summary value that can be computed (`posts_over_1m`, `total_views`, `top_post`),
 neither in JSON, nor in constants, nor in components.
+
+Never fabricate views, people, publications, politicians, media references or citations. If a
+record is missing, hide the section or use a fixture explicitly marked `"_placeholder": true`
+(`§3`) — never a plausible-looking stand-in.
 
 ---
 
@@ -23,13 +26,8 @@ data/project.json         project metadata (no metrics)
 
 Optional later only if genuinely needed: `people.json`, `organizations.json`, `snapshots/`.
 
-**Current state (2026-09-23, after B11):** 32 posts (all `verified`), 15 amplifications (all
-`verified` — five added by B10's search sweep, which opened the `media` category at three records),
-109 media references (100 `verified`, 9 `archived`, **no `needs_review` left** — the
-imported press queue has been worked through end to end). Of the 100 verified media records: 81
-original, 19 republications, 37 featured, newsrooms in 7 countries (originals without a settled
-newsroom country are deliberately blank and counted in none). A dated reading of the dataset, not
-a target — derive, never match.
+The live counts for every file are derived, never restated here — see the selectors in `§10`, the
+figures printed on `/methodology`, and the ledger on `/evidence`.
 
 ---
 
@@ -128,7 +126,7 @@ carrying `views`, `observed_at` and `source`.
 **Views are observations.** `views + observed_at` means *the post displayed ~that many public
 views when checked on that date* — not unique people, not a final lifetime count, not X analytics.
 
-### The observation history (B18)
+### The observation history
 
 **A refresh appends; it never replaces.** A reading of a public counter cannot be re-taken, so
 discarding it throws away the only record that the number was ever that on that day. The array is
@@ -160,7 +158,7 @@ deliberately does **not** prefer the API reading: doing so would publish a figur
 most recent one, on a judgement this project has no basis for making.
 
 **Process rule for refreshes.** A refresh is run by hand with `pnpm refresh:metrics`
-(`docs/ENGINEERING.md §22`) and always appends a reading with `source: "api"`, because that is
+(`docs/TOOLS.md §3`) and always appends a reading with `source: "api"`, because that is
 where it reads from. An `interface` reading is only used to seed a post the API cannot return.
 Followed, the series stays homogeneous and the mixed-source hazard never arises in practice.
 
@@ -225,8 +223,8 @@ New categories require updating this doc, the schema and the UI filter config to
 
 ### Choosing `category` — the full mapping
 
-**The governing rule (maintainer decision, 2026-09-21):** *the category follows the role the
-person or organisation holds **at the time of the act**, not the highest office they ever held.*
+**The governing rule:** *the category follows the role the person or organisation holds **at the
+time of the act**, not the highest office they ever held.*
 
 It was settled when a third former-officeholder record arrived and the first two had been
 categorised differently. It reproduces both of those unchanged, and it is the tie-breaker whenever
@@ -265,29 +263,17 @@ Evans      former state legislator, now in business and farming        -> public
 All three carry the office in the `role` string regardless, so nothing is lost by the category: a
 reader sees "Former member of the West Virginia House of Delegates" either way.
 
-**~~`journalism` and `business` stand at zero~~ — `journalism` opened on 2026-09-21, and the
-reasoning under it was wrong.**
+`business` stays in the enum even while it holds no record, because an empty category is invisible to a
+reader (`selectCrossoverCategories` omits any category with no records, §10) and costs nothing to
+keep, while removing it would be a schema change that would have to be reversed the moment a
+non-tech executive appears.
 
-`business` still stands at zero, and the part that holds is the first half: `selectCrossoverCategories`
-omits any category with no records (§10), so an empty category is invisible to a reader and costs
-nothing. It is kept because removing a category from the enum is a schema change that would have to
-be reversed the moment a non-tech executive appears.
-
-**The part that was wrong:** this said journalists "cite in prose, which is the full-archive search
-population, never the quote-post population — so no quote-post sweep can fill `journalism` however
-many posts it covers." A quote-post sweep filled it. Track B's calibration run surfaced
-`@kylenabecker`, a RedState columnist confirmed against RedState's own author page, **quote-posting**
-a tracked post with an argument of his own — `amp-kyle-becker-2087712833760813122`.
-
-The mistaken step was treating "how an outlet cites" as "how a journalist amplifies". An outlet
-publishes prose that names a source, and that is indeed Track A's population. An individual
-journalist with an X account behaves like any other commentator: he quote-posts. So the two
-populations are not split by *who* the account is, they are split by **which surface the act happens
-on**, and a person can use either.
-
-**What follows for discovery spend:** a sweep aimed at filling a category is still the wrong frame —
-categories are an outcome of what is found, never a target (`CLAUDE.md §3`). But "this track cannot
-reach that population" is a claim about mechanics, and this one did not survive contact.
+**`media` vs `journalism` is not about which discovery method can reach an account.** An outlet's
+own account publishes prose that names a source (`media`); an individual journalist with a personal
+account behaves like any other commentator and may repost, mention, quote-post or otherwise amplify
+like anyone else (`journalism`). Categories are an outcome of what is found, never a target: the
+category follows who performed the act and in what capacity, never which surface the act happened
+on.
 
 Follower counts are contextual metadata only, never evidence of impressions.
 
@@ -321,11 +307,19 @@ plus `provenance` and `cited_work` on every `verified` record.
 
 One record per article. Publication totals (`FORBES — 3 references`) are **derived**, never stored.
 
-### The B13 record contract
+### The media record contract
 
-Three fields decide what a media record contributes to the derived figures. All three were
-defined in `docs/WORKPLAN.md` B13, before the verification sweep, so no record is visited twice.
-A fourth, `cited_work`, was added at B16 and is specified under it below.
+**What counts as a reference at all.** A media record requires the publication's own output — its
+prose, or, for a broadcast, its audio — to carry the reference, or the publication to have embedded
+or linked the LayoffHedge post or site itself, at first level. A name that arrives only because the
+publication embedded a third party who had quoted LayoffHedge is that third party's amplification,
+not the publication's reference. A page that carries no reporting of its own — a link roundup, a
+distribution surface, an aggregator card — is archived on sight rather than fitted to a `provenance`
+value.
+
+Four fields decide what a media record contributes to the derived figures: `country`, `provenance`
+and `featured` on every record, plus `cited_work` (specified below) on every `verified` one. Setting
+them is part of reading the article, so no record is visited twice for it.
 
 **`country`** — ISO 3166-1 alpha-2 for the country of **the publication's own newsroom**, never
 the country the story is about. `null` when it is not settled by a public, citable statement; a
@@ -340,7 +334,7 @@ otherwise, and must name a publication other than this record's own. It is a **n
 record id: the crediting is a fact about the article whether or not the original piece happens to
 be in this dataset.
 
-**The tie-breaker, added 2026-09-22 at B11 because the case recurs.** A piece can write its own
+**The tie-breaker, because the case recurs.** A piece can write its own
 paragraphs, add reporting of its own, and still credit another outlet for the LayoffHedge finding
 it carries — India Today did exactly that with a Newsweek analysis, for an Indian readership. That
 is `syndicated`. **The test is who read the data, not who wrote the paragraphs**, which is §10's
@@ -365,12 +359,12 @@ only effect is ordering (`§11`). Where a record's stored evidence does not alre
 criterion, `featured` stays `false` — `false` is the conservative default and is never a judgement
 about the publication.
 
-### `cited_work` (B16)
+### `cited_work`
 
 Which of the official project's works the piece used. The governing rule, and the reason the
 field is admissible at all: **the work is never the subject of a record, only an attribute of a
-record that already exists** (`docs/WORKPLAN.md` B16). Nothing in this dataset describes a work,
-rates one, or exists because of one.
+record that already exists.** Nothing in this dataset describes a work, rates one, or exists
+because of one.
 
 `media.json` only. An amplification is a quote post, not a use of a work, and putting the field on
 those records would manufacture attributions for them.
@@ -404,7 +398,7 @@ naming the project, not a work; a figure quoted from inside an embedded post is 
 content, not a use of the dataset behind it. Where the evidence does not reach a work, the value
 is `none` rather than the likeliest work.
 
-The field is filled on `verified` records only, for the same reason `country` was at B13:
+The field is filled on `verified` records only, for the same reason `country` is:
 `needs_review` and `archived` records feed no metric, and determining it belongs to the pass that
 reads the article.
 
@@ -412,9 +406,9 @@ reads the article.
 
 ## 8. *(section retired)*
 
-A fourth record type was removed on 2026-09-19 (`docs/WORKPLAN.md` B17) and its section with it.
-The number stays reserved and empty so every `docs/DATA.md §N` reference in the code and the other
-docs keeps resolving — do not renumber the sections below it.
+A fourth record type (milestones) was removed and its section with it. The number stays reserved
+and empty so every `docs/DATA.md §N` reference in the code and the other docs keeps resolving — do
+not renumber the sections below it.
 
 ---
 
@@ -456,7 +450,7 @@ totalObservedViews    sum of views   → label "OBSERVED VIEWS ACROSS TRACKED PO
 ```
 
 Every `views` above is **one observation per post** — the latest, resolved by
-`latestObservation(post)` (`src/lib/metrics/observation.ts`, B18). Never a post's whole history,
+`latestObservation(post)` (`src/lib/metrics/observation.ts`). Never a post's whole history,
 and never two different readings of one post inside a single figure. `compareArchiveOrder` reads
 the same value, so the archive's rank, the top post and the sum can never disagree about what a
 post's view count is.
@@ -486,15 +480,14 @@ those fields. If no threshold cell qualifies, fewer than four cells are returned
 never fabricates a fourth cell to pad the grid; `StatGrid` renders whatever it receives. Read
 2026-09-20 (32 posts, `postsOver1M` 17, max 4.5M, sum 43,625,943) this resolves to
 `POSTS ABOVE 1M · TRACKED POSTS · MOST VIEWED TRACKED POST · OBSERVED VIEWS ACROSS TRACKED POSTS`
-— a dated reading, never a target to match. The post count and the sum were stale here (21 and
-37.1M, the figures from before the eleven posts landed); corrected at B10.
+— a dated reading, never a target to match.
 
 ### Archive selectors (`src/lib/metrics/archive.ts`)
 
 `compareArchiveOrder(a, b)` — the one shared comparator for "the archive order": highest views →
 earliest `published_at` → smallest `id` (lexicographic). `getAttentionMetrics`'s `topPost` uses
-this exact function for its tie-break (it used to keep a private, duplicate copy — extracted in
-B3 so the top-post pick and the archive sort can never silently diverge).
+this exact function for its tie-break, so the top-post pick and the archive sort can never
+silently diverge.
 
 `selectArchivePosts(posts: Post[]): { post: Post; rank: number }[]` — eligible posts (same rule as
 above), sorted by `compareArchiveOrder`, each carrying its **stable, 1-based rank** in the full
@@ -543,8 +536,6 @@ hand-positioned. Categories with a count of `0` are omitted entirely. `examples`
 entity names per category, in `compareAmplifierOrder`. Read 2026-09-20 (15 verified amplifications)
 this resolves to `GOVERNMENT 2 · POLITICS 7 · MEDIA 3 · TECH 1 · PUBLIC FIGURES 2`; `JOURNALISM`,
 `BUSINESS` and `OTHER` are absent (zero records) — a dated reading, never a target to match.
-`MEDIA` was itself at zero until B10's search sweep found three outlets citing the project on X,
-which is what the batch existed to do.
 
 ### Media (`media.json`)
 
@@ -554,7 +545,7 @@ originalReferenceCount · syndicatedReferenceCount · featuredReferenceCount
 referencesByCountry · countryCount · originalReferencesByCitedWork
 ```
 
-**The counting rule (B13).** Two questions are kept apart instead of averaged into one number,
+**The counting rule.** Two questions are kept apart instead of averaged into one number,
 and neither figure is ever given the other's label:
 
 ```text
@@ -580,7 +571,7 @@ country is unknown is counted in no country. `countryCount` is that map's size �
 behind "references from newsrooms in N countries". `featuredReferenceCount` counts eligible
 records carrying the `/methodology` criterion.
 
-`originalReferencesByCitedWork` (B16) splits `originalReferenceCount` by `cited_work` (`§7`),
+`originalReferencesByCitedWork` splits `originalReferenceCount` by `cited_work` (`§7`),
 over originals for the same reason `referencesByCountry` is: a republication carries the answer of
 the piece it copies, so counting it too would report one newsroom's use of a dataset as two. Every
 enum member is a key, `none` included, so the keys sum to `originalReferenceCount` exactly and the
@@ -589,20 +580,20 @@ because it is the only map in that object that does not count every eligible rec
 
 `/methodology` states every one of these in the reader's words and prints today's values live.
 None of them is on the homepage: `docs/HOMEPAGE.md §11` keeps the Public References section
-without a dominant number, and that standing decision was not reopened in B13.
+without a dominant number.
 
 ### Media selectors (`src/lib/metrics/media.ts`)
 
-`compareMediaOrder(a, b)` — media ordering for `/evidence` (B5): newest `published_at` first, tie-
+`compareMediaOrder(a, b)` — media ordering for `/evidence`: newest `published_at` first, tie-
 broken by smallest `id` (lexicographic) — the same reasoning as `compareArchiveOrder` and
 `compareAmplifierOrder`.
 
 `selectMediaReferences(mediaReferences: MediaReference[]): MediaReference[]` — the verified,
-sorted media list `/evidence`'s media section renders directly. No filters, no pagination. With
-today's dataset (109 raw records, 100 verified) this resolves to 100 rows. Provenance does not
-filter this list: `/evidence` is the ledger where every verified record is auditable, and a
-republication is dropped from the derived coverage figures, never from the page that claims to
-list everything.
+sorted media list `/evidence`'s media section renders directly. No filters, no pagination. This
+resolves to every verified media record; the exact count is `verifiedMediaReferenceCount` (above),
+derived live rather than restated here. Provenance does not filter this list: `/evidence` is the
+ledger where every verified record is auditable, and a republication is dropped from the derived
+coverage figures, never from the page that claims to list everything.
 
 `selectPublicationReferences(mediaReferences: MediaReference[]): PublicationReferences[]` — the
 Public References groups (`docs/HOMEPAGE.md §11`), each carrying its own `references`,
@@ -615,12 +606,12 @@ groups hold exactly one reference** — a dated reading, never a target to match
 (`docs/HOMEPAGE.md §11`) shows the first N of that result; `/evidence` lists every verified record
 and the section's `OPEN EVIDENCE →` link is how the rest is reached. The counterpart of
 `HOMEPAGE_ARCHIVE_ROW_COUNT` above, and the same contract: a dataset smaller than N shows what
-exists rather than padding. Twelve is the composition the section was reviewed at in B8 and B13 —
-B14 grew the list behind it from 12 groups to 51, which is an argument for capping the section,
-not for resizing it. It is deliberately a constant and not a threshold ("every group with more
-than one reference" is eleven today and a different number next import).
+exists rather than padding. Twelve is a fixed row cap, chosen deliberately rather than resized as
+the dataset grows — the underlying list can grow far larger without changing the constant. It is
+deliberately a constant and not a threshold ("every group with more than one reference" would be a
+different number after every import).
 
-`mediaReferenceDescriptors(reference)` (`src/lib/format/media-descriptors.ts`) — the B13
+`mediaReferenceDescriptors(reference)` (`src/lib/format/media-descriptors.ts`) — the media record
 attributes as words, for the metadata line shared by the Public References panel and the
 `/evidence` media rows: the newsroom country (`src/lib/format/country.ts` resolves the ISO code
 to a name, falling back to the code rather than inventing one), `Republished from <outlet>` for a
@@ -714,19 +705,20 @@ where prominence belongs. Five keys, every one a fact stored on the records:
 5  publication name, ascending               final deterministic tie-break
 ```
 
-**The printed number first (B19, revising B13's order).** The rule has not changed: a key the
-reader cannot see must never reorder a number the reader can. B13 applied it to `featured`, which
-is why featured sits below the counts; B19 applies the same rule one key higher, because the
-original count is exactly as invisible on the row as `featured` is. At twelve rows the difference
-was undetectable; at fifty-one it put `Inkl` (8 references, 0 originals) at row 43 below thirty-odd
-rows printing `1 reference`, and `Alex Jones Live` (3 references) below `The National Pulse` (2) in
-the first screenful at 390px. Both were the keys working as designed and both read as a broken
-sort — which is what makes it a display decision rather than a data one.
+### The printed number first
 
-Never a computed rank of any kind, and the ordering still does the prominence work B13 asked of
-it, inside the ties the printed number creates: among publications printing the same count, one
-that did its own reporting leads one that only republished, and a featured publication leads the
-unfeatured ones it ties with.
+The rule: a key the reader cannot see must never reorder a number the reader can. It applies to
+both `featured`, which is why featured sits below the counts, and to the original count, which is
+exactly as invisible on the row as `featured` is. At a small number of rows the difference is
+undetectable; at scale it can put a publication with many total references but few originals below
+rows printing a single reference, and a publication with more references below one with fewer,
+inside the first screenful at 390px. Both are the keys working as designed and both read as a
+broken sort — which is what makes it a display decision rather than a data one.
+
+Never a computed rank of any kind, and the ordering still carries the prominence the design
+intends, inside the ties the printed number creates: among publications printing the same count,
+one that did its own reporting leads one that only republished, and a featured publication leads
+the unfeatured ones it ties with.
 
 ---
 

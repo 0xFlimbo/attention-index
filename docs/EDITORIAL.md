@@ -1,8 +1,7 @@
 # EDITORIAL.md
 
 Owns: voice, metric labels, banned language, neutrality rules, alt text, CTA wording.
-(Consolidated from `CONTENT_GUIDELINES.md`, kept in `docs/archive/`.
-The section-by-section approved copy now lives in `docs/HOMEPAGE.md`.)
+The section-by-section approved copy lives in `docs/HOMEPAGE.md`.
 
 > **Make the claim specific. Show the number. Link the evidence. Avoid the hype.**
 
@@ -154,8 +153,7 @@ note:     figures and nothing else
 
 Apply it consistently, never selectively — a caveat appearing only on posts the maintainer happens
 to distrust is editorialising, which is the failure this rule exists to avoid in both directions. It
-never applies to a post that makes no numeric claim. On the eleven posts added the day the rule was
-adopted it fired exactly once. (Maintainer decision, 2026-09-19.)
+never applies to a post that makes no numeric claim.
 
 **Amplification actions** — `REPOSTED · QUOTE-POSTED · MENTIONED · SHARED · CITED · INTERVIEWED`.
 Never upgrade a weak interaction. A mention is not a repost; a repost is not an endorsement unless
@@ -179,6 +177,12 @@ Publication and company names use their standard public form (`Forbes`, `Reuters
 — and nothing else. A press page's `Inkl (via IBTimes UK)` packs a provenance fact into a name;
 the name keeps `Inkl` and the fact moves to the record's own fields (`docs/DATA.md §7`).
 Publication reference counts are derived, never asserted (`FORBES / 3 references`).
+
+**A disambiguator goes, an edition stays.** A parenthetical that only tells two outlets of the same
+name apart is stripped — the country the record's own `country` field already carries, for
+example, comes out of the name (`The Deep Dive (Canada)` → `The Deep Dive`). A parenthetical that
+names a genuine edition with its own newsroom and its own URL stays, because collapsing it would
+merge two publications into one row (`BeInCrypto (Spanish edition)`, `IBTimes UK`, `IBTimes JP`).
 
 **Republications** are described as the fact they are, never as a lesser form of coverage:
 `Republished from Western Journal`. The point of recording it is arithmetic, not judgement — one
@@ -216,12 +220,14 @@ Quote sparingly and identify the source: `The publication described LayoffHedge 
 **Curation is declared, never disguised as measurement.** The `featured` flag is a rule this
 project wrote and applies by hand, so `/methodology` states the rule in the reader's words and
 says plainly that it is curation. It stays binary — no tiers, no score, no prestige number of the
-project's own invention (`CLAUDE.md §3`) — and it changes position only. A publication that is
+project's own invention — and it changes position only. A publication that is
 not featured is never described, or implied, to be a weaker source.
 
 **Verification** — "verified" means the maintainer checked that the public source supports the record.
 Not verified by X, not audited, not certified by LayoffHedge. `needs_review` records never appear as
-verified facts and never in headline metrics.
+verified facts and never in headline metrics. Identity and role claims are confirmed from a source
+independent of the account itself — an outlet's own author page, an official listing, a masthead.
+An account's own bio is self-reported and is never treated as proof on its own.
 
 **Corrections** — handled transparently through repository history, without defensive language:
 `Data is periodically reviewed and corrected when stronger source information becomes available.`
@@ -292,8 +298,7 @@ new tab, and carries an `(opens in a new tab)` note for screen readers; an inter
 So `VIEW SOURCE`, `VIEW ORIGINAL`, `GITHUB`, `CONTRIBUTE DATA` and `SUBMIT A CORRECTION` are `↗`,
 while `METHODOLOGY` and `OPEN ARCHIVE` are `→`, and a label like `SOURCE DATA` or `VIEW DATA` takes
 whichever matches where it actually points that day — external once `project.json.repository_url`
-is set, internal while it is `null`. Clarified at B9, where four labels had been shipped with `↗`
-against internal routes because this list was read as prescribing the glyph.
+is set, internal while it is `null`.
 
 Source labels: `Original X post`, `Public repost`, `Forbes article`, `Official LayoffHedge page`,
 `YouTube interview`, `Public newsletter`. Never `Definitive proof`, `Verified truth`,

@@ -114,14 +114,14 @@ does not mean verified by X, audited, or confirmed by LayoffHedge. Records await
 
 ## 5. The maintenance tools
 
-Occasional, run by hand, never part of a build or CI. Full detail in `ENGINEERING.md §16–§22`.
+Occasional, run by hand, never part of a build or CI. Full detail in `TOOLS.md`.
 
 | Command | What it does | Network | Cost |
 |---|---|---|---|
 | `pnpm import:press` | imports the official press page as `needs_review` candidates | yes | free |
 | `pnpm check:media-mentions` | fetches an article — one already stored, or any list of URLs — and reports whether the page names the project | yes | free |
 | `pnpm refresh:metrics` | takes a new reading of every tracked post's public counters and appends it to its history | yes | **paid** (~$0.005/post) |
-| `pnpm enrich:twitter` | fills post metadata from the X API | yes | **paid** |
+| `pnpm enrich:twitter` | fills post metadata from the X API | yes | **paid** (`--fetch`; plans free by default) |
 | `pnpm sweep:quotes` | enumerates who quoted a tracked post | yes | **paid** |
 | `pnpm sweep:mentions` | searches the X archive for posts whose text names the project | yes | **paid** |
 | `pnpm sweep:web` | asks a web-search index which pages cite the project, and diffs them against the dataset | yes | **paid** (~$0.005/query; Google News through Serper runs on free credits) |
@@ -130,9 +130,9 @@ Occasional, run by hand, never part of a build or CI. Full detail in `ENGINEERIN
 
 The paid ones need a credential in `.env.local` — `X_BEARER_TOKEN` for the four X tools,
 `BRAVE_SEARCH_API_KEY` and `SERPER_API_KEY` for the web sweep — and spend real money per request.
-If you are forking this, read the cost model before running any of them: **X bills per resource
-returned**, so a call that returns 500 posts costs 500 reads and page size saves requests rather
-than money, while Brave bills per query and applies **no default spending cap**.
+If you are forking this, read the cost model in `docs/PROVIDERS.md` before running any of them —
+it covers each vendor's pricing, billing behaviour and spending caps. `docs/TOOLS.md` has the
+per-tool cost and known traps.
 
 Three habits worth copying:
 
@@ -140,9 +140,10 @@ Three habits worth copying:
   Nothing else is reliable. Where a vendor publishes no balance endpoint — Brave does
   not — keep a ledger instead: one line per billed request, written as it happens, and check it
   against the vendor's own dashboard once so the cost model is confirmed rather than assumed.
-- **Make the cheap mode the default.** Every paid tool here plans, sizes or reports for free and
-  bills only when told to. A mistyped flag should cost nothing, and on a vendor with no spending
-  cap the script carries its own ceiling.
+- **The cheap mode is the default, with one named exception.** Every paid tool here plans, sizes
+  or reports for free and spends only when told to — except `sweep:quotes`, whose default
+  `--measure` is one billed request (`docs/TOOLS.md §1, §8`). A mistyped flag should still cost at
+  most a few cents, and on a vendor with no spending cap the script carries its own ceiling.
 - **Nothing paid for is thrown away.** Raw API results live outside any cache directory, and every
   profile ever fetched is kept so a later run reuses it instead of buying it again.
 
@@ -158,7 +159,7 @@ pnpm refresh:metrics -- --from tracked-post-metrics-<day>.json --write   # appen
 
 Then run the checks from §2 ("Check it the way CI does") and commit. The headline numbers move on the next build, each
 still paired with the date it was read. Finding new coverage is a separate step, and every hit is
-read by a person before it becomes a record: `ENGINEERING.md §22` lists the commands in order.
+read by a person before it becomes a record: `TOOLS.md §2` lists the commands in order.
 
 ### If you are the account being measured
 
@@ -186,13 +187,24 @@ string are in `README.md`.
 
 ## 7. Forking it for a different subject
 
-Nothing in the architecture is specific to LayoffHedge. To point it at another account or project:
+The derived-metric layer, the schemas and the tooling contracts are not specific to LayoffHedge,
+but naming the subject touches real code, not only prose: `git grep -c -i -E
+'layoffhedge|layoffai' -- src scripts` finds the name in about two dozen files (measured
+2026-09-23). To point this at another account or project, expect to touch:
 
-1. Replace the contents of `data/` and update `data/project.json`.
-2. Update the copy that names the subject — `HOMEPAGE.md` owns the approved wording.
-3. Keep the independence statement on every page, and keep the subject's name out of the
-   repository name and domain. Naming what you measure is necessary; naming yourself after it
-   reads as affiliation.
+1. **The dataset.** Replace the contents of `data/` and update `data/project.json`.
+2. **Page copy.** Every route under `src/app/*/page.tsx` and the components that name the subject
+   directly (the hero, the footer, the closing line, the crossover diagram) — `HOMEPAGE.md` owns
+   the approved wording.
+3. **The discovery vocabulary.** `src/lib/sweep/mention-patterns.ts` and `web-queries.ts` hard-code
+   the brand words, handles and domains a sweep searches for.
+4. **The press importer.** `scripts/import-layoffhedge-press.ts` is written against
+   `layoffhedge.com/press`'s specific markup, not a generic press-page scraper.
+5. **The Open Graph image copy.** `src/lib/og-image.tsx` and `og-image-meta.ts`.
+
+Keep the independence statement on every page, and keep the subject's name out of the
+repository name and domain. Naming what you measure is necessary; naming yourself after it
+reads as affiliation.
 
 The parts most worth reusing are the boring ones: the schemas, the derived-metric functions, the
 placeholder guard, and the rule that a tool reports while a person records.

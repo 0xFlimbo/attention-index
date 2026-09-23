@@ -2,7 +2,7 @@
  * pnpm sweep:quotes [-- --measure] [-- --post <id>] [-- --all]
  *                   [-- --max-pages N] [-- --profiles N] [-- --delay MS] [-- --dry-run]
  *
- * Occasional maintenance tool (docs/ENGINEERING.md §18). Never called during
+ * Occasional maintenance tool (docs/TOOLS.md §8). Never called during
  * `next build`, rendering, or CI.
  *
  * **Strictly read-only against `data/`.** It enumerates the accounts that quoted
@@ -561,7 +561,7 @@ async function measure(posts: Post[], token: string): Promise<PostSize[]> {
    * integer from each. The same resource already carries the full
    * `public_metrics` — impressions, likes, reposts, replies, bookmarks — which
    * is precisely the reading `docs/DATA.md §10`'s observation history stores and
-   * the periodic metric refresh (docs/ENGINEERING.md §22) is scoped to fetch. It
+   * the periodic metric refresh (docs/TOOLS.md §3) is scoped to fetch. It
    * was being paid for and dropped on the floor, then budgeted for again as if
    * it were new work.
    *

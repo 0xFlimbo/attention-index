@@ -69,11 +69,15 @@ export default function MethodologyPage() {
   // only when the dataset holds no verified record anywhere.
   const lastUpdated = dataLastUpdated(posts, amplifications, mediaReferences);
 
-  // Records held at `needs_review` are real rows in the dataset, just not yet
-  // public — stating how many exist is honest, not a fabricated number, and
-  // it is derived the same way `isVerifiedRecord` is (never `.length` alone).
+  // Records held at `needs_review` or `archived` are real rows in the dataset,
+  // just not yet public (or no longer public) — stating how many exist is
+  // honest, not a fabricated number, and each is derived the same way
+  // `isVerifiedRecord` is (never `.length` alone).
   const mediaNeedsReviewCount = mediaReferences.filter(
     (reference) => reference.status === "needs_review" && reference._placeholder !== true,
+  ).length;
+  const mediaArchivedCount = mediaReferences.filter(
+    (reference) => reference.status === "archived" && reference._placeholder !== true,
   ).length;
 
   // docs/DATA.md §7 — the named works, in schema order, each with its own
@@ -186,8 +190,10 @@ export default function MethodologyPage() {
             a development placeholder, feed any number shown on this website.{" "}
             {lastUpdated !== null && <>As of {formatDateLong(lastUpdated)}, </>}
             {formatCount(mediaMetrics.verifiedMediaReferenceCount)}{" "}
-            of the {formatCount(mediaReferences.length)} imported media records are verified and
-            visible on this site; {formatCount(mediaNeedsReviewCount)} remain at{" "}
+            of the {formatCount(mediaReferences.length)} media records in the dataset are verified
+            and visible on this site; {formatCount(mediaArchivedCount)}{" "}
+            {mediaArchivedCount === 1 ? "is archived" : "are archived"}, each with its reason
+            recorded, and {formatCount(mediaNeedsReviewCount)} remain at{" "}
             {/*
               `font-mono` alone, never `.text-record-id`: that class is the
               12px metadata scale (docs/DESIGN.md §4), and inside this 18–24px

@@ -2,7 +2,7 @@
  * pnpm import:press
  *
  * One-time / occasional seed of `data/media.json` from https://layoffhedge.com/press
- * (docs/ENGINEERING.md §13). Never fetched at build or runtime.
+ * (docs/TOOLS.md §5). Never fetched at build or runtime.
  *
  * The press page is plain server-rendered HTML: a flat grid of `<a class="press-card…">`
  * entries, each holding three inner `<div>`s (publication + date, title, factual context —

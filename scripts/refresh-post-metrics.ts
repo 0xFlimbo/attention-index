@@ -5,7 +5,7 @@
  * pnpm refresh:metrics -- --fetch --write       # ...and append it to data/posts.json
  * pnpm refresh:metrics -- --from <file> --write
  *
- * The manual metric refresh (docs/ENGINEERING.md §22). Never called during
+ * The manual metric refresh (docs/TOOLS.md §3). Never called during
  * `next build`, rendering, or CI, and never scheduled: kept manual by
  * maintainer decision.
  *

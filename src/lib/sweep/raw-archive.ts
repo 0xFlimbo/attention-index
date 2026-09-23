@@ -74,7 +74,7 @@ export function slugify(label: string): string {
  * Wraps a body for archiving.
  *
  * The endpoint is stored as a path with the query string dropped: a raw URL can
- * carry credentials, and `docs/ENGINEERING.md §8` says a token is never written
+ * carry credentials, and `docs/TOOLS.md §1` says a token is never written
  * anywhere, including into a file nobody meant to publish.
  */
 export function archiveEntry(url: string, label: string, body: unknown, now = new Date()): RawArchiveEntry {

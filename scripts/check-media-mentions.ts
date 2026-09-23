@@ -3,7 +3,7 @@
  *                           [-- --urls <file>] [-- --limit N] [-- --delay MS]
  *                           [-- --no-proxy]
  *
- * Occasional maintenance tool (docs/ENGINEERING.md §17). Never called during
+ * Occasional maintenance tool (docs/TOOLS.md §6). Never called during
  * `next build`, rendering, or CI.
  *
  * **Strictly read-only.** It fetches each selected page and reports whether the

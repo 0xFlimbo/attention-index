@@ -1,6 +1,6 @@
 /**
  * Where a billed response goes the moment it arrives
- * (`src/lib/sweep/raw-archive.ts`, `docs/ENGINEERING.md §18c`).
+ * (`src/lib/sweep/raw-archive.ts`, `docs/TOOLS.md §1`).
  *
  * The naming is tested rather than eyeballed because the archive is read months
  * later by someone deciding whether a question can be answered without paying

@@ -8,7 +8,7 @@
  * `research/track-a-state.json` keeps a `since_id` high-water mark that moves
  * **only forwards and only after a successful run**, because a mark that moves
  * backwards re-buys a paid window and one that moves forwards after a failure
- * silently skips what nobody has seen (`docs/ENGINEERING.md §18a`). The same
+ * silently skips what nobody has seen (`docs/TOOLS.md §7`). The same
  * two failure modes exist here, with a third that is specific to a query set.
  *
  * **The third one: a mark belongs to a query, not to a run.** A single

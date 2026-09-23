@@ -67,9 +67,7 @@ Attribution for the dataset:
 ## Documentation
 
 These are the specifications the site is built to — the product contract, in the order a
-newcomer would read them. Planning and working-process notes are kept out of this repository, so
-a cross-reference to a file you cannot find here is one of those; nothing a contributor needs is
-missing.
+newcomer would read them.
 
 | File | Contents |
 |---|---|
@@ -80,3 +78,5 @@ missing.
 | `docs/DATA.md` | JSON contract, validation rules, derived metrics |
 | `docs/ENGINEERING.md` | architecture, scripts, testing, CI, deployment |
 | `docs/EDITORIAL.md` | voice, metric labels, neutrality rules |
+| `docs/TOOLS.md` | the maintenance tools — commands, cost, what each writes |
+| `docs/PROVIDERS.md` | the paid data vendors — pricing, billing behaviour, traps |
