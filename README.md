@@ -5,9 +5,9 @@ crossover of LayoffHedge.
 
 > **Independent community project. Not affiliated with or endorsed by LayoffHedge.**
 
-**Live site: <https://attention-index-theta.vercel.app>**
+**Live site: <https://attentionindex.org>**
 
-![Open Graph image for the LayoffHedge Attention Index, showing the site's title on the cream, black and red design system](https://attention-index-theta.vercel.app/opengraph-image)
+![Open Graph image for the LayoffHedge Attention Index, showing the site's title on the cream, black and red design system](https://attentionindex.org/opengraph-image)
 
 [![CI](https://github.com/0xFlimbo/attention-index/actions/workflows/ci.yml/badge.svg)](https://github.com/0xFlimbo/attention-index/actions/workflows/ci.yml)
 

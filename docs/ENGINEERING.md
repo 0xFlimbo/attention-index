@@ -312,13 +312,14 @@ from the `packageManager` field in `package.json`, so the version is declared on
 ## 11. Deployment
 
 Vercel, connected to `https://github.com/0xFlimbo/attention-index` through its GitHub integration.
-Production is `main`; the canonical URL is `https://attention-index-theta.vercel.app` (Vercel
-appended the suffix because the plain subdomain was taken). Stay portable — do not design around
-the provider. Cloudflare remains a later option.
+Production is `main`; the canonical URL is `https://attentionindex.org`, set in Vercel as
+`NEXT_PUBLIC_SITE_URL` (Production). `www.attentionindex.org` and the deployment host
+`attention-index-theta.vercel.app` redirect to it with a permanent 308. Stay portable — do not
+design around the provider. Cloudflare remains a later option.
 
-A custom domain is a one-variable change, deliberately not a prerequisite: set
-`NEXT_PUBLIC_SITE_URL` and add a redirect. `src/lib/site-url.ts` is the single source of truth that
-`metadataBase`, `sitemap.ts` and `robots.ts` all read; nothing else hardcodes the URL.
+`src/lib/site-url.ts` is the single source of truth that `metadataBase`, `sitemap.ts` and
+`robots.ts` all read; nothing else hardcodes the URL. Its fallback is the same canonical domain, so
+a build without the variable still names the real site.
 
 **A push does not mean a deploy.** GitHub Actions starts within seconds of a push, and Vercel can
 lag behind it by several minutes. Vercel registers a deployment on GitHub only once the build
