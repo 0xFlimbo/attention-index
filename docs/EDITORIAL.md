@@ -233,7 +233,7 @@ verified facts and never in headline metrics.
 Plain and explicit. State limitations directly — they increase credibility.
 
 ```text
-good: View counts are manually recorded from publicly visible X post counters.
+good: View counts are readings of the public view counter each X post displays.
       Because these counters change over time, each value is stored with an observation date.
 bad:  Our proprietary methodology accurately captures true reach.
 ```

@@ -101,7 +101,7 @@ export default function MethodologyPage() {
           <ul className="text-body mt-6 max-w-prose space-y-4 text-ink-soft">
             <li>
               <strong className="text-ink">Tracked posts</strong> — public posts published by
-              @LayoffAI, each paired with a manually recorded snapshot of its public view counter.
+              @LayoffAI, each paired with dated readings of its public view counter.
             </li>
             <li>
               <strong className="text-ink">Amplifications</strong> — public reposts, quote posts,
@@ -124,9 +124,10 @@ export default function MethodologyPage() {
 
         <ProseSection id="observation" heading="Observed views and observation dates">
           <p className="text-body mt-6 max-w-prose text-ink-soft">
-            View counts on this site are not pulled from any private API or analytics dashboard.
-            They are manually recorded from the public view counter visible on each X post, at a
-            specific point in time.
+            View counts on this site are readings of the public view counter each X post displays,
+            taken at a specific point in time. Early readings were copied by hand from the post
+            itself, where X rounds large numbers. Later ones come from X&apos;s developer API, which
+            returns the same counter unrounded. Neither is a private analytics figure.
           </p>
 
           {/* docs/ENGINEERING.md §6 — required verbatim statements. */}
