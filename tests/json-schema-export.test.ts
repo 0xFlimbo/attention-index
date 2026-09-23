@@ -19,8 +19,13 @@ import { mediaReferenceTypeEnum } from "../src/schemas/media.schema";
 const DATA_DIR = resolve(process.cwd(), "data");
 const SCHEMAS_DIR = resolve(DATA_DIR, "schemas");
 
+/**
+ * Line endings are normalised before comparing: a Windows checkout with
+ * `core.autocrlf` rewrites the committed LF files as CRLF, and that is not a
+ * drift from what the Zod schemas generate.
+ */
 function readCommittedSchema(fileName: string): string {
-  return readFileSync(resolve(SCHEMAS_DIR, fileName), "utf-8");
+  return readFileSync(resolve(SCHEMAS_DIR, fileName), "utf-8").replace(/\r\n/g, "\n");
 }
 
 function readDataFile(fileName: string): unknown {
