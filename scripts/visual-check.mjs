@@ -18,7 +18,7 @@
  *   4. close   — browser first, then the server, then verify the port is free.
  *
  * Browser review also only runs in a session the maintainer has agreed to
- * (docs/WORKPLAN.md, "Rules for every batch"). This script does not ask for
+ * (docs/ENGINEERING.md §16). This script does not ask for
  * that consent — the operator has it before running the command.
  *
  * Usage:
@@ -119,7 +119,7 @@ mkdirSync(outDir, { recursive: true });
 const widths = arg("widths", DEFAULT_WIDTHS.join(",")).split(",").map(Number);
 const routePath = arg("path", "/");
 // Every capture is prefixed with the route's slug: reviewing two routes in one
-// session (B3 reviews `/` and `/archive`) otherwise has the second run silently
+// session (the homepage and `/archive`, say) otherwise has the second run silently
 // overwrite the first run's reduced-motion and no-JS screenshots.
 const baseSlug = routePath === "/" ? "home" : routePath.replace(/\W+/g, "-").replace(/^-|-$/g, "");
 // `--anchor attention` reviews a section that sits below the fold. It is a URL

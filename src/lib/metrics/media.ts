@@ -70,7 +70,7 @@ function emptyTypeCounts(): Record<MediaReferenceType, number> {
  * (`status === "verified" && _placeholder !== true`). Publication totals are always
  * derived, never stored (docs/DATA.md §7).
  *
- * **The B13 counting rule.** Two different questions are kept apart rather
+ * **The counting rule (docs/DATA.md §10).** Two different questions are kept apart rather
  * than averaged into one number:
  *   - *how many public records are there* — `verifiedMediaReferenceCount`,
  *     `uniquePublicationCount` and `referencesByPublication` count every
@@ -79,10 +79,9 @@ function emptyTypeCounts(): Record<MediaReferenceType, number> {
  *     count would make the count disagree with the rows underneath it.
  *   - *how much reporting is there* — `originalReferenceCount`,
  *     `referencesByCountry` and `originalReferencesByCitedWork` count
- *     original records only (the last added at B16). `IBTimes UK` plus
+ *     original records only (`cited_work`, docs/DATA.md §7). `IBTimes UK` plus
  *     `Inkl` is one piece of reporting and its republications, so any figure
- *     presented as coverage has to exclude the copies or it inflates
- *     (docs/WORKPLAN.md B13).
+ *     presented as coverage has to exclude the copies or it inflates it.
  * Neither figure is ever given the other's label; `/methodology` prints both
  * and says which is which.
  */
@@ -125,7 +124,7 @@ export function getMediaMetrics(mediaReferences: MediaReference[]): MediaMetrics
 }
 
 /**
- * Deterministic media ordering for `/evidence` (B5): newest `published_at`
+ * Deterministic media ordering for `/evidence`: newest `published_at`
  * first, tie-broken by smallest `id` (lexicographic) — same reasoning as
  * `compareArchiveOrder` (src/lib/metrics/archive.ts) and
  * `compareAmplifierOrder` (src/lib/metrics/amplification.ts): nothing here
@@ -190,14 +189,14 @@ export interface PublicationReferences {
  * `compareMediaOrder`, so the newest reference is also what "most recent
  * published_at" reads from step 4.
  *
- * Why the printed count outranks both provenance and featured (B19, revised
- * from B13's order). B13's own rule was that an invisible key must not
+ * Why the printed count outranks both provenance and featured
+ * (docs/DATA.md §11). The original rule was that an invisible key must not
  * reorder a visible number: it demoted `featured` below the original count
  * because "a list ordered featured-first would print 3, 1, 1, 3, 2 down the
  * right rail and read as broken rather than as curated". The original count
  * is just as invisible to the reader as `featured` is, so the same rule
- * applies to it one key higher up — which only became observable when B14
- * took the section from 12 rows to 51. At that size the provenance key put
+ * applies to it one key higher up — which only became observable once
+ * the section grew from 12 rows to 51. At that size the provenance key put
  * `Inkl` (8 references, 0 originals) at row 43, below thirty-odd rows
  * printing `1 reference`, and `Alex Jones Live` (3 references, 2 originals)
  * below `The National Pulse` (2 references) in the first screenful at 390px.
@@ -260,7 +259,7 @@ export function selectPublicationReferences(mediaReferences: MediaReference[]): 
  * lives on its own route.
  *
  * Twelve, because twelve rows is the composition this section was reviewed
- * at and approved in B8 and B13 — B14 grew the dataset behind it from 12
+ * at and approved early on — the dataset behind it later grew from 12
  * publications to 51, which is a reason to cap the section, not a reason to
  * resize it. It is a constant, not a threshold: it is deliberately not
  * "however many publications have more than one reference" (eleven, today),

@@ -16,9 +16,9 @@ import { ClosingLine } from "@/components/closing-line";
 import { Footer } from "@/components/footer";
 
 /**
- * docs/HOMEPAGE.md §1 — sections 00–04 (B2), Crossover + Amplified By
- * (05–06, B4), Viral Archive (07, B3), Public References (08, B8),
- * Evidence + Footer (09, 11, B5), Closing line (10, B15). Thin composition: data loading + metrics
+ * docs/HOMEPAGE.md §1 — sections 00–04, Crossover + Amplified By
+ * (05–06), Viral Archive (07), Public References (08),
+ * Evidence + Footer (09, 11), Closing line (10). Thin composition: data loading + metrics
  * calls, no layout logic, no inline metric math.
  */
 export default function Home() {

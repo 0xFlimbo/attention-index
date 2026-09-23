@@ -6,7 +6,7 @@ import { SITE_URL } from "@/lib/site-url";
  * this site ships is already public (no auth, no draft/admin surface), so
  * "public routes only" means allow everything rather than an allow-list of
  * paths. Points at `sitemap.ts`, built in the same batch for the same reason
- * (needs `SITE_URL`, which did not exist until B9's deployment decision).
+ * (needs `SITE_URL`, which did not exist until the deployment target was confirmed).
  */
 export default function robots(): MetadataRoute.Robots {
   return {

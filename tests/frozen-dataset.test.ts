@@ -1,5 +1,5 @@
 /**
- * The literal snapshot (docs/WORKPLAN.md B10–B12, "value-pinned tests").
+ * The literal snapshot.
  *
  * `tests/data-integration.test.ts` used to pin every headline figure of the live
  * `data/` files as a literal. That is the right guard for a hand-made edit — it
@@ -8,7 +8,7 @@
  * goes red on the first new record and a job that edits its own expectations to
  * go green is not a guard at all.
  *
- * The split the WORKPLAN prescribes: the live files are asserted by *relationship*
+ * The split this project uses: the live files are asserted by *relationship*
  * next door, and the literal snapshot moves here, onto a frozen copy of the
  * dataset as it stood on 2026-09-20. No assertion was deleted — `trackedPostCount
  * 32`, `totalObservedViews 43_625_943` and `verifiedAmplificationCount 10` are all
@@ -20,7 +20,8 @@
  * of these numbers and fails here. Adding an amplification does not.
  *
  * The fixture is frozen input, never a target the live data should match. It is
- * updated only when a schema migration makes it unparseable (B18 was such a
+ * updated only when a schema migration makes it unparseable (adding the
+ * required `cited_work` field was such a
  * change), and then the figures below are re-derived and re-read by a human, not
  * pasted from the run that failed.
  */
@@ -92,7 +93,7 @@ describe("frozen dataset (2026-09-20) — derived figures", () => {
     });
 
     // Four categories hold no record, so the Crossover map draws four nodes
-    // (docs/DATA.md §10) — the gap B10's sweep is aimed at.
+    // (docs/DATA.md §10) — the gap a discovery sweep is aimed at.
     expect(selectCrossoverCategories(frozenAmplifications).map((c) => c.label)).toEqual([
       "GOVERNMENT",
       "POLITICS",
@@ -112,7 +113,7 @@ describe("frozen dataset (2026-09-20) — derived figures", () => {
     expect(media.originalReferenceCount + media.syndicatedReferenceCount).toBe(
       media.verifiedMediaReferenceCount,
     );
-    // B16 — the cited-work split, read off the frozen file when the field was
+    // docs/DATA.md §7 — the cited-work split, read off the frozen file when the field was
     // added and re-derived by hand, never pasted from a failing run. It is a
     // split of the 77 originals, not of the 94 records.
     expect(media.originalReferenceCount).toBe(77);

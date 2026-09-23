@@ -2,7 +2,7 @@ import type { MediaReference } from "@/schemas/media.schema";
 import { formatCountry } from "./country";
 
 /**
- * docs/WORKPLAN.md B13 — the three B13 attributes, rendered as words in the
+ * docs/DATA.md §7 — the three record attributes, rendered as words in the
  * record's own metadata line. There is no star, no badge and no icon:
  * `docs/DESIGN.md` carries no decorative iconography anywhere, and a press
  * kit's star is the one grammar an independent index must not borrow. What

@@ -2,14 +2,14 @@
  * pnpm sweep:mentions [-- --sweep] [-- --since-id <id>] [-- --start-time <ISO>]
  *                     [-- --max-pages N] [-- --dry-run]
  *
- * **Track A** (docs/WORKPLAN.md B10, docs/X-API.md §5–§6): the full-archive
+ * **Track A** (docs/PROVIDERS.md): the full-archive
  * search over every post whose *text* names the account, the brand word or the
  * domain. The complement of `sweep:quotes`, which is Track B and reads the
  * quote timeline of one post.
  *
  * The two barely overlap, and that is measured rather than assumed: **0 of the
  * 10 pre-existing records were findable by Track A**, because a quote post
- * attaches a card instead of text (`docs/X-API.md §4`). Track A finds outlets
+ * attaches a card instead of text (`docs/PROVIDERS.md`). Track A finds outlets
  * and commentators, who cite in prose; Track B finds the officeholders, who
  * quote in silence.
  *
@@ -19,7 +19,7 @@
  * Track A produced five of this project's records and was never written down as
  * a program. Both runs — 2026-09-20 ($3.27) and the 2026-09-21 incremental
  * ($0.12) — were hand-assembled request strings, which is how the field-name
- * bugs in `docs/X-API.md §16` happened in the first place: an ad-hoc request is
+ * bugs in `docs/PROVIDERS.md` happened in the first place: an ad-hoc request is
  * validated by nobody, tested by nothing, and reconstructed from a doc by the
  * next person under time pressure.
  *
@@ -77,7 +77,7 @@ const COUNTS_URL = "https://api.x.com/2/tweets/counts/all";
 const CREDITS_URL = "https://api.x.com/2/usage/credits";
 
 /**
- * The query, verbatim from `docs/X-API.md §6` with this project's values
+ * The query, verbatim from `docs/PROVIDERS.md` with this project's values
  * substituted. Kept as one constant because it is the thing that must not drift
  * between runs: a different query is a different population, and comparing two
  * runs of different queries silently answers the wrong question.
@@ -89,7 +89,7 @@ const QUERY =
   '(@LayoffAI OR layoffhedge OR url:"layoffhedge.com") -is:retweet -from:LayoffAI (is:quote OR -is:reply)';
 
 /**
- * Billing is per resource returned, never per field (`docs/X-API.md §12`), so
+ * Billing is per resource returned, never per field (`docs/PROVIDERS.md`), so
  * every field worth having is requested once. `note_tweet` is not optional
  * here: on the 2026-09-20 corpus **24 of 48 posts named the project only in the
  * text past the truncation point**, and reading `text` alone discarded it.
@@ -214,7 +214,7 @@ async function fetchJson<T>(
   }
   const body = (await response.json()) as T;
   // Persist before parsing: a misunderstood request and an absent field look
-  // identical once the response has been read away (docs/X-API.md §15).
+  // identical once the response has been read away (docs/PROVIDERS.md).
   if (billed && !isDryRun) archiveRaw(url, label, body);
   return body;
 }
@@ -231,7 +231,7 @@ function archiveRaw(url: string, label: string, body: unknown): void {
 /**
  * The balance, before and after. `usage/credits` is metered rather than billed,
  * and the difference across a run is the **only** cost figure that cannot be
- * wrong (`docs/X-API.md §1`). Everything else is a model.
+ * wrong (`docs/PROVIDERS.md`). Everything else is a model.
  */
 async function readBalance(token: string): Promise<number | null> {
   try {
@@ -315,7 +315,7 @@ function fullPostText(tweet: ApiTweet): { text: string; truncated: boolean } {
  * A count is a **price estimate and never a completion check**: on 2026-09-21
  * `counts` reported 28 for the window and the search returned 25 distinct
  * posts. Deleted posts and protected accounts sit in the gap, so a sweep that
- * pages until it reaches the advertised number pages forever (`docs/X-API.md §17`).
+ * pages until it reaches the advertised number pages forever (`docs/PROVIDERS.md`).
  *
  * **One response covers at most 31 days** (measured 2026-09-23, at $0.01 a
  * request). This used to read the first page only, so a window longer than a
@@ -355,7 +355,7 @@ async function sizeWindow(token: string, since: string): Promise<number> {
     if (bucket.tweet_count > 0) console.log(`  ${bucket.start.slice(0, 10)}  ${bucket.tweet_count}`);
   }
 
-  // Authors ~= 0.85 x posts, measured across both tracks (docs/X-API.md §11).
+  // Authors ~= 0.85 x posts, measured across both tracks (docs/PROVIDERS.md).
   const posts = total * 0.005;
   const users = Math.round(total * 0.85) * 0.01;
   console.log(
@@ -410,7 +410,7 @@ async function sweep(
      * barely repeats — 245 user objects for 242 distinct authors on the full
      * run — so the expansion costs ~1% over a batched lookup and no candidate
      * can be judged without it. Track B pages dozens of times, where the same
-     * economy runs the other way (docs/X-API.md §12).
+     * economy runs the other way (docs/PROVIDERS.md).
      */
     const body = await fetchJson<SearchPage>(url, token, `search-all-page-${page + 1}`);
     pages.push(body);
@@ -446,7 +446,7 @@ async function sweep(
 
     pageToken = body.meta?.next_token;
     if (!pageToken) break;
-    // The quote endpoint re-issues a token forever (docs/X-API.md §17). Search
+    // The quote endpoint re-issues a token forever (docs/PROVIDERS.md). Search
     // has not been seen to, but the same guard costs nothing and the failure it
     // prevents is an entire rate window.
     barren = fresh === 0 ? barren + 1 : 0;

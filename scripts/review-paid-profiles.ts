@@ -3,7 +3,7 @@
  *
  * Re-reads every profile this project has already paid for and reports the ones
  * a human should look at. **Makes no network request of any kind** — it is the
- * "the data is bought, the reading is free" pass (`docs/WORKPLAN.md` B10).
+ * "the data is bought, the reading is free" pass.
  *
  * Why it exists as a script rather than a one-off: `research/` grows every sweep,
  * and the review criteria have already changed twice. A stored pass can be re-run
@@ -191,7 +191,7 @@ function main(): void {
   console.log(
     "A register match is a reason to look, not a verification — names collide, and the\n" +
       "historical register holds twelve thousand people. Confirm identity from independent\n" +
-      "sources before writing anything (docs/X-API.md §9 step 4). Nothing was written to data/.",
+      "sources before writing anything (docs/PROVIDERS.md). Nothing was written to data/.",
   );
 }
 

@@ -17,7 +17,7 @@
  *   `note_tweet`. It was ignored, the full text of 34 posts was discarded, and
  *   the absence was written up as "the field is unpopulated on this tier". It
  *   was not: we were asking wrong. One maintainer decision was reversed when the
- *   text came back (`docs/X-API.md §13`).
+ *   text came back (docs/PROVIDERS.md).
  * - `expansions=referenced_tweets.id` in `enrich:twitter` was ignored for the
  *   same reason — the spec names it `referenced_posts`. Harmless only because
  *   nothing read the result.
@@ -25,17 +25,27 @@
  * A human cannot catch this by reading the code, because the wrong spelling
  * looks exactly like the right one. The spec can.
  *
- * **The spec is gitignored** (`research/`, a paid-data directory), so this test
- * skips rather than fails when it is absent. That is deliberate: a contributor
- * without the file should not see a red suite, and the check is a guard for the
- * maintainer who spends the money, not a contract for the site.
+ * **The spec.** `https://api.x.com/2/openapi.json` is public and free, no
+ * authentication required (verified 2026-09-23: HTTP 200, OpenAPI 3.0.0,
+ * version 2.168, 159 paths). CI downloads it fresh on every run and passes its
+ * path via `X_OPENAPI_SPEC`, so a field the vendor renames fails CI on
+ * purpose rather than going stale silently — see `.github/workflows/ci.yml`.
+ * Locally, with no env var set, this test falls back to a dated local copy
+ * under `research/` (gitignored, a paid-data directory) and skips if that
+ * copy is absent too: a contributor without the file should not see a red
+ * suite. But if `X_OPENAPI_SPEC` **is** set and the file it names is missing
+ * or unparsable, the test fails rather than skips — CI must never silently
+ * skip the one guard that catches a renamed field before it costs money.
  * ---------------------------------------------------------------------------
  */
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
-const SPEC = resolve(process.cwd(), "research", "x-api-2026-09-20", "openapi.json");
+const EXPLICIT_SPEC = process.env.X_OPENAPI_SPEC;
+const SPEC = EXPLICIT_SPEC
+  ? resolve(EXPLICIT_SPEC)
+  : resolve(process.cwd(), "research", "x-api-2026-09-20", "openapi.json");
 const SCRIPTS = resolve(process.cwd(), "scripts");
 
 /**
@@ -47,7 +57,7 @@ const SCRIPTS = resolve(process.cwd(), "scripts");
  * check waved through `post.fields=author_id` — a value the Post vocabulary
  * carries as an *expansion*, never a field. That is precisely the silent-200
  * class this file exists to catch, and on 2026-09-21 it cost a billed page that
- * reported zero quotes (`docs/X-API.md §16`). Removed: the spec's own enums
+ * reported zero quotes (docs/PROVIDERS.md). Removed: the spec's own enums
  * already accept both under the vocabulary that has them.
  */
 const DEFAULT_FIELDS = new Set(["id", "text", "username"]);
@@ -56,9 +66,32 @@ interface Spec {
   paths: Record<string, { get?: { parameters?: unknown[] } }>;
 }
 
+/**
+ * `null` means "skip" and is only reachable with no `X_OPENAPI_SPEC` set: a
+ * contributor without the paid-data directory should see a skipped suite, not
+ * a red one. Once `X_OPENAPI_SPEC` is set — which CI always does, from a spec
+ * it just downloaded fresh — a missing or unparsable file is not a reason to
+ * skip, it is the check failing to run at all, so this throws instead.
+ */
 function loadSpec(): Spec | null {
-  if (!existsSync(SPEC)) return null;
-  return JSON.parse(readFileSync(SPEC, "utf-8")) as Spec;
+  if (!existsSync(SPEC)) {
+    if (EXPLICIT_SPEC) {
+      throw new Error(
+        `X_OPENAPI_SPEC was set to "${EXPLICIT_SPEC}" but no file exists at "${SPEC}".`,
+      );
+    }
+    return null;
+  }
+  try {
+    return JSON.parse(readFileSync(SPEC, "utf-8")) as Spec;
+  } catch (error) {
+    if (EXPLICIT_SPEC) {
+      throw new Error(
+        `X_OPENAPI_SPEC points at "${SPEC}", which did not parse as JSON: ${(error as Error).message}`,
+      );
+    }
+    return null;
+  }
 }
 
 /**

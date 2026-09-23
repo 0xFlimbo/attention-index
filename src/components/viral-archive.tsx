@@ -7,8 +7,8 @@ import { SectionEyebrow } from "./section-eyebrow";
 /**
  * docs/HOMEPAGE.md §10 — Viral Archive (section 07, thematic eyebrow "04").
  * Approved copy verbatim. No filters here — the homepage only ever shows
- * `HOMEPAGE_ARCHIVE_ROW_COUNT` of the strongest rows; `/archive` (B3, same
- * batch) is the full, filterable database view. Server Component: nothing
+ * `HOMEPAGE_ARCHIVE_ROW_COUNT` of the strongest rows; `/archive` is the full,
+ * filterable database view. Server Component: nothing
  * here needs client interaction, so none is added.
  */
 interface ViralArchiveProps {

@@ -8,8 +8,8 @@
  * entries, each holding three inner `<div>`s (publication + date, title, factual context —
  * the "major coverage" variant adds a leading badge `<div>`, handled below). That
  * structure is regular enough to parse with a small amount of targeted regex; cheerio /
- * a scraping framework was not needed and was not installed (docs/ENGINEERING.md §13,
- * §28 — dependency gate).
+ * a scraping framework was not needed and was not installed (docs/ENGINEERING.md §1,
+ * "Dependency gate").
  *
  * Every new record is written with `status: "needs_review"` and `verified_at: null`
  * (docs/DATA.md §3) — none of this counts toward public metrics until a maintainer
@@ -163,8 +163,8 @@ function extractAuthor(context: string): { author: string | null; context: strin
 
 /**
  * The press page describes its own coverage in first person ("our investigation",
- * "embeds our @LayoffAI post"). This site is independent of LayoffHedge (AGENTS.md §5,
- * docs/EDITORIAL.md §2 "possessive framing"), so a mechanical, conservative substitution
+ * "embeds our @LayoffAI post"). This site is independent of LayoffHedge
+ * (docs/EDITORIAL.md §2, "possessive framing"), so a mechanical, conservative substitution
  * removes the possessive without rewriting or reinterpreting the underlying claim.
  */
 function normalizeVoice(context: string): string {
@@ -202,7 +202,7 @@ function detectReferenceType(url: string, outlet: string, title: string, context
 async function fetchPressPage(): Promise<{ ok: true; html: string } | { ok: false; reason: string }> {
   try {
     const response = await fetch(PRESS_URL, {
-      headers: { "User-Agent": "Mozilla/5.0 (compatible; LayoffHedgeAttentionIndex/1.0; +https://github.com)" },
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; LayoffHedgeAttentionIndex/1.0; +https://github.com/0xFlimbo/attention-index)" },
     });
     if (!response.ok) {
       return { ok: false, reason: `HTTP ${response.status} ${response.statusText}` };
@@ -301,7 +301,7 @@ async function main(): Promise<void> {
     const context = normalizeVoice(contextAfterAuthor);
     const referenceType = detectReferenceType(card.url, outlet, card.title, card.context);
 
-    // docs/DATA.md §7 (B13): the press page writes provenance into the outlet
+    // docs/DATA.md §7: the press page writes provenance into the outlet
     // name ("Inkl (via IBTimes UK)"). That belongs in `provenance` /
     // `syndicated_from`, not in a publication name — docs/EDITORIAL.md §5
     // requires the outlet's standard public form — so the suffix is split off
@@ -327,10 +327,10 @@ async function main(): Promise<void> {
       country: null,
       // Imported records land unverified, so provenance stays undetermined
       // unless the outlet name itself already stated it. Determining it for
-      // the rest is part of reading the article (docs/WORKPLAN.md B14).
+      // the rest is part of reading the article (docs/DATA.md §7).
       provenance: syndicatedFrom === null ? null : "syndicated",
       syndicated_from: syndicatedFrom,
-      // Same rule for the cited work (B16): the press card says a piece exists,
+      // Same rule for the cited work (docs/DATA.md §7): the press card says a piece exists,
       // never which of LayoffHedge's works it used. Reading that off a card
       // would be a guess, so it stays undetermined until the article is read.
       cited_work: null,

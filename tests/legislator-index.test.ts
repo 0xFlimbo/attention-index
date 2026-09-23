@@ -1,5 +1,5 @@
 /**
- * The legislator register matcher (docs/WORKPLAN.md B10, Track B).
+ * The legislator register matcher (Track B).
  *
  * The cases below are the real ones. Every handle, display name and account id
  * here is taken from `data/amplifications.json` or from the 2026-09-21

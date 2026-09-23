@@ -50,8 +50,8 @@ export function EvidenceBlock({
           (7–12) share one 12-column row. Without it the panel is 1376px wide
           at 1440 while its content sits in a ~672px column on the left, which
           is the "narrow column beside a void" docs/DESIGN.md §5 rules out for
-          a key section — the same correction, for the same reason, as the B2
-          hero and the B4 Crossover diagram. Below `lg` everything stacks in
+          a key section — the same correction, for the same reason, as the hero
+          and the Crossover diagram above. Below `lg` everything stacks in
           DOM order: statement, table, CTAs.
         */}
         <div className="lg:grid lg:grid-cols-12 lg:gap-x-12">

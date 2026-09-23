@@ -8,11 +8,11 @@ import { ProseSection } from "@/components/prose-section";
 import { ExternalArrow } from "@/components/external-arrow";
 
 /**
- * docs/WORKPLAN.md B6 — real content, replacing the B2 placeholder. Title
+ * Route metadata: real content, replacing the earlier placeholder copy. Title
  * stays short; `src/app/layout.tsx`'s template appends the site suffix,
- * reproducing the exact string this route shipped before B6.
+ * reproducing the exact string this route has always shipped.
  *
- * `images` explicit (B9) — see `src/app/archive/page.tsx`'s comment: a route
+ * `images` explicit — see `src/app/archive/page.tsx`'s comment: a route
  * that declares its own `openGraph`/`twitter` object replaces the root's
  * already-resolved image rather than extending it, so every such route
  * repeats the pointer.
@@ -111,7 +111,7 @@ export default function AboutPage() {
           {/*
             `.text-metadata`, not `.text-body`: this is a CTA in the same register
             as /evidence's CONTRIBUTE DATA / SUBMIT A CORRECTION row, not a
-            sentence. It shipped at body size and was flagged at the B9 visual
+            sentence. It shipped at body size and was flagged at a later visual
             review, where it stood out once the CTA block moved to /evidence and
             left it alone here.
           */}
@@ -154,7 +154,7 @@ export default function AboutPage() {
               so the line keeps its size beside its siblings and the value
               stays verbatim. Same class, same reason, as the record ids on
               `/evidence`; a `normal-case` utility would lose here, exactly as
-              it did in B5.
+              it has before.
             */}
             <li className="text-ink-soft">
               Official X account:{" "}

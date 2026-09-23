@@ -102,7 +102,7 @@ describe("selectPublicationReferences — grouping and counts", () => {
  * These fixtures are all `provenance: "original"` and unfeatured, so the
  * original count equals the total and the featured key ties — they exercise
  * the reference-count key and the two tie-breaks below it. The provenance
- * and featured keys (2 and 3 after B19) have their own cases in
+ * and featured keys have their own cases in
  * `tests/media-contract.test.ts`.
  */
 describe("selectPublicationReferences — ordering", () => {
@@ -165,9 +165,9 @@ describe("selectPublicationReferences — ordering", () => {
 
 describe("selectPublicationReferences — real dataset", () => {
   /*
-   * Converted from literals at B10 (docs/WORKPLAN.md, "value-pinned tests").
-   * `51 groups / 94 references / top group 17` went red on B10's first media
-   * record. `tests/frozen-dataset.test.ts` keeps those numbers against the frozen
+   * Converted from literal figures to relationship assertions.
+   * `51 groups / 94 references / top group 17` went red on the first sweep-added
+   * media record. `tests/frozen-dataset.test.ts` keeps those numbers against the frozen
    * 2026-09-20 fixture; the live file is asserted by relationship.
    *
    * The invariant: grouping is a partition. Every eligible reference lands in
@@ -191,8 +191,8 @@ describe("selectPublicationReferences — real dataset", () => {
   });
 
   /*
-   * The B19 guard, on the real file rather than on fixtures: the defect this
-   * batch fixed was only ever visible at 51 rows. Nothing about the number of
+   * The ordering guard, on the real file rather than on fixtures: the defect
+   * it catches was only ever visible at 51 rows. Nothing about the number of
    * references is asserted here — only that the column the reader actually
    * sees never steps back up.
    */
@@ -207,16 +207,17 @@ describe("selectPublicationReferences — real dataset", () => {
 
   it("orders a group on its reference count alone, not on how many are originals", () => {
     /*
-     * The B19 defect, stated as the property rather than as two positions.
+     * The ordering defect, stated as the property rather than as two positions.
      *
      * It was pinned as `indexOf("Inkl") === 1` and `Alex Jones Live` above
      * `The National Pulse`. The first still holds; the second was a 3-vs-2
-     * comparison and B10 gave The National Pulse its third reference, making it
-     * a tie and the assertion a statement about the tie-break. That is a real
-     * change in the data, not a regression, and pinning a pair of names was the
-     * wrong way to hold the rule — a dataset-widening batch moves those names.
+     * comparison and a later sweep gave The National Pulse its third reference,
+     * making it a tie and the assertion a statement about the tie-break. That
+     * is a real change in the data, not a regression, and pinning a pair of
+     * names was the wrong way to hold the rule — a dataset-widening sweep moves
+     * those names.
      *
-     * What B19 actually fixed: Inkl printed 8 references and sat at row 43,
+     * What this actually fixed: Inkl printed 8 references and sat at row 43,
      * below thirty-odd rows printing "1 reference", because ordering had been
      * keyed on originals. So the invariant is that ordering follows the count
      * the reader is shown, and a group of republications ranks on it exactly

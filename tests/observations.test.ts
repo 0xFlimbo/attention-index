@@ -7,7 +7,7 @@ import { compareArchiveOrder } from "../src/lib/metrics/archive";
 import { getPosts } from "../src/lib/data/posts";
 
 /**
- * docs/WORKPLAN.md B18 — the append-only observation history. Covers the
+ * docs/DATA.md §5 — the append-only observation history. Covers the
  * schema rules that keep "the latest observation" well defined, the selector
  * every derived metric now goes through, and the mixed-precision case the
  * batch exists to handle.
@@ -154,7 +154,7 @@ describe("latestObservation", () => {
   });
 
   it("does not prefer an API reading over a more recent interface reading", () => {
-    // The B18 trap, on the real numbers: 427,443 read from the API, then
+    // The mixed-precision trap, on the real numbers: 427,443 read from the API, then
     // 427,000 read off the interface two days later. The published figure is
     // the later one — it is not a decline, it is a rounded reading of the same
     // counter, and it is paired with its own date.

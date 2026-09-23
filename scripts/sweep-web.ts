@@ -15,7 +15,7 @@
  * raw folder and `--since-last` state; everything below applies to both unless
  * it names one.
  *
- * **B11's discovery half** (docs/WORKPLAN.md B11, docs/ENGINEERING.md §21):
+ * **The web-search discovery half** (docs/ENGINEERING.md §21):
  * ask a web-search index which pages name this project or carry the claims its
  * work produced, diff every returned URL against `data/media.json`, and hand a
  * human a queue of pages to read. Nothing in this repo queried a search engine
@@ -43,7 +43,7 @@
  * the price of a sweep. Set a cap in the vendor dashboard as well; a script's
  * ceiling protects against this script only.
  *
- * **Metering, in the shape `docs/X-API.md §1` requires.** There is no balance
+ * **Metering, in the shape `docs/PROVIDERS.md` requires.** There is no balance
  * endpoint here, so the meter is what the response itself reports: every
  * response's headers are archived, and the rate-limit/quota headers are
  * printed before and after the run. **Those header names are not yet verified
@@ -56,7 +56,7 @@
  * **The vendor publishes no OpenAPI specification.** Six candidate paths were
  * probed on 2026-09-22 and every one 404s or 403s; the reference site is an
  * application that embeds no spec URL, and the vendor's own skills repository
- * carries prose files rather than a schema. So the rule `docs/X-API.md §0`
+ * carries prose files rather than a schema. So the rule `docs/PROVIDERS.md`
  * sets — read the spec, believe it over our notes — has nothing to point at
  * here, and the nearest thing is kept instead: dated copies of the vendor's
  * own parameter reference in
@@ -200,7 +200,8 @@ const maxPages = Math.min(Number(flagValue("pages") ?? vendor.defaultPages), 10)
 /**
  * Restrict each query to what is new since that query was last swept.
  *
- * This is the cadence lever B12 needs: the first sweep pays for the back
+ * This is the cadence lever the periodic manual refresh routine
+ * (docs/ENGINEERING.md §22) needs: the first sweep pays for the back
  * catalogue, every later one pays only for the delta. A query the state has
  * never seen — new, or reworded since — is swept unrestricted anyway, because
  * a window applied to a query that has never seen the archive reports a clean
@@ -254,7 +255,7 @@ interface BraveResponse {
    * The news vertical, read as well as `web`. A media-citation sweep is
    * looking for articles, and the vendor returns news results in their own
    * array rather than inside `web.results` — reading only `web` would drop
-   * exactly the population B11 exists to find.
+   * exactly the population this sweep exists to find.
    */
   news?: { results?: BraveResult[] };
 }
@@ -448,7 +449,7 @@ async function runQuery(
    * - `count` is capped at 20 by the vendor, which is why `resultCount` is.
    * - `spellcheck` is a boolean and is sent as `false`, not `0`. An unknown
    *   *value* is the class of bug that cost this project a paid page on the
-   *   other API (`docs/X-API.md §16`), and "0" is not in the documented set.
+   *   other API (`docs/PROVIDERS.md`), and "0" is not in the documented set.
    * - `text_decorations=false` strips the highlight markers the vendor
    *   otherwise injects into `description`. They are markup inside the text
    *   this sweep string-matches, so leaving them on corrupts the input.

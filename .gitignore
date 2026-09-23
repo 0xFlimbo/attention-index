@@ -32,3 +32,7 @@ coverage/
 # Paid API data and research working files. NOT a cache - see research/README.md.
 # Raw third-party dumps holding hundreds of public profiles; the verified records go to data/.
 /research/
+
+# Design direction images supplied at the start: LayoffHedge's own branded graphics.
+# Kept on disk as reference, never redistributed from this repository.
+/references/

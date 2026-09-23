@@ -17,8 +17,6 @@
     "sweep:quotes": "tsx scripts/sweep-quote-tweets.ts",
     "check:visual": "node scripts/visual-check.mjs",
     "review:profiles": "tsx scripts/review-paid-profiles.ts",
-    "refetch:truncated": "tsx scripts/refetch-truncated-posts.ts",
-    "probe:fields": "tsx scripts/probe-field-parameter.ts",
     "sweep:mentions": "tsx scripts/sweep-mentions.ts",
     "sweep:web": "tsx scripts/sweep-web.ts",
     "refresh:metrics": "tsx scripts/refresh-post-metrics.ts"

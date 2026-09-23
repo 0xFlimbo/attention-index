@@ -27,7 +27,7 @@ export interface EvidenceRecordRowData {
    * "VIEW SOURCE" | "VIEW EVIDENCE" — docs/EDITORIAL.md §9 approved CTA
    * vocabulary. The label carries no glyph: the row appends `<ExternalArrow />`
    * itself, so the `↗` is aria-hidden rather than baked into a string a screen
-   * reader would read out as a character (B9 accessibility pass).
+   * reader would read out as a character (fixed at an accessibility pass).
    */
   linkLabel: string;
 }
@@ -37,7 +37,7 @@ export interface EvidenceRecordRowData {
  * its own `observed_at`, never the record's `published_at`.
  */
 export function toPostEvidenceRow(post: Post): EvidenceRecordRowData {
-  // B18 — the latest of the post's observations, the same one every derived
+  // docs/DATA.md §5 — the latest of the post's observations, the same one every derived
   // metric reads, so this row can never print a figure the homepage does not
   // also use.
   const observation = latestObservation(post);
@@ -76,10 +76,10 @@ export function toAmplificationEvidenceRow(amplification: Amplification): Eviden
 /**
  * docs/ENGINEERING.md §7 — `author, country, context, logo, archive_url` are
  * all nullable; only non-null fields ever reach `meta`. This is the first
- * time media records reach the UI (B5), so there is no established display
+ * time media records reach the UI, so there is no established display
  * shape to reuse.
  *
- * `mediaReferenceDescriptors` appends the B13 attributes (newsroom country,
+ * `mediaReferenceDescriptors` appends the docs/DATA.md §7 attributes (newsroom country,
  * the outlet a republication credits, and the featured criterion stated as
  * the fact it stands for). `/evidence` is the ledger where every verified
  * record is auditable, so a syndicated record appears here in full rather
@@ -105,7 +105,7 @@ export function toMediaEvidenceRow(reference: MediaReference): EvidenceRecordRow
 /**
  * Neutral, capitalized display labels for `MediaReferenceType` —
  * docs/EDITORIAL.md §9. Exported (not module-private) because
- * `MediaReferenceRow` (B8) needs the same labels for its expanded panel —
+ * `MediaReferenceRow` needs the same labels for its expanded panel —
  * one definition, not a second copy.
  */
 export const REFERENCE_TYPE_LABELS: Record<MediaReference["reference_type"], string> = {

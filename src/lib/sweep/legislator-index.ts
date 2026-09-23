@@ -1,6 +1,6 @@
 /**
  * Matching a quoting account against the public register of U.S. legislators
- * (docs/WORKPLAN.md B10, Track B).
+ * (Track B).
  *
  * Pure, like `quote-candidates.ts`: it takes CSV text and returns an index, so
  * the script owns the file reading and this can be tested without touching disk.
@@ -27,13 +27,13 @@
  * one thing about them that a register can rely on.
  *
  * This is why a handle miss means nothing at all, and is never evidence that an
- * account is not an officeholder (`docs/X-API.md §7`).
+ * account is not an officeholder (`docs/PROVIDERS.md`).
  * ---------------------------------------------------------------------------
  *
  * **A match is a reason to look, never a verification.** Names collide, and the
  * historical register runs to twelve thousand people since 1789, so an ordinary
  * member of the public can share a name with a nineteenth-century congressman.
- * `docs/X-API.md §9` step 4 still applies without exception: identity is
+ * `docs/PROVIDERS.md` still applies without exception: identity is
  * confirmed by independent sources, off-API, by a human.
  */
 

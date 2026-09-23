@@ -15,7 +15,7 @@ import { ExternalArrow } from "./external-arrow";
  *
  * `DATA` links to the repository’s `data/` directory — the raw-data
  * destination docs/HOMEPAGE.md §14 always intended. It stood in at `/archive`
- * only while `repository_url` was `null` (B5 sign-off, explicitly temporary);
+ * only while `repository_url` was `null` (explicitly temporary);
  * that stand-in expired when the repository was published. The `/archive`
  * branch is kept for the null case so the footer never renders a broken link
  * against a dataset without a repository.
@@ -102,8 +102,8 @@ export function Footer({ project }: FooterProps) {
               SOURCES
             </Link>
             {/*
-              Not in docs/HOMEPAGE.md §14's original link list — added at the B5
-              sign-off and written back into §14. `/about` is a real route with no
+              Not in docs/HOMEPAGE.md §14's original link list — added later
+              and written back into §14. `/about` is a real route with no
               inbound link anywhere else: docs/HOMEPAGE.md §3 fixes the nav at
               ATTENTION / CROSSOVER / ARCHIVE / SOURCES / GITHUB, so the footer is
               the only site-map surface that can reach it.

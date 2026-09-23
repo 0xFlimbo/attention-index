@@ -9,13 +9,14 @@
  * **Strictly read-only.** It fetches each selected page and reports whether the
  * page's own text names this project. It never writes to `data/` — promotion
  * stays a human edit, and a discovery sweep is exactly where the temptation to
- * auto-promote would do the most damage (docs/WORKPLAN.md B11).
+ * auto-promote would do the most damage.
  *
  * **Two inputs, one core.** Records already in `data/media.json` (by status or
  * id), or a plain list of URLs that are in no file yet (`--urls`). The second
- * mode is what B11's web sweep hands off to, and what B14 wrote two throwaway
- * scripts to do because it did not exist. The fetch-and-detect half both modes
- * share lives in `src/lib/sweep/page-probe.ts`; what counts as a mention lives
+ * mode is what the web-search discovery sweep hands off to (docs/ENGINEERING.md
+ * §21), and what two throwaway scripts once did because it did not exist. The
+ * fetch-and-detect half both modes share lives in `src/lib/sweep/page-probe.ts`;
+ * what counts as a mention lives
  * in `src/lib/sweep/mention-patterns.ts`.
  *
  * **A hit is not a verification, and the report says so on every line.** It

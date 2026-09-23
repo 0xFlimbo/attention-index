@@ -5,8 +5,8 @@
  *
  * ---------------------------------------------------------------------------
  * **Why there are two, and why they sit side by side rather than one replacing
- * the other.** Measured 2026-09-23 (`docs/WORKPLAN.md` B11, "The Serper
- * experiment"): of Brave's six real or calibration finds, Google returned one;
+ * the other.** Measured 2026-09-23: of Brave's six real or calibration finds,
+ * Google returned one;
  * Google News returned one citing publication Brave never did. Neither index
  * contains the other on this project's long tail. Brave's web search stays the
  * default; Serper's `/news` runs alongside it, and Google web search is not

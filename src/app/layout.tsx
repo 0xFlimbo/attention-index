@@ -24,7 +24,7 @@ const plexMono = IBM_Plex_Mono({
  * only applies to a route that sets its own (short) `title`, letting every
  * other route (`/archive`, `/evidence`, `/methodology`, `/about`) keep the
  * same "<Page> — LayoffHedge Attention Index" shape without repeating the
- * suffix in five places. `metadataBase` (B9) resolves every route's relative
+ * suffix in five places. `metadataBase` resolves every route's relative
  * OG/Twitter URLs — including the `opengraph-image.tsx` / `twitter-image.tsx`
  * routes — against `SITE_URL`, the single source of truth for the canonical
  * deployment URL (`src/lib/site-url.ts`).

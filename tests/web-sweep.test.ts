@@ -1,5 +1,5 @@
 /**
- * The decisions B11's web sweep makes before a human spends time on a result
+ * The decisions the web sweep makes before a human spends time on a result
  * (`src/lib/sweep/web-search-results.ts`, `src/lib/sweep/url-list.ts`,
  * `src/lib/sweep/web-queries.ts`, `docs/ENGINEERING.md §21`).
  *
@@ -100,7 +100,7 @@ describe("classifyResult", () => {
 
   it("leaves a syndicating outlet a candidate — a syndication is still a record", () => {
     // NewsBreak carries The American Bazaar's Trine piece: syndicated under
-    // B13's contract, not a link surface. Blanket-excluding the host would
+    // the media record contract (docs/DATA.md §7), not a link surface. Blanket-excluding the host would
     // have lost one of the two candidates the 2026-09-22 probe confirmed.
     expect(classifyResult(result("https://www.newsbreak.com/news/trine-1234"), known).verdict).toBe(
       "candidate",

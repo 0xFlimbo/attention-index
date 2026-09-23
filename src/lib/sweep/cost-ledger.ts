@@ -19,7 +19,7 @@
  *
  * **The modelled cost is labelled as modelled, everywhere.** This vendor
  * publishes no balance endpoint, so nothing here is a meter reading in the
- * sense `docs/X-API.md §1` means it. The honest shape is: record what was
+ * sense `docs/PROVIDERS.md` means it. The honest shape is: record what was
  * asked, record what the response said about our quota, multiply by the
  * published unit price, and never call the product a measurement.
  * ---------------------------------------------------------------------------

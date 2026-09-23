@@ -5,8 +5,8 @@
  * and `robots.ts` all read this one constant rather than each hardcoding or
  * re-deriving the URL.
  *
- * Falls back to the canonical Vercel deployment confirmed at the B9 maintainer
- * decision (`docs/WORKPLAN.md`, open question 6) — never an invented domain.
+ * Falls back to the canonical Vercel deployment confirmed at a maintainer
+ * decision — never an invented domain.
  * A future custom domain (`attentionindex.org`, unregistered as of this date)
  * is a one-variable swap: set `NEXT_PUBLIC_SITE_URL` and nothing here changes.
  *

@@ -66,9 +66,9 @@ describe("selectCrossoverCategories — real dataset", () => {
     }
     // The complement of the check above, and the reason this assertion is a
     // relationship rather than the list of four categories it used to name:
-    // B10's sweep exists to put records into journalism, media and business,
-    // so a literal set here fails on exactly the record the batch is hunting
-    // for (docs/WORKPLAN.md B10-B12). The dated literal is kept against frozen
+    // A discovery sweep exists to put records into journalism, media and business,
+    // so a literal set here fails on exactly the record such a sweep is hunting
+    // for. The dated literal is kept against frozen
     // input in `tests/frozen-dataset.test.ts`.
     const nonEmpty = amplificationCategoryEnum.options.filter(
       (category) =>

@@ -4,8 +4,8 @@ import { dataLastUpdated } from "@/lib/metrics/last-updated";
 import { SITE_URL } from "@/lib/site-url";
 
 /**
- * docs/ENGINEERING.md §6 — "Sitemap covers the five routes." Deferred from B6
- * to B9 because it needs an absolute canonical URL (`SITE_URL`), which did not
+ * docs/ENGINEERING.md §6 — "Sitemap covers the five routes." Deferred until
+ * it needs an absolute canonical URL (`SITE_URL`), which did not
  * exist until the Vercel deployment target was confirmed. No invented routes:
  * exactly the five real ones this site ships (`docs/ENGINEERING.md §6`'s own
  * route table) — no `/methodology#anchor`-style entries, no route that

@@ -3,8 +3,8 @@
 Owns: visual identity, tokens, typography, layout, component styling, motion, accessibility.
 (Consolidated from `DESIGN_SYSTEM.md`, kept in `docs/archive/`.)
 
-Visual references: `references/visual/*.jpg` — warm cream, near-black type, selective warm red,
-large editorial headlines, thin rules, simple infographics. They are direction, not shippable assets.
+Visual direction: warm cream, near-black type, selective warm red, large editorial headlines, thin
+rules, simple infographics.
 
 ---
 

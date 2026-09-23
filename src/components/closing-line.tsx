@@ -1,20 +1,19 @@
 import { ExternalArrow } from "./external-arrow";
 
 /**
- * docs/HOMEPAGE.md §13 — the closing line (section 10), shipped at B15. One
+ * docs/HOMEPAGE.md §13 — the closing line (section 10). One
  * factual statement and one link to the project this site measures, which
  * until now was reachable only from the footer and `/about`.
  *
- * **It is information, not a recommendation** (docs/WORKPLAN.md B15, and
- * `Decisions already made` item (c)). No imperative verb, no community
- * recruitment, no token, no purchase path: "join the community" is an implied
- * endorsement, which `CLAUDE.md §3` bans by name, and the site's growth
- * mechanism is being cited by journalists and researchers rather than
- * converting readers. The second sentence says where the destination is; it
- * never suggests going there.
+ * **It is information, not a recommendation** (docs/HOMEPAGE.md §13). No
+ * imperative verb, no community recruitment, no token, no purchase path:
+ * "join the community" is an implied endorsement, which docs/PRODUCT.md §18
+ * rules out, and the site's growth mechanism is being cited by journalists
+ * and researchers rather than converting readers. The second sentence says
+ * where the destination is; it never suggests going there.
  *
- * Three calls made with the maintainer at the B15 plan, so they are not
- * re-derived from the section sketch:
+ * Three calls made with the maintainer when this section was planned, so they
+ * are not re-derived from the section sketch:
  *
  * 1. **`OFFICIAL LAYOFFHEDGE ↗`, not `OFFICIAL PROJECT ↗`.** The batch title
  *    uses the latter, but the footer and `/about` already ship the former for

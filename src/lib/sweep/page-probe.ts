@@ -6,10 +6,10 @@
  * ---------------------------------------------------------------------------
  * **Why it left the script.**
  *
- * The tool could only probe records *already in* `data/media.json`. B14 needed
- * to probe five press cards and 23 outlet about-pages that were in no file
- * yet, and the answer was two throwaway scripts inside the batch, each
- * reimplementing this same direct→proxy fetch (`docs/WORKPLAN.md` B11). The
+ * The tool could only probe records *already in* `data/media.json`. An
+ * earlier session needed to probe five press cards and 23 outlet about-pages
+ * that were in no file yet, and the answer was two throwaway scripts, each
+ * reimplementing this same direct→proxy fetch. The
  * web sweep starts from URLs that are in no file by definition, so the third
  * reimplementation was already scheduled. This is the core both input modes
  * share; selecting the targets is the script's job and only that.

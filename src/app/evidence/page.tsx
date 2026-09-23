@@ -21,11 +21,11 @@ import {
 } from "@/components/evidence-record-row";
 
 /**
- * docs/WORKPLAN.md B6 — same title/OG treatment as `/archive`: a short
- * `title` that reproduces the pre-B6 string through the root layout's
- * `template`, plus OG/Twitter fields.
+ * Route metadata — same title/OG treatment as `/archive`: a short
+ * `title` that reproduces the string this route has always shipped, through
+ * the root layout's `template`, plus OG/Twitter fields.
  *
- * `images` explicit (B9) — see `src/app/archive/page.tsx`'s comment: a route
+ * `images` explicit — see `src/app/archive/page.tsx`'s comment: a route
  * that declares its own `openGraph`/`twitter` object replaces the root's
  * already-resolved image rather than extending it, so every such route
  * repeats the pointer.
@@ -167,8 +167,8 @@ export default function EvidencePage() {
               `max-w-prose` column with the right half of its row empty, while
               the record lists and the rule above it span all twelve columns —
               the "narrow column beside a void" docs/DESIGN.md §5 rules out, and
-              the same defect already corrected at the B2 hero, the B4 Crossover
-              diagram, the B5 Evidence panel and the B6 prose pages. The grid is
+              the same defect corrected elsewhere on the hero, the Crossover
+              diagram, the Evidence panel and the prose pages. The grid is
               inline rather than `ProseSection` itself because this section keeps
               a top rule separating it from the records, and widening that
               component API for one caller buys less than two class strings.

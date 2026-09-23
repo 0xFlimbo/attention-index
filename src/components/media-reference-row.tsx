@@ -13,7 +13,7 @@ export interface MediaReferenceEntryData {
   publishedAt: string;
   author: string | null;
   /**
-   * docs/WORKPLAN.md B13 — newsroom country, the outlet a republication
+   * docs/DATA.md §7 — newsroom country, the outlet a republication
    * credits, and the featured criterion, already resolved to words by
    * `mediaReferenceDescriptors` and joined into the same metadata line as
    * the type, date and author. Nothing here is a badge or a glyph.
@@ -66,7 +66,7 @@ interface MediaReferenceRowProps {
  * reasons: zero-JS, keyboard-accessible expansion, and nothing hover-only on
  * mobile (docs/HOMEPAGE.md §15).
  *
- * B13 leaves this summary line exactly as it was. The publication name and
+ * This summary line has always stayed exactly as it was. The publication name and
  * `N references` are unchanged, and the provenance and featured facts live
  * inside the panel instead: the right rail is `shrink-0 whitespace-nowrap`,
  * so anything added there widens a fixed column and is the first thing to
@@ -74,7 +74,7 @@ interface MediaReferenceRowProps {
  * (`selectPublicationReferences`) and by the words in each reference's own
  * metadata line — never by a marker on the row.
  *
- * Planner decision (B8 brief): no row-level `↗`. docs/HOMEPAGE.md §11's
+ * Planner decision: no row-level `↗`. docs/HOMEPAGE.md §11's
  * sketch shows one at the end of the publication line, but a publication
  * with more than one reference has no single correct destination — picking
  * one would silently misattribute the row to a single article. §11 itself

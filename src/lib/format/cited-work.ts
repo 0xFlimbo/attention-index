@@ -1,7 +1,7 @@
 import type { MediaCitedWork } from "@/schemas/media.schema";
 
 /**
- * docs/WORKPLAN.md B16 — the stored `cited_work` value as the reader's words.
+ * docs/DATA.md §7 — the stored `cited_work` value as the reader's words.
  * Storage is an enum because free text does not aggregate; this is the one
  * place that turns the enum back into English, so the same work is never
  * described two ways on two pages.

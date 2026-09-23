@@ -1,7 +1,7 @@
 /**
  * pnpm enrich:twitter [-- --dry-run]
  *
- * NOTE (B18): post readings live in `post.observations`, an append-only
+ * NOTE: post readings live in `post.observations`, an append-only
  * history, and this script never touches them. Refreshing them is
  * `pnpm refresh:metrics` (docs/ENGINEERING.md §22), which appends one
  * observation with `source: "api"` rather than overwriting the previous one.
@@ -71,7 +71,7 @@ const isDryRun = args.includes("--dry-run");
 const refreshMetrics = args.includes("--refresh-metrics");
 
 // ---------------------------------------------------------------------------
-// Stage B — human-authored post copy (docs/WORKPLAN.md B7, docs/ENGINEERING.md §12)
+// Stage B — human-authored post copy (docs/ENGINEERING.md §12)
 //
 // Written by reading each post's fetched tweet text (full text via `note_tweet`
 // where the tweet was longer than the classic 280-character view). Never

@@ -55,7 +55,7 @@ describe("selectDatasetSummary — real dataset", () => {
   });
 
   /*
-   * Converted from literals at B10 (docs/WORKPLAN.md, "value-pinned tests").
+   * Converted from literal figures to relationship assertions.
    * It read `103 raw records, 94 verified` and went red the moment a sweep added
    * one — the failure mode that makes a guard into an obstacle. The literals are
    * not gone: `tests/frozen-dataset.test.ts` still asserts 103 and 94 against the
@@ -125,7 +125,7 @@ describe("selectDatasetSummary — row order is independent of which datasets ha
   });
 
   /**
-   * The zero-count rule alongside a populated row. Until B17 the milestones row
+   * The zero-count rule alongside a populated row. At one point the milestones row
    * was the only zero in the real dataset and carried this assertion; every
    * dataset now has records, so the mixed case has to be constructed.
    */

@@ -289,7 +289,7 @@
     "featured": false,
     "logo": null,
     "archive_url": null,
-    "notes": "Archived at B14 review (open question 2): the reference is second-level. Breitbart embeds Rep. Brandon Gill's post, which quote-tweets the @LayoffAI card; Breitbart's own text never names the project, and the outlet's editorial act was choosing Gill's post, not LayoffHedge's. The event is recorded where it belongs, as the amplification amp-brandon-gill-2087634340632998361 against post-layoffai-2087170419027526094.",
+    "notes": "Archived on review (open question 2): the reference is second-level. Breitbart embeds Rep. Brandon Gill's post, which quote-tweets the @LayoffAI card; Breitbart's own text never names the project, and the outlet's editorial act was choosing Gill's post, not LayoffHedge's. The event is recorded where it belongs, as the amplification amp-brandon-gill-2087634340632998361 against post-layoffai-2087170419027526094.",
     "status": "archived",
     "verified_at": null
   },
@@ -1150,7 +1150,7 @@
     "featured": false,
     "logo": null,
     "archive_url": null,
-    "notes": "Archived at B14 close-out: the maintainer opened the page and there is no citation on it. The BeInCrypto original it syndicates does carry the embedded @LayoffAI post, but this republication dropped it, so the record asserts a reference the page does not contain.",
+    "notes": "Archived at close-out: the maintainer opened the page and there is no citation on it. The BeInCrypto original it syndicates does carry the embedded @LayoffAI post, but this republication dropped it, so the record asserts a reference the page does not contain.",
     "status": "archived",
     "verified_at": null
   },
@@ -1696,7 +1696,7 @@
     "featured": true,
     "logo": null,
     "archive_url": null,
-    "notes": "Verified by the maintainer in a browser, 2026-09-19. Country ES rests on the country parenthetical the press page carried (docs/WORKPLAN.md open question 12), not on a statement by the outlet — the weakest country basis in this dataset, and the only one of its kind.",
+    "notes": "Verified by the maintainer in a browser, 2026-09-19. Country ES rests on the country parenthetical the press page carried (open question 12), not on a statement by the outlet — the weakest country basis in this dataset, and the only one of its kind.",
     "status": "verified",
     "verified_at": "2026-09-19"
   },
@@ -1780,7 +1780,7 @@
     "featured": false,
     "logo": null,
     "archive_url": null,
-    "notes": "Archived at B14 review (open question 14): a link-roundup card listing layoffhedge.com/company/coinbase beside other outlets' stories. The page carries no reporting of its own, so it is neither original nor syndicated, and a link surface is not a publication reference.",
+    "notes": "Archived on review (open question 14): a link-roundup card listing layoffhedge.com/company/coinbase beside other outlets' stories. The page carries no reporting of its own, so it is neither original nor syndicated, and a link surface is not a publication reference.",
     "status": "archived",
     "verified_at": null
   },
@@ -1927,7 +1927,7 @@
     "featured": false,
     "logo": null,
     "archive_url": null,
-    "notes": "Archived at B14 review: the page is a user's meme repost of an @LayoffAI screenshot, posted by the account DankMemerr, not a reference published by an outlet.",
+    "notes": "Archived on review: the page is a user's meme repost of an @LayoffAI screenshot, posted by the account DankMemerr, not a reference published by an outlet.",
     "status": "archived",
     "verified_at": null
   },
@@ -2011,7 +2011,7 @@
     "featured": false,
     "logo": null,
     "archive_url": null,
-    "notes": "Archived at B14 review (open question 14): a distribution surface for a piece published elsewhere, carrying no reporting of its own, so neither provenance value describes it. The article's text is also not in the served page.",
+    "notes": "Archived on review (open question 14): a distribution surface for a piece published elsewhere, carrying no reporting of its own, so neither provenance value describes it. The article's text is also not in the served page.",
     "status": "archived",
     "verified_at": null
   },
@@ -2032,7 +2032,7 @@
     "featured": false,
     "logo": null,
     "archive_url": null,
-    "notes": "Archived at B14 review (open question 14): a distribution surface for a piece published elsewhere, carrying no reporting of its own, so neither provenance value describes it. The article's text is also not in the served page.",
+    "notes": "Archived on review (open question 14): a distribution surface for a piece published elsewhere, carrying no reporting of its own, so neither provenance value describes it. The article's text is also not in the served page.",
     "status": "archived",
     "verified_at": null
   },
@@ -2053,7 +2053,7 @@
     "featured": false,
     "logo": null,
     "archive_url": null,
-    "notes": "Archived at B14 close-out (maintainer's call): the page quotes an @LayoffAI reply among a round-up of reactions to an Elon Musk thread, rather than referencing the project's own data or reporting.",
+    "notes": "Archived at close-out (maintainer's call): the page quotes an @LayoffAI reply among a round-up of reactions to an Elon Musk thread, rather than referencing the project's own data or reporting.",
     "status": "archived",
     "verified_at": null
   },
@@ -2074,7 +2074,7 @@
     "featured": false,
     "logo": null,
     "archive_url": null,
-    "notes": "Archived at B14 review: a promotional profile of LayoffHedge in the site's newsroom placement section, bylined to the outlet itself and quoting the developer, rather than an outlet citing the project's data.",
+    "notes": "Archived on review: a promotional profile of LayoffHedge in the site's newsroom placement section, bylined to the outlet itself and quoting the developer, rather than an outlet citing the project's data.",
     "status": "archived",
     "verified_at": null
   },
@@ -2137,7 +2137,7 @@
     "featured": false,
     "logo": null,
     "archive_url": null,
-    "notes": "Archived at B14 close-out: the source URL returns page not found. A verified record requires a working source URL (docs/DATA.md §14), and no archive copy has been located.",
+    "notes": "Archived at close-out: the source URL returns page not found. A verified record requires a working source URL (docs/DATA.md §14), and no archive copy has been located.",
     "status": "archived",
     "verified_at": null
   },

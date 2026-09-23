@@ -23,7 +23,7 @@ import { ExternalArrow } from "./external-arrow";
  * both with `↗`, but `↗` is reserved sitewide for genuinely external links
  * (docs/DESIGN.md §6; the same rule `EvidenceBlock`, `ViralArchive` and
  * `PublicReferences` already apply, each with the identical comment). Fixed
- * at B9's accessibility pass: `METHODOLOGY` never leaves the site, so it is
+ * at an accessibility pass: `METHODOLOGY` never leaves the site, so it is
  * `METHODOLOGY →` to `/methodology`. `SOURCE DATA` mirrors `EvidenceBlock`'s
  * `VIEW DATA` exactly — external once `repositoryUrl` is published
  * (`${repositoryUrl}/tree/main/data`, `↗`), falling back to an internal

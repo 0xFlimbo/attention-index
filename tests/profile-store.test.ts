@@ -1,5 +1,5 @@
 /**
- * The paid-profile store (docs/WORKPLAN.md B10, Track B).
+ * The paid-profile store (Track B).
  *
  * A user read costs $0.010 and a follower count is an observation that cannot be
  * re-taken. These tests guard the two ways that money gets lost: a profile the
@@ -44,7 +44,7 @@ describe("collectUserObjects", () => {
 
   it("does not mistake an @-mention annotation for a profile", () => {
     /*
-     * The bug this file failed to catch, found 2026-09-21 (docs/X-API.md §17).
+     * The bug this file failed to catch, found 2026-09-21 (docs/PROVIDERS.md).
      *
      * `entities.mentions[]` carries `{ start, end, id, username }` — the exact
      * pair the scanner used to treat as proof of a user object. Once the sweep

@@ -214,12 +214,12 @@ const CLAIMS: SweepQuery[] = [
  * 8 in prose. The prose-dominant clusters are the ones the query set already
  * covers (`h1b_data` 9 of 14 prose, `layoff_data` 5 of 12). An embed puts the
  * name in a client-rendered card that is frequently not in the served HTML at
- * all, which is the same wall B14 hit when twelve records could not be read
+ * all, which is the same wall hit earlier when twelve records could not be read
  * from this environment.
  *
  * So a text-search index cannot reach this population **in principle**, not
  * for want of a better query. It is the web-sweep analogue of the split
- * `docs/X-API.md §4` already records: Track A finds those who cite in prose,
+ * `docs/PROVIDERS.md` already records: Track A finds those who cite in prose,
  * Track B finds those who quote in silence. **The instrument for the embed
  * population is the X API side, and it has already been run.**
  *

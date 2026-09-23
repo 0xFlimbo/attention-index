@@ -7,7 +7,7 @@ import { formatCountry } from "../src/lib/format/country";
 import { splitSyndicationSuffix } from "../src/lib/validation/publication-name";
 
 /**
- * docs/WORKPLAN.md B13 — the media record contract: `country`, provenance and
+ * docs/DATA.md §7 — the media record contract: `country`, provenance and
  * the `featured` criterion. Covers the schema rules that keep the contract
  * from being broken by hand-editing, the derived figures that depend on it,
  * and the ordering that carries prominence without a badge.
@@ -122,7 +122,7 @@ describe("mediaSchema — the featured criterion", () => {
   });
 });
 
-describe("getMediaMetrics — the B13 counting rule", () => {
+describe("getMediaMetrics — the counting rule", () => {
   const references = [
     makeMediaReference({
       id: "media-a",
@@ -200,7 +200,7 @@ describe("getMediaMetrics — the B13 counting rule", () => {
   });
 });
 
-describe("mediaSchema — the cited work (B16)", () => {
+describe("mediaSchema — the cited work", () => {
   it("accepts an undetermined cited work on a needs_review record", () => {
     const result = mediaSchema.safeParse(
       validMedia({
@@ -228,7 +228,7 @@ describe("mediaSchema — the cited work (B16)", () => {
   });
 });
 
-describe("getMediaMetrics — the cited-work split (B16)", () => {
+describe("getMediaMetrics — the cited-work split", () => {
   const references = [
     makeMediaReference({
       id: "media-a",
@@ -315,9 +315,9 @@ describe("getMediaMetrics — the cited-work split (B16)", () => {
 
 describe("selectPublicationReferences — prominence by ordering", () => {
   /*
-   * B19 revised these keys: the printed reference count is now key 1, above
-   * provenance and featured. The two assertions below were written at B13
-   * against the old order and are updated on purpose — provenance still
+   * A later revision changed these keys: the printed reference count is now
+   * key 1, above provenance and featured. The two assertions below were
+   * written against the old order and are updated on purpose — provenance still
    * carries prominence, but inside a tie in the printed number rather than
    * above it. The reasoning lives in `selectPublicationReferences` and in
    * docs/DATA.md §11.
@@ -366,7 +366,7 @@ describe("selectPublicationReferences — prominence by ordering", () => {
       }),
       makeMediaReference({ id: "media-c", publication: "Townhall", published_at: "2026-01-01" }),
     ]);
-    // The defect B19 exists to fix, at its smallest: a row printing
+    // The defect this guards against, at its smallest: a row printing
     // "2 references" must not sit below a row printing "1 reference".
     expect(groups.map((group) => group.publication)).toEqual(["Inkl", "Townhall"]);
     expect(groups.map((group) => group.references.length)).toEqual([2, 1]);
@@ -511,8 +511,8 @@ describe("media contract — real dataset", () => {
   });
 
   /*
-   * Converted from literals at B10 (docs/WORKPLAN.md, "value-pinned tests").
-   * It pinned `94 / 77 / 17 / 33 / 7`, so B10's first media record turned the
+   * Converted from literal figures to relationship assertions.
+   * The literals pinned `94 / 77 / 17 / 33 / 7`, and the first sweep-added media record turned the
    * suite red. The literals live on in `tests/frozen-dataset.test.ts` against the
    * frozen 2026-09-20 fixture; what belongs here is the arithmetic that has to
    * hold whatever the dataset grows to.

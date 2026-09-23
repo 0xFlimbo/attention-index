@@ -1,13 +1,13 @@
 /**
- * The decisions `scripts/sweep-quote-tweets.ts` makes about a quote post
- * (docs/WORKPLAN.md B10), kept here as pure functions so they can be tested
+ * The decisions `scripts/sweep-quote-tweets.ts` makes about a quote post,
+ * kept here as pure functions so they can be tested
  * without an API call. Nothing on the site imports this — it is maintenance-tool
  * logic, in `src/lib` for the same reason `src/lib/validation/placeholder.ts` is.
  *
  * These three functions decide what a human is asked to read. A silent bug in
  * any of them would either bury a real amplifier in noise or hand the maintainer
  * a record that was never the account's own act, which is the one failure this
- * project treats as worse than finding nothing (`CLAUDE.md §3`).
+ * project treats as worse than finding nothing (docs/EDITORIAL.md §5).
  */
 
 /** Only the fields the sweep reads, so the tool's API types stay in the script. */
@@ -153,7 +153,7 @@ export function knownAccountKeys(amplifications: AmplificationLike[]): Set<strin
 /**
  * Plain signals to read, never a ranking. There is deliberately no score and no
  * order of merit: this project does not invent Influence or Attention numbers
- * (`CLAUDE.md §3`), and a maintenance tool is not a licence to start.
+ * (docs/DATA.md §10), and a maintenance tool is not a licence to start.
  *
  * `verified_type` is checked only for `government`, the one value that names an
  * office. Measured 2026-09-20 across 105 quoting accounts, the field returned

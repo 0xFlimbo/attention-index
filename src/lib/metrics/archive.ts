@@ -18,7 +18,7 @@ import { latestObservation } from "@/lib/metrics/observation";
  * implementations agreeing today.
  */
 export function compareArchiveOrder(a: Post, b: Post): number {
-  // One agreed reading per post (B18): the comparator sorts on each post's
+  // One agreed reading per post (docs/DATA.md §5): the comparator sorts on each post's
   // latest observation, the same value the row prints and the same one
   // `getAttentionMetrics` sums.
   const aViews = latestObservation(a).views;

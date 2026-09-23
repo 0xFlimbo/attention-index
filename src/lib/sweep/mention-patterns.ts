@@ -7,7 +7,7 @@
  * `scripts/check-media-mentions.ts` looked for `layoffhedge` and `@?layoffai`
  * and nothing else. That list was derived from `data/media.json`, which is
  * derived from the official press page, so it was calibrated on the one sample
- * the web sweep exists to leave behind (`docs/WORKPLAN.md` B11).
+ * the web sweep exists to leave behind.
  *
  * The measurement, 2026-09-22: counted over `data/media.json`, `layoffhedge`
  * appears 83 times, `layoffai` 99, **`layoff hedge` zero** — while the best

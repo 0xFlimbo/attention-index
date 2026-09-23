@@ -1,7 +1,7 @@
 /**
  * pnpm check:production-data
  *
- * Production gate (docs/DATA.md §12, docs/CLAUDE.md §3): a build must never ship
+ * Production gate (docs/DATA.md §12): a build must never ship
  * visible placeholder data, headline metrics must never be computed from anything
  * other than verified, non-placeholder records, and required project metadata must
  * be present. Exits non-zero on any violation, reporting the exact file and record id.

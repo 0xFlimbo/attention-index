@@ -12,7 +12,7 @@
  * subject does double duty by making a hundred otherwise identical
  * "VIEW SOURCE" links distinguishable out of context.
  *
- * Added at B9's accessibility pass, which found the glyph exposed on all 138.
+ * Added at an accessibility pass, which found the glyph exposed on all 138.
  */
 export function ExternalArrow() {
   return <span aria-hidden="true">↗</span>;

@@ -9,7 +9,7 @@
  * a tracked post, drops the ones already recorded, and reports the rest as
  * candidates for a human to read. It never writes an amplification: promotion
  * is a human edit, and a discovery sweep is exactly where auto-promotion would
- * do the most damage (`docs/WORKPLAN.md` B10–B12).
+ * do the most damage.
  *
  * Why the batch exists: all four federal legislators in `data/amplifications.json`
  * surfaced by accident, one of them from a Breitbart embed. This makes the
@@ -51,8 +51,8 @@
  *    A retweet is also the wrong record on its own terms
  *    — it is someone else's quote post travelling, an act belonging to the
  *    account that wrote the quote, not to the account that passed it on. That is
- *    B14's standing rule: a surface that carries no act of its own is archived on
- *    sight, never fitted into a value that does not belong to it.
+ *    this project's standing rule: a surface that carries no act of its own is
+ *    archived on sight, never fitted into a value that does not belong to it.
  *
  * 4. **`verified_type` is not a public-role signal.** Across 105 distinct
  *    quoting accounts on that post it returned only `blue` (48) and `none` (57)
@@ -87,7 +87,7 @@
  * exactly like a post genuinely holding nobody. On a post chosen because
  * officeholders are expected, pass `--profiles 500`: it is a `slice`, so that is
  * a full pass. Keep the cap for exploratory sweeps where a zero is the expected
- * answer. See `docs/X-API.md §11–§12`.
+ * answer. See `docs/PROVIDERS.md`.
  *
  * That ranking signal is a property of the **post**, not of the person: it says
  * a quote travelled, never that its author matters. It exists only to order a
@@ -97,7 +97,7 @@
  * flags (`government-verified`, `role-phrase`, `large-following`,
  * `register-match`) and are split into "flagged" and "the rest". There is
  * deliberately no score and no order of merit: this project does not invent
- * Influence or Attention numbers (`CLAUDE.md §3`), and a maintenance tool is not
+ * Influence or Attention numbers (`docs/DATA.md §10`), and a maintenance tool is not
  * a licence to start. A flag means "a human should look at this account",
  * nothing more, and an unflagged account is not thereby uninteresting — the full
  * list is written to the report file for exactly that reason.
@@ -227,7 +227,7 @@ interface ApiTweet {
    * A few posts cut off mid-sentence and end with a t.co link. The spec lists a
    * `note_post` field that should carry the rest, so 48 such posts were
    * re-fetched asking for it on 2026-09-21: **0 characters recovered, on all 48**
-   * (`docs/X-API.md §13`). The field is valid, accepted and empty on this tier.
+   * (`docs/PROVIDERS.md`). The field is valid, accepted and empty on this tier.
    *
    * It is still requested below, because it costs nothing — billing is per
    * resource returned, never per field — and because it may be populated on
@@ -337,7 +337,7 @@ async function fetchJson<T>(
 
     if (response.ok) {
       const body = (await response.json()) as T;
-      // Persist before parsing (docs/X-API.md §15). `label: null` is the
+      // Persist before parsing (docs/PROVIDERS.md). `label: null` is the
       // metering endpoint, which returns a balance rather than billed content.
       if (label !== null) archiveRaw(url, label, body);
       return { body, remaining: response.headers.get("x-rate-limit-remaining") };
@@ -461,7 +461,7 @@ function saveProfileStore(store: Map<string, StoredProfile>): void {
 }
 
 /**
- * The U.S. legislator register, free and offline (`docs/X-API.md §7`).
+ * The U.S. legislator register, free and offline (`docs/PROVIDERS.md`).
  *
  * Optional: a sweep runs without it, only with weaker flags. Never a reason to
  * stop, because an absent register is not evidence about anybody.
@@ -499,8 +499,8 @@ interface Candidate {
   /**
    * **What the account actually said.** Kept because it is the only thing that
    * settles the question every candidate is judged on: did this account perform
-   * an act, or merely pass a link along? B14's standing rule turns on exactly
-   * that, and one Track A candidate was rejected as "a bare link with no prose"
+   * an act, or merely pass a link along? This project's standing rule turns on
+   * exactly that, and one Track A candidate was rejected as "a bare link with no prose"
    * — a ruling impossible to make without the text.
    *
    * It was being bought and discarded. The enumeration pays for the whole post
@@ -509,7 +509,7 @@ interface Candidate {
    *
    * Takes `note_post` where it is longer than `text`. Measured 2026-09-21 it
    * never is, on this tier — but the field costs nothing to request and the
-   * fallback is correct either way (`docs/X-API.md §13`).
+   * fallback is correct either way (`docs/PROVIDERS.md`).
    */
   quote_text: string;
   /** Whether the text above came from `note_post` rather than `text`. Expected false. */
@@ -561,10 +561,11 @@ async function measure(posts: Post[], token: string): Promise<PostSize[]> {
    * integer from each. The same resource already carries the full
    * `public_metrics` — impressions, likes, reposts, replies, bookmarks — which
    * is precisely the reading `docs/DATA.md §10`'s observation history stores and
-   * B12's periodic metric refresh is scoped to fetch. It was being paid for and
-   * dropped on the floor, then budgeted for again as if it were new work.
+   * the periodic metric refresh (docs/ENGINEERING.md §22) is scoped to fetch. It
+   * was being paid for and dropped on the floor, then budgeted for again as if
+   * it were new work.
    *
-   * Fields are free (`docs/X-API.md §12`); the resource is what costs. So take
+   * Fields are free (`docs/PROVIDERS.md`); the resource is what costs. So take
    * all of it and write it to `research/` where a later batch can use it.
    */
   const url =
@@ -642,10 +643,10 @@ async function fetchProfiles(
     const batch = missing.slice(index, index + 100);
     // Billing is per resource returned, never per field, so there is no economy
     // in asking for less about an account you are already buying
-    // (`docs/X-API.md §12`). Request everything worth having, once.
+    // (`docs/PROVIDERS.md`). Request everything worth having, once.
     /*
      * Every field worth having, because billing is per resource returned and
-     * never per field (`docs/X-API.md §12`). The list was widened 2026-09-21
+     * never per field (`docs/PROVIDERS.md`). The list was widened 2026-09-21
      * after reading the OpenAPI spec, which is free and documents four fields
      * this tool had never asked for:
      *
@@ -663,7 +664,7 @@ async function fetchProfiles(
      *                 less noisy size reading than the raw count.
      *
      * None of these is a verification on its own, and none is combined into a
-     * score (`CLAUDE.md §3`).
+     * score (`docs/DATA.md §10`).
      */
     const url =
       `${USERS_URL}?ids=${batch.join(",")}` +
@@ -728,7 +729,7 @@ interface SweepResult {
 /**
  * Phase one: enumerate one post's quote posts, **without profiles**.
  *
- * Two deliberate economies, both measured (docs/X-API.md):
+ * Two deliberate economies, both measured (docs/PROVIDERS.md):
  *
  * - `exclude=retweets,replies`, not just retweets. The endpoint's timeline
  *   carries replies inside the quote threads; excluding only retweets left a
@@ -862,7 +863,7 @@ async function sweepPost(
           .filter(Boolean)
           .join(" or ")}. ` +
         "The request asks for them as `tweet.fields` values, a legacy alias on this endpoint " +
-        "(docs/X-API.md §16). If it has been dropped, re-request them as " +
+        "(docs/PROVIDERS.md). If it has been dropped, re-request them as " +
         "`expansions=author_id,referenced_posts` under `post.fields` — which bills a user read " +
         "per author, so price it first. Without these two fields every entry fails the quote " +
         "test and the sweep bills for a whole post while reporting zero.";

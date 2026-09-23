@@ -1,5 +1,5 @@
 /**
- * docs/DATA.md §7 (docs/WORKPLAN.md B13) — the `publication` field holds the
+ * docs/DATA.md §7 — the `publication` field holds the
  * outlet's standard public form and nothing else (docs/EDITORIAL.md §5).
  * layoffhedge.com/press labels a republication as `Inkl (via IBTimes UK)`,
  * which is provenance written into a name: two facts in one string, neither

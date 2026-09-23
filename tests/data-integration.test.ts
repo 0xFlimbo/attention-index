@@ -2,8 +2,8 @@
  * Integration smoke test against the real `data/` files — the closest thing to a
  * route smoke test without adding a rendering dependency (docs/ENGINEERING.md §9).
  *
- * **Asserts relationships, never values** (docs/WORKPLAN.md B10–B12). Until B10
- * this file pinned each headline figure as a literal, which made the suite go red
+ * **Asserts relationships, never values.** This file used to pin each headline
+ * figure as a literal, which made the suite go red
  * on every legitimate data change — including the first record a sweep finds. The
  * literals did not disappear: they moved to `tests/frozen-dataset.test.ts`, where
  * they run against a frozen copy of the dataset that cannot drift.

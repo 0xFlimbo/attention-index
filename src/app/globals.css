@@ -11,8 +11,8 @@
  * `--color-bg: var(--color-bg)` is self-referential and only resolves by accident
  * of declaration order.
  *
- * B1 scope: base tokens + <body> defaults + focus-visible treatment only.
- * Typography scale, spacing scale and component styling belong to B2+.
+ * Base scope: base tokens + <body> defaults + focus-visible treatment only.
+ * Typography scale, spacing scale and component styling were added later.
  */
 @theme {
   --color-bg: #f2efe9;
@@ -57,7 +57,7 @@
  */
 
 /*
- * B2 scope: typography scale (docs/DESIGN.md §4) and spacing/radius scale
+ * Typography scale (docs/DESIGN.md §4) and spacing/radius scale
  * (docs/DESIGN.md §5), as literal values — same style as the color block
  * above, no self-referential entries. `--text-*` and `--radius-*` are
  * Tailwind v4's recognized namespaces, so this also (re)generates the
@@ -119,7 +119,7 @@
 }
 
 /*
- * One canvas, no dark mode: docs/CLAUDE.md §6 defines cream + near-black as the
+ * One canvas, no dark mode: docs/DESIGN.md §3 defines cream + near-black as the
  * only visual identity. The scaffold's `prefers-color-scheme: dark` block has
  * been removed intentionally — do not reintroduce it.
  */
@@ -223,7 +223,7 @@ body {
  * rather than `.text-metadata normal-case`: these component classes are written
  * outside Tailwind's cascade layers, so they outrank every utility in
  * `@layer utilities`, and the `normal-case` utility silently lost. Caught in the
- * B5 visual review, after a markup-only check had confirmed the class was
+ * an earlier visual review, after a markup-only check had confirmed the class was
  * emitted — which says nothing about which rule wins.
  */
 .text-record-id {
@@ -236,7 +236,7 @@ body {
    * was enough. It is not enough when the class sits on a child of a
    * `.text-metadata` element — `text-transform` inherits, and an unset
    * property inherits the ancestor's `uppercase`. That is how `@LayoffAI`
-   * shipped to the B6 visual review as `@LAYOFFAI` on `/about`, inside the
+   * shipped to a visual review as `@LAYOFFAI` on `/about`, inside the
    * official-links list. The class's whole contract (docs/DESIGN.md §4) is
    * "the metadata scale with the uppercasing removed", so it now enforces
    * that rather than assuming nothing above it asked for uppercase.
@@ -282,7 +282,7 @@ body {
  * number count (JS, in primary-attention-metric.tsx) and the mobile nav panel
  * transition (in navigation.tsx). Nothing else animates.
  *
- * Two effects were removed at B9 (maintainer decision, 2026-09-18). The
+ * Two effects were removed (maintainer decision, 2026-09-18). The
  * section reveal and the Crossover line draw both fired at mount with no
  * scroll trigger, so on every section below the first viewport they had
  * finished before the visitor could reach them — invisible motion whose base
@@ -374,7 +374,7 @@ body {
  * docs/HOMEPAGE.md §8 / docs/DESIGN.md §7 — Crossover diagram
  * (src/components/crossover-map.tsx). Colors reference tokens only, never a
  * hardcoded hex value. Connectors are drawn in their final state: the
- * line-draw animation was removed at B9 for the reason given in the motion
+ * line-draw animation was removed for the reason given in the motion
  * budget note above. Hover/focus highlighting is plain CSS `:hover`/
  * `:focus-within` on the node group — no JS, no "use client" — and needs no
  * reduced-motion override, since a color transition on hover is not scroll or

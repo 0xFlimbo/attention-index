@@ -15,11 +15,11 @@ import { Footer } from "@/components/footer";
 import { ProseSection } from "@/components/prose-section";
 
 /**
- * docs/WORKPLAN.md B6 — real content, replacing the B2 placeholder. Title
+ * Route metadata: real content, replacing the earlier placeholder copy. Title
  * stays short; `src/app/layout.tsx`'s template appends the site suffix,
- * reproducing the exact string this route shipped before B6.
+ * reproducing the exact string this route has always shipped.
  *
- * `images` explicit (B9) — see `src/app/archive/page.tsx`'s comment: a route
+ * `images` explicit — see `src/app/archive/page.tsx`'s comment: a route
  * that declares its own `openGraph`/`twitter` object replaces the root's
  * already-resolved image rather than extending it, so every such route
  * repeats the pointer.
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
  * model, and what data is unavailable. Statically authored prose, not
  * generated from code (§6) — but every *number* on the page is still a live
  * read from the same loaders and metric functions the rest of the site uses
- * (CLAUDE.md §3, "headline metrics are derived, never hardcoded"), so this
+ * (docs/DATA.md, "store the evidence, derive the number"), so this
  * page can never quietly drift out of sync with the dataset it describes.
  */
 export default function MethodologyPage() {
@@ -76,7 +76,7 @@ export default function MethodologyPage() {
     (reference) => reference.status === "needs_review" && reference._placeholder !== true,
   ).length;
 
-  // docs/WORKPLAN.md B16 — the named works, in schema order, each with its own
+  // docs/DATA.md §7 — the named works, in schema order, each with its own
   // live count. Built from the enum rather than written out, so adding a work
   // to the schema puts it in this sentence instead of leaving the page a
   // member short. `none` has no label and is written by hand below, because
@@ -264,7 +264,7 @@ export default function MethodologyPage() {
         </ProseSection>
 
         {/*
-          docs/WORKPLAN.md B13 — the media record contract stated in the
+          docs/DATA.md §7 — the media record contract stated in the
           reader's words: what provenance changes about the counts, and the
           written criterion behind the `featured` flag. Every figure here is
           read live from `getMediaMetrics`, like the rest of this page.
@@ -371,9 +371,9 @@ export default function MethodologyPage() {
             default and are promoted to verified individually, by hand.
           </p>
           {/*
-            Repository-aware, not asserted. This paragraph shipped at B6 saying
+            Repository-aware, not asserted. This paragraph once said
             the repository "is not published yet", which stopped being true on
-            2026-09-18 and was still on the page at B13 — a hardcoded fact about
+            2026-09-18 and stayed on the page regardless — a hardcoded fact about
             a field that already exists. It now reads from
             `project.repository_url`, the same switch the navigation, the footer
             and the Evidence panel use (docs/DATA.md §9: a `null`

@@ -10,7 +10,7 @@
  * to a segment that declares no `images` key of its own, and that check does
  * not cascade past a child segment which redeclares `openGraph`/`twitter` —
  * which `/archive`, `/evidence`, `/methodology` and `/about` all do, for their
- * own titles and descriptions (B6). Those four therefore repeat the pointer.
+ * own titles and descriptions. Those four therefore repeat the pointer.
  * A bare string would resolve to a URL and nothing else, dropping
  * `og:image:width`, `height` and `alt`, so the pointer is an object: the four
  * routes emit the same complete tag set as the homepage, whose image the file

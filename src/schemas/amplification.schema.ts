@@ -54,7 +54,7 @@ export const amplificationSchema = z
     related_post_id: z.string().nullable(),
     // Real records in data/amplifications.json omit these keys entirely rather than
     // setting them to null (a deviation from docs/DATA.md §2's "use null, never omit"
-    // convention — flagged in the B1 report). Accept both shapes and normalize to null
+    // convention). Accept both shapes and normalize to null
     // so downstream code only ever sees `number | null`, never `undefined`.
     follower_count: nonNegativeInt.nullish().transform((value) => value ?? null),
     follower_count_observed_at: isoDateString.nullish().transform((value) => value ?? null),

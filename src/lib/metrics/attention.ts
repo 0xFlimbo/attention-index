@@ -28,7 +28,7 @@ export interface AttentionMetrics {
  * (`status === "verified" && _placeholder !== true`). Thresholds are inclusive (`>=`).
  *
  * Every figure here reads **one** observation per post — the latest, via
- * `latestObservation` (B18). That single rule is what keeps the headline
+ * `latestObservation` (docs/DATA.md §5). That single rule is what keeps the headline
  * numbers meaning the same thing they meant before the history existed: a
  * sum across posts of one agreed reading each, never a mix of readings from
  * different days of the same post.

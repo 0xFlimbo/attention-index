@@ -36,7 +36,7 @@ const postObservationSchema = z.object({
 });
 
 /**
- * docs/DATA.md §5 — the append-only observation history (B18). A refresh adds
+ * docs/DATA.md §5 — the append-only observation history. A refresh adds
  * a reading, it never replaces one: a past reading of a public counter cannot
  * be re-taken, and discarding it throws away the only record that it was ever
  * that number on that day.

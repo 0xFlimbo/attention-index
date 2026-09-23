@@ -16,7 +16,7 @@ interface ArchivePreviewPanelProps {
  * the data (docs/DESIGN.md §10 — desktop hover must always have a mobile /
  * no-JS equivalent).
  *
- * `row.subject` is an `<h2>`, not `<h3>` (fixed at B9's accessibility pass):
+ * `row.subject` is an `<h2>`, not `<h3>` (fixed at an accessibility pass):
  * `/archive`'s only other heading is the route's own `<h1>`
  * (`src/app/archive/page.tsx`) — `ArchiveExplorer` and `ArchiveRow` render no
  * heading of their own — so an `<h3>` here skipped a level. Visual size stays

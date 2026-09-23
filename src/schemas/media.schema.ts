@@ -31,7 +31,7 @@ export const mediaProvenanceEnum = z.enum(["original", "syndicated"]);
 
 /**
  * docs/DATA.md §7 — which of the official project's works the piece used, as
- * an attribute of a record that already exists (docs/WORKPLAN.md B16). It is
+ * an attribute of a record that already exists. It is
  * never the subject of a record: nothing here describes a work, it only says
  * which one a reference drew on.
  *
@@ -101,7 +101,7 @@ export const mediaSchema = z
  * docs/DATA.md §12 — a `verified` record has had its article read, so its
  * provenance is known by definition. Leaving it `null` on a verified record
  * would let a syndication enter the derived original-reporting figures
- * unnoticed, which is the inflation docs/WORKPLAN.md B13 exists to close.
+ * unnoticed, which is the inflation this constraint exists to close.
  */
 function requireProvenanceWhenVerified(
   data: { status: string; provenance: string | null },

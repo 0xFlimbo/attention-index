@@ -29,7 +29,7 @@ export function CrossoverMap({ amplifications }: CrossoverMapProps) {
         hard left — a narrow centred column with a void beside it, which
         docs/DESIGN.md §5 rules out for a key section ("the site should feel
         broad and spatial"). Same correction, and the same 12-column reasoning,
-        as the B2 hero fix. Below `lg` the two simply stack as before.
+        as the hero fix above. Below `lg` the two simply stack as before.
       */}
       <div className="lg:grid lg:grid-cols-12 lg:items-center lg:gap-8">
         <div className="lg:col-span-5">

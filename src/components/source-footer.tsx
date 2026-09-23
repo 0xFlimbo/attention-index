@@ -2,7 +2,7 @@ import { formatDate } from "@/lib/format/date";
 
 /**
  * docs/DESIGN.md §6 — the small "Sources: … / Observed: …" credibility
- * component. Not the site footer (B5 owns that). Used wherever a mutable
+ * component. Not the site footer (`Footer` owns that). Used wherever a mutable
  * value needs its source and observation date kept visible and reachable.
  */
 interface SourceFooterProps {

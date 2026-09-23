@@ -4,8 +4,8 @@ import { getProjectMetadata } from "@/lib/data";
 import { ogImageSize } from "@/lib/og-image-meta";
 
 /**
- * docs/WORKPLAN.md B9, docs/DESIGN.md §1–3 — the Open Graph artwork, deferred
- * from B6 with `sitemap.ts`/`robots.ts` for the same reason (needed an
+ * docs/DESIGN.md §1–3 — the Open Graph artwork, deferred
+ * along with `sitemap.ts`/`robots.ts` for the same reason (needed an
  * absolute canonical URL that didn't exist yet). Shared render function so
  * `src/app/opengraph-image.tsx` and `src/app/twitter-image.tsx` — Next's two
  * separate file conventions for `og:image` and `twitter:image` — produce the
@@ -14,7 +14,7 @@ import { ogImageSize } from "@/lib/og-image-meta";
  * Uses `next/og`'s built-in `ImageResponse` — no new dependency
  * (docs/ENGINEERING.md §1's dependency gate). No custom font is loaded: doing
  * so means fetching a font file at render time, which is both a network
- * dependency this static-first project avoids (`CLAUDE.md`'s engineering
+ * dependency this static-first project avoids (docs/ENGINEERING.md's stack
  * rule) and unnecessary risk on this VPS. `ImageResponse`'s bundled default
  * sans font already reads as a plain, confident, editorial face at this size.
  *
@@ -23,11 +23,11 @@ import { ogImageSize } from "@/lib/og-image-meta";
  * Tailwind/CSS-variable resolution, so the values are necessarily restated
  * here rather than imported; this is the one place in the codebase where a
  * raw brand hex value is correct, not a violation of "tokens are centralized"
- * (docs/CLAUDE.md §5).
+ * (docs/ENGINEERING.md §5).
  *
  * No token imagery, no third-party logo, no fabricated metric — the
  * disclaimer line is `project.disclaimer` itself, read from `data/project.json`
- * like every other on-site use of that field (docs/CLAUDE.md §3), never
+ * like every other on-site use of that field (docs/DATA.md §9), never
  * retyped.
  */
 const COLOR_BG = "#F2EFE9";

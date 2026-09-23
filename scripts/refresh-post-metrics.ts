@@ -6,8 +6,8 @@
  * pnpm refresh:metrics -- --from <file> --write
  *
  * The manual metric refresh (docs/ENGINEERING.md §22). Never called during
- * `next build`, rendering, or CI, and never scheduled: B12 keeps the refresh
- * manual by maintainer decision (docs/WORKPLAN.md).
+ * `next build`, rendering, or CI, and never scheduled: kept manual by
+ * maintainer decision.
  *
  * **What it does.** One `GET /2/tweets?ids=` request per 100 tracked posts
  * returns each post's public counters. Each reading becomes one observation,
@@ -18,7 +18,7 @@
  * **Planning is the default and spending is opt-in**, as in every paid tool
  * here. An unqualified run makes no request: it prints how many posts would be
  * read, what that costs, and which readings already paid for have not been
- * applied. `--fetch` is what bills, at $0.005 per post read (docs/X-API.md §6).
+ * applied. `--fetch` is what bills, at $0.005 per post read (docs/PROVIDERS.md).
  *
  * **Reading and writing are separate steps.** `--fetch` and `--from` print, per
  * post, the latest stored reading beside the new one and write nothing to
@@ -63,7 +63,7 @@ const LOOKUP_URL = "https://api.x.com/2/tweets";
 const CREDITS_URL = "https://api.x.com/2/usage/credits";
 /** The endpoint's own ceiling on ids per request. */
 const IDS_PER_REQUEST = 100;
-/** Per post returned, measured (docs/X-API.md §1, §6). */
+/** Per post returned, measured (docs/PROVIDERS.md). */
 const COST_PER_POST = 0.005;
 /** The credit meter lags a billed request; read it again after a pause. */
 const METER_SETTLE_MS = 5_000;

@@ -30,7 +30,7 @@ export interface ArchiveRowData {
 
 /** `post.subject` falls back to `post.title` — docs/DATA.md allows a null `subject`. */
 export function toArchiveRowData(post: Post, rank: number): ArchiveRowData {
-  // B18 — one agreed reading per post: the latest observation, the same one
+  // docs/DATA.md §5 — one agreed reading per post: the latest observation, the same one
   // `compareArchiveOrder` ranked this row by and `getAttentionMetrics`
   // summed. The row view model stays a flat, serializable shape, so the
   // client-side preview on /archive never sees the history array.

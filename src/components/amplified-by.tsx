@@ -20,8 +20,8 @@ export const AMPLIFIER_GRID_MIN_RECORDS = 3;
  * docs/HOMEPAGE.md §9 — Amplified By (section 06). Self-contained Server
  * Component, same shape as `ViralArchive`/`CrossoverMap`: owns its own
  * eyebrow/headline and decides its own visibility by returning `null` below
- * `AMPLIFIER_GRID_MIN_RECORDS`. No filters (docs/WORKPLAN.md's B4 entry keeps
- * them off; Crossover directly above already gives the category breakdown) —
+ * `AMPLIFIER_GRID_MIN_RECORDS`. No filters (Crossover directly above already
+ * gives the category breakdown) —
  * so no client interaction is needed and this stays a Server Component.
  */
 interface AmplifiedByProps {

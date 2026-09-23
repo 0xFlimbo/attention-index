@@ -1,6 +1,6 @@
 /**
  * Recovering paid profile readings out of whatever shape a research file
- * happens to have (docs/WORKPLAN.md B10, Track B).
+ * happens to have (Track B).
  *
  * Pure, so it can be tested without a disk or an API. The scripts own the file
  * walking; this owns the question "which objects in here are user profiles".

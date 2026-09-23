@@ -19,11 +19,11 @@ import { SectionEyebrow } from "./section-eyebrow";
  * (that threshold exists because that section is a *grid*; this one is
  * rows, so a single row is still a legitimate section).
  *
- * Planner decision (B8 brief): no marquee. docs/HOMEPAGE.md §11 allows "at
+ * Planner decision: no marquee. docs/HOMEPAGE.md §11 allows "at
  * most one slow marquee… only if enough recognizable [publications] exist",
  * but `globals.css` documents the homepage's motion budget as exactly three
- * effects and `CLAUDE.md` requires restrained motion; a fifth is deferred to
- * B9, which owns the motion audit, not decided ad hoc here.
+ * effects and docs/DESIGN.md §8 requires restrained motion; a fifth is
+ * deferred to a future motion audit, not decided ad hoc here.
  */
 interface PublicReferencesProps {
   mediaReferences: MediaReference[];
@@ -56,9 +56,9 @@ export function PublicReferences({ mediaReferences }: PublicReferencesProps) {
         public sources.
       </p>
       {/*
-        docs/WORKPLAN.md B19 — the country figure is a sentence in the
+        The country figure is a sentence in the
         supporting copy, never a stat cell: this section carries no dominant
-        number (docs/WORKPLAN.md "Decisions already made"), and a display-size
+        number (docs/DATA.md §10), and a display-size
         numeral here would compete with the Primary Attention Metric. The
         capped-list sentence sits beside it so the cap is stated rather than
         silent: without it the section drops most of the list without a word,
@@ -69,7 +69,7 @@ export function PublicReferences({ mediaReferences }: PublicReferencesProps) {
         <p className="text-body mt-3 max-w-2xl text-ink-soft">
           {/*
             A non-breaking space between each derived figure and the noun that
-            gives it meaning. B19's visual review found the 390px line breaking
+            gives it meaning. A visual review found the 390px line breaking
             as "newsrooms in 7" / "countries.", which leaves a numeral alone at
             the end of a line with nothing to read it against. It binds the
             number to its unit only — the rest of the sentence still wraps

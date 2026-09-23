@@ -1,5 +1,5 @@
 /**
- * The quote sweep's decisions (docs/WORKPLAN.md B10), tested without an API call.
+ * The quote sweep's decisions, tested without an API call.
  *
  * These are the three judgements that decide what a human is asked to read, and
  * each is tested against the shapes the 2026-09-20 measurement actually returned
@@ -32,7 +32,7 @@ describe("isQuoteOfPost", () => {
   });
 
   it("rejects a retweet, which carries no act of its own", () => {
-    // B14's standing rule: someone else's quote post travelling belongs to the
+    // This project's standing rule: someone else's quote post travelling belongs to the
     // account that wrote it, never to the account that passed it on.
     expect(isQuoteOfPost([{ type: "retweeted", id: POST_ID }], POST_ID)).toBe(false);
   });
@@ -175,7 +175,7 @@ describe("signalFlags", () => {
       verified_type: "government",
       public_metrics: { followers_count: 900_000 },
     });
-    // CLAUDE.md §3 — no invented Influence/Attention number, here or anywhere.
+    // docs/DATA.md §10 — no invented Influence/Attention number, here or anywhere.
     expect(flags).toEqual([
       "government-verified",
       expect.stringContaining("role-phrase:"),

@@ -5,8 +5,8 @@
  * Deliberately the dumbest format that can carry the job — one URL per line,
  * `#` comments, blank lines ignored, and anything after the URL on the same
  * line taken as a label. The web sweep writes this file; a human can also type
- * one in ten seconds, which is the point. B14 wrote two throwaway scripts for
- * exactly this and neither survived the batch (`docs/WORKPLAN.md` B11).
+ * one in ten seconds, which is the point. Two throwaway scripts once existed
+ * for exactly this and neither survived past that session.
  */
 import { slugify } from "./raw-archive";
 import type { ProbeTarget } from "./page-probe";

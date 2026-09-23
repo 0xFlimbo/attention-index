@@ -1,7 +1,7 @@
 /**
  * docs/HOMEPAGE.md §4 — the hero. Approved copy verbatim. `disclaimer` is
  * read from `project.json` (never retyped) so the independence statement
- * can never drift from the canonical value — docs/CLAUDE.md §3.
+ * can never drift from the canonical value — docs/EDITORIAL.md §8.
  *
  * §4 allows the supporting copy either below the headline or offset right.
  * Below it at mobile/tablet; from `lg` up it moves into the right half of

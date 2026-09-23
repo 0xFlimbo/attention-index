@@ -61,7 +61,7 @@ it must never gate main metrics, archive rows, source URLs, the disclaimer or me
 │                    enrich-twitter-posts.ts  import-layoffhedge-press.ts
 │                    check-media-mentions.ts  sweep-quote-tweets.ts  sweep-mentions.ts
 │                    sweep-web.ts  review-paid-profiles.ts  refresh-post-metrics.ts
-│                    refetch-truncated-posts.ts  probe-field-parameter.ts  visual-check.mjs
+│                    visual-check.mjs
 ├── src/
 │   ├── app/         layout.tsx page.tsx archive/ evidence/ methodology/ about/
 │   ├── components/  layout/ editorial/ data/ archive/ ui/
@@ -70,8 +70,7 @@ it must never gate main metrics, archive rows, source URLs, the disclaimer or me
 │   ├── styles/
 │   └── types/
 ├── tests/
-├── research/            paid API data + the working files behind it (gitignored, NOT a cache)
-└── references/visual/   (design references, not shipped)
+└── research/            paid API data + the working files behind it (gitignored, NOT a cache)
 ```
 
 `research/` exists because `.cache/` is disposable by convention and some of what is in there cost
@@ -229,8 +228,6 @@ external embeds).
   "sweep:quotes": "tsx scripts/sweep-quote-tweets.ts",
   "check:visual": "node scripts/visual-check.mjs",
   "review:profiles": "tsx scripts/review-paid-profiles.ts",
-  "refetch:truncated": "tsx scripts/refetch-truncated-posts.ts",
-  "probe:fields": "tsx scripts/probe-field-parameter.ts",
   "sweep:mentions": "tsx scripts/sweep-mentions.ts",
   "sweep:web": "tsx scripts/sweep-web.ts",
   "refresh:metrics": "tsx scripts/refresh-post-metrics.ts"
@@ -242,14 +239,14 @@ probe — see §17. `sweep:mentions` is the Track A mention sweep — see §18a;
 of both tracks — see §18b; and keeping every billed response is the tools' job — see §18c.
 `sweep:quotes` is the Track B quote-post sweep — see §18. `review:profiles`
 re-reads profiles already paid for and **makes no network request at all** — see §19.
-`refetch:truncated` and `probe:fields` are the two one-off scripts of §20.
+§20 covers field-name hygiene across every script.
 `sweep:web` is the web-search discovery sweep — see §21; it is the only tool here that talks to a
 second paid vendor. `refresh:metrics` is the manual metric refresh — see §22; it is the one tool
 that appends to `data/`. Both make no request at all in their default mode.
 
-**This block is generated from `package.json`, not maintained beside it.** It had drifted by four
-entries — `review:profiles`, `refetch:truncated`, `probe:fields` and `sweep:mentions` all existed
-and none was listed — which is the ordinary fate of a list copied by hand. If you add a script,
+**This block is generated from `package.json`, not maintained beside it.** It had drifted by two
+entries — `review:profiles` and `sweep:mentions` both existed
+and neither was listed — which is the ordinary fate of a list copied by hand. If you add a script,
 paste the whole `scripts` object again rather than appending a line.
 
 None of the maintenance tools is part of the pre-deploy pipeline below: `check:visual` must not
@@ -852,47 +849,12 @@ a missing field and an ignored request are indistinguishable downstream; and **a
 that the fields a paginated run depends on actually arrived, because a run that pages on regardless
 bills for the whole post and reports nothing.
 
-### `pnpm probe:fields`
-
-`scripts/probe-field-parameter.ts`. Asks one post for the same fields twice, once under
-`tweet.fields` and once under `post.fields`, and keeps both raw bodies. It exists as the record of
-how the vocabulary question was settled: the API answers in the dialect you ask in — `note_tweet`
-versus `note_post` — and both carry the full text. Re-runnable for a few tenths of a cent, free
-inside the 24-hour dedup window.
-
-### `pnpm refetch:truncated`
-
-`scripts/refetch-truncated-posts.ts`. **Already executed, 2026-09-21.** Kept as the record of a
-measurement, not as a tool anyone needs to run again.
-
-**Read its result as corrected, not as first written.** Its first run concluded that `note_post` is
-unpopulated on this tier. That was our bug, not the API's: the request sent `tweet.fields` and the
-reader looked for `note_post`, a key that only exists in the `post.fields` dialect. Re-run with the
-key read correctly — free, inside the dedup window — it recovered **32,495 characters across 34 of
-48 posts**, and **24 of them name the project in prose** where the stored text did not. One
-maintainer rejection was reversed as a result.
-
-It re-fetched 48 Track A posts asking for `note_post` — the field the OpenAPI spec says carries the
-remainder of a long post — and wrote the result to
-`research/x-api-2026-09-20/track-a-full-text.json`.
-
-**It disproved the premise it was built on**, which is why it is worth keeping:
-
-- **`note_post` appeared to return nothing** — 48 posts, 0 characters recovered. Later shown to be
-  a dialect mismatch in our own reader, not an API limitation. The corrected lesson: *when a
-  documented field comes back empty, suspect your request before blaming the API.*
-- **The selection heuristic was wrong.** "Text ending in a bare t.co link" is usually an ordinary
-  post with an attached photo, not a stub. The function keeps that heuristic, commented as wrong,
-  because changing it would misdescribe which 48 posts were actually bought.
-- **What the 48 were:** 28 link `layoffhedge.com` without naming it in prose, matching the Track A
-  query through `url:` rather than through the text. Overwhelmingly token promotion — the "bare
-  link, no act of its own" shape already archived on sight. No record had been missed.
-- **Post reads bill at exactly $0.005.** Balance $1.02 → $0.78 for 48 posts, no user reads. This
-  closed an open unknown and retired the blended `$0.0068` planning rate (`docs/X-API.md §1`).
-- **The corrected re-run cost $0.0000**, inside the 24-hour dedup window.
-
-Cost $0.2400, authorised in advance, appended to the ledger in
-`research/x-api-2026-09-20/cost-ledger.json`.
+`pnpm probe:fields` (`scripts/probe-field-parameter.ts`) and `pnpm refetch:truncated`
+(`scripts/refetch-truncated-posts.ts`) were two one-off measurements — settling which
+`*.fields` vocabulary the API actually honors, and re-fetching truncated Track A posts once that
+was corrected. Both have done their job and been removed from `scripts/` and `package.json`; git
+history keeps them, and the facts they established are recorded where the scripts that still rely
+on them cite them.
 
 ---
 

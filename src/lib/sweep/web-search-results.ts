@@ -1,11 +1,10 @@
 /**
- * What a web-search result is, before anybody spends time on it
- * (`docs/WORKPLAN.md` B11).
+ * What a web-search result is, before anybody spends time on it.
  *
  * A sweep's output is a queue of pages for a human to read, and the expensive
  * resource is the human. Three of the first six probe queries, 2026-09-22,
  * returned the same shape — a `twitterscore.io` account card, an Instagram tag
- * page, a Threads post — which is what made B14's open question 14 a
+ * page, a Threads post — which is what made the archive-on-sight rule a
  * load-bearing rule rather than a precaution: **a result that carries no
  * reporting of its own is archived on sight**, never fitted to a provenance
  * value.
@@ -22,10 +21,11 @@ const SELF_HOSTS = ["layoffhedge.com", "x.com/layoffai", "twitter.com/layoffai"]
  * Hosts that distribute somebody else's work rather than publishing their own.
  *
  * Kept short and evidenced on purpose. Each entry is either a surface the
- * discovery probe actually returned or one the dataset has already archived
- * under open question 14. A host is not a verdict — `NewsBreak` syndicates and
+ * discovery probe actually returned or one this project has already archived
+ * on the same rule. A host is not a verdict — `NewsBreak` syndicates and
  * is deliberately absent, because a syndication of a named outlet's piece is a
- * record under B13's contract, while a bare link card is not.
+ * record under the media record contract (docs/DATA.md §7), while a bare link
+ * card is not.
  */
 const DISTRIBUTION_HOSTS = [
   "twitterscore.io",

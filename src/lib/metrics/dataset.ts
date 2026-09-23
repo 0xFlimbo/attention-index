@@ -6,7 +6,7 @@ import { isVerifiedRecord } from "@/lib/data/eligibility";
 /**
  * docs/HOMEPAGE.md §12 — one row of the Evidence section's dataset summary.
  * `count` is always derived from the eligible records passed in, never a
- * stored or hardcoded number (docs/CLAUDE.md §3). A zero-count row still
+ * stored or hardcoded number (docs/DATA.md). A zero-count row still
  * renders — it is an honest statement about the dataset — but `href` is
  * `null` so `EvidenceBlock` never links to an `/evidence` anchor that has
  * nothing under it.

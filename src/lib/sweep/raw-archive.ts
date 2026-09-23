@@ -24,7 +24,7 @@
  * before anything reads a field off it, because a request that was
  * misunderstood and a field that is genuinely absent look identical once the
  * response has been parsed away — and the X API answers an unknown field name
- * with HTTP 200 and silence (`docs/X-API.md §15–§16`).
+ * with HTTP 200 and silence (`docs/PROVIDERS.md`).
  * ---------------------------------------------------------------------------
  */
 
@@ -49,7 +49,7 @@ export interface RawArchiveEntry {
  * question without paying again, and `response-3.json` does not help them.
  *
  * `api` names the vendor whose day this is, and defaults to the one that was
- * here first. A second paid API arrived at B11 (web search); filing its
+ * here first. A second paid API arrived later (web search); filing its
  * responses under `x-api-<day>` would put two vendors' bills in one folder,
  * which is exactly the confusion `research/README.md` exists to prevent.
  */

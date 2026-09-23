@@ -5,7 +5,7 @@ import type { ReactNode } from "react";
  *
  * docs/DESIGN.md §5 sets a "12-column editorial grid on desktop" and rules out
  * narrow content columns standing beside empty space — the same defect already
- * corrected at the B2 hero, the B4 Crossover diagram and the B5 Evidence panel
+ * corrected at the hero, the Crossover diagram and the Evidence panel
  * and footer. Stacked prose keeps a readable measure (`max-w-prose` on the
  * children), but at 1440 that left the right half of both new pages empty.
  *

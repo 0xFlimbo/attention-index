@@ -8,12 +8,12 @@ import { Footer } from "@/components/footer";
 import { ArchiveExplorer } from "@/components/archive-explorer";
 
 /**
- * docs/ENGINEERING.md §6, docs/WORKPLAN.md B6 — route metadata. `title` is
+ * docs/ENGINEERING.md §6 — route metadata. `title` is
  * short: `src/app/layout.tsx`'s `template` appends " — LayoffHedge Attention
- * Index", reproducing the exact string this route shipped before B6. OG/
+ * Index", reproducing the exact string this route has always shipped. OG/
  * Twitter carry their own full-string title (templates don't apply there).
  *
- * `images` is explicit here (B9), not left to inherit from the root
+ * `images` is explicit here, not left to inherit from the root
  * `opengraph-image.tsx` / `twitter-image.tsx` file convention: Next only
  * auto-applies a file-convention image to a segment's `openGraph`/`twitter`
  * metadata when that exact segment declares no `images` key of its own — and
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
  * and sorted once here on the server (`selectArchivePosts`), with
  * client-side threshold filtering and a desktop hover/focus preview layered
  * on top by `ArchiveExplorer`. Thin composition: data + metrics calls only,
- * no layout logic — matching how B2 left `src/app/page.tsx`.
+ * no layout logic — matching `src/app/page.tsx`.
  */
 export default function ArchivePage() {
   const project = getProjectMetadata();
