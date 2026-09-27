@@ -244,6 +244,13 @@ VIEW EVIDENCE ↗
 Fields supported: name, role, category, action, date, related LayoffHedge post, evidence URL,
 optional portrait, optional follower count (always with its observation date).
 
+**One card per person.** A person with several acts gets one card that lists each act — action,
+date, tracked post, evidence link — newest first; name and role come from the latest act. A single
+act renders as above. The follower count sits under the role, and only on `public_figure` cards: that
+is the category a person can enter on audience size (docs/DATA.md §6), so the number is why they are
+listed. On any other card the role is the point, and a number beside it would read as a ranking.
+Each card is a link target, `#amplifier-<name-slug>`, like a single media reference in §11.
+
 Desktop 2–3 column editorial grid, thin separators, large whitespace, no profile-card styling.
 Mobile 1 column, source link always visible.
 Filters (`ALL / POLITICS / JOURNALISM / BUSINESS / OTHER`) only if there are enough records.

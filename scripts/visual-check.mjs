@@ -27,6 +27,7 @@
  *   pnpm check:visual --out ./review-shots
  *   pnpm check:visual --path /archive
  *   pnpm check:visual --anchor archive    # a section below the fold
+ *   pnpm check:visual --port 3100         # when 3000 serves something else
  */
 import { chromium } from "playwright-core";
 import { spawn } from "node:child_process";
@@ -36,7 +37,13 @@ import { homedir, freemem } from "node:os";
 import { join } from "node:path";
 
 const MIN_FREE_GB = 3;
-const PORT = 3000;
+// `--port` exists because this machine is shared: another project's server may
+// hold 3000, and the answer is to move aside, never to stop someone else's process.
+const PORT = Number(arg("port", "3000"));
+if (!Number.isInteger(PORT) || PORT < 1024 || PORT > 65535) {
+  console.error("ABORT: --port must be an integer between 1024 and 65535.");
+  process.exit(1);
+}
 const ORIGIN = `http://localhost:${PORT}`;
 const DEFAULT_WIDTHS = [390, 768, 1440];
 
@@ -104,7 +111,7 @@ if (!existsSync(join(process.cwd(), ".next"))) {
 }
 
 if (!(await isPortFree())) {
-  console.error(`ABORT: something is already serving ${ORIGIN}. Stop it first.`);
+  console.error(`ABORT: something is already serving ${ORIGIN}. Stop it first, or pass --port.`);
   process.exit(1);
 }
 
@@ -137,7 +144,7 @@ console.log("\nstarting server (alone)…");
 // fails to resolve and leaves an orphan process behind at teardown.
 const require = createRequire(import.meta.url);
 const nextBin = require.resolve("next/dist/bin/next");
-const server = spawn(process.execPath, [nextBin, "start"], {
+const server = spawn(process.execPath, [nextBin, "start", "--port", String(PORT)], {
   cwd: process.cwd(),
   stdio: "ignore",
 });

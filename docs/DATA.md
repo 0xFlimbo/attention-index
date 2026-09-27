@@ -134,6 +134,12 @@ carrying `views`, `observed_at` and `source`.
 **Views are observations.** `views + observed_at` means *the post displayed ~that many public
 views when checked on that date* — not unique people, not a final lifetime count, not X analytics.
 
+**Which posts are tracked.** A post enters `posts.json` because the maintainer selects it; no tool
+decides. 100,000 observed views is a reference point, not a rule — a post below it can enter for a
+stated reason, and one above it can be left out. A reply by @LayoffAI to its own post is tracked
+when it carries content of its own (a finding, a link to a report), and is judged like any other
+post; its `notes` name the post it replies to. Its views are its own counter, not the parent's.
+
 ### The observation history
 
 **A refresh appends; it never replaces.** A reading of a public counter cannot be re-taken, so
@@ -229,25 +235,59 @@ action:   repost | quote_post | reply | mention | share | citation | interview |
 Use the most accurate action — a mention is not a repost, a repost is not an endorsement.
 New categories require updating this doc, the schema and the UI filter config together.
 
+### Who is recorded — amplifiers on X
+
+An amplification record needs three things, checked in this order.
+
+1. **An act.** A public quote post, reply, mention or share of a @LayoffAI post, with an
+   `evidence_url` a reader can open. On X the *content* of the act is not judged: the record says
+   what was done ("quote-posted"), never whether it was insightful, and a one-word quote is as much
+   an act as a paragraph. Judging content is for articles, where the question is whether a piece
+   carries reporting of its own (§7). A repost, quote post or citation is documented amplification,
+   never endorsement.
+2. **An identity.** A real, identifiable person, or an organisation under its standard public name.
+   The link from the account to the person has to come from a source other than the account
+   itself — the person's own site linking the handle, an employer's page, an encyclopaedic entry.
+   **A pseudonymous account is not recorded, whatever its follower count.** A large account whose
+   owner is publicly known *is* an identity: that person is a public figure.
+3. **A role that verifies.** `role` holds only what an independent source confirms. A
+   self-description that does not verify ("journalist", "writer at …") is left out of the record,
+   never written as fact, and the person is categorised on what does verify.
+
+**One act, one record.** The same person quoting the same post twice, or from two accounts, is one
+record; the extra evidence goes in `notes`. The same person acting on different posts is one record
+per act. Metrics and the homepage count the person once (§10).
+
 ### Choosing `category` — the full mapping
 
 **The governing rule:** *the category follows the role the person or organisation holds **at the
-time of the act**, not the highest office they ever held.*
+time of the act***, with one exception stated below: elected office, held at any time, places a
+person in `politics`.
 
-It was settled when a third former-officeholder record arrived and the first two had been
-categorised differently. It reproduces both of those unchanged, and it is the tie-breaker whenever
-a record could sit in two categories.
-
-| Category | Who it holds | Test at the time of the act | Records today |
+| Category | Who it holds | Test | Records today |
 |---|---|---|---|
 | `government` | officials and official bodies acting in an administrative or enforcement capacity | holds an appointed or civil-service position, or is an agency account | 2 — an Assistant Attorney General, a federal Inspector General |
-| `politics` | elected officeholders, and people whose current public role is political | holds elected office, seeks it, or acts publicly as a political figure or commentator | 8 — five members of Congress, a sitting governor, a former member now commentating for a news network, a network commentator |
-| `journalism` | **individual** reporters, editors, correspondents, columnists | that is their job when they act | 1 — a named outlet's columnist, confirmed against that outlet's own author page |
+| `politics` | people who hold, have held or are seeking **elected office** | an elected office on the record, current, former or sought | 9 — five members of Congress, a sitting governor, three former legislators |
+| `journalism` | **individual** reporters, editors, correspondents, columnists | that is their job when they act, confirmed by the outlet | 1 — a named outlet's columnist, confirmed against that outlet's own author page |
 | `media` | news **organisations** posting as themselves | the account is the outlet, not a person | 4 |
 | `business` | companies and executives outside technology | acting in that commercial role | **0** |
 | `tech` | technology companies and their executives | acting in that role | 1 |
-| `public_figure` | notable people whose current public role fits none of the above | notable, but not currently political, journalistic, media, business or tech | 4 |
+| `public_figure` | identified people whose public standing fits none of the above: commentators, hosts, activists, creators | a verified role that places them nowhere else, **or at least 100,000 followers** on the account that acted | 10 records, 9 people |
 | `other` | anything genuinely outside the seven | — | 0 |
+
+**`politics` is elected office, not political talk.** Anyone who holds, has held or is seeking an
+elected office is `politics`, whatever they do now: a former member of Congress running a policy
+organisation and a former state legislator now in business sit with sitting members. A commentator,
+host or activist who has never held or sought office is `public_figure`, however political their
+programme. The line exists so that the number beside `POLITICS` means people with an electoral
+mandate, and is not inflated by broadcasters.
+
+**`public_figure` admits by audience.** A person with no role that places them elsewhere enters on
+**100,000 followers or more** on the account that performed the act. Every `public_figure` record
+carries `follower_count` and `follower_count_observed_at`, because for this category the audience
+is the reason the person is listed. A verified role still goes in `role` whenever one exists.
+There is no separate `influencer` category: audience size is not a sector, and the Crossover map
+shows sectors.
 
 **`government` vs `politics`** is the line that needs stating, because both are public office. The
 dataset draws it on *how the office is held*: `politics` is for people who stand for election —
@@ -260,16 +300,20 @@ amplification carrying `category: media`; a reporter posting under their own nam
 Note that an outlet's *published article* is not an amplification at all — it belongs in
 `media.json` (§7). The same outlet can therefore appear in both files for different acts.
 
-**Worked examples, the three that set the rule:**
+**Worked examples:**
 
 ```text
 Chaffetz   former U.S. Representative, now a news-network commentator  -> politics
-Carson     former U.S. Representative, now runs a policy organisation  -> public_figure
-Evans      former state legislator, now in business and farming        -> public_figure
+Carson     former U.S. Representative, now runs a policy organisation  -> politics
+Evans      former state legislator, now in business and farming        -> politics
+Gonzales   network host, never held or sought office                   -> public_figure
 ```
 
-All three carry the office in the `role` string regardless, so nothing is lost by the category: a
-reader sees "Former member of the West Virginia House of Delegates" either way.
+An earlier version of this mapping put Carson and Evans in `public_figure` (role at the time of the
+act) and Gonzales in `politics` (a political commentator). Both readings were replaced on
+2026-09-27 by the elected-office line above. Every record carries its office or programme in the
+`role` string regardless, so a reader sees "Former member of the West Virginia House of Delegates"
+either way.
 
 `business` stays in the enum even while it holds no record, because an empty category is invisible to a
 reader (`selectCrossoverCategories` omits any category with no records, §10) and costs nothing to
@@ -283,7 +327,8 @@ like anyone else (`journalism`). Categories are an outcome of what is found, nev
 category follows who performed the act and in what capacity, never which surface the act happened
 on.
 
-Follower counts are contextual metadata only, never evidence of impressions.
+Follower counts are contextual metadata only, never evidence of impressions. They are shown on
+`public_figure` records only; for every other category the role is the point.
 
 ---
 
@@ -522,6 +567,12 @@ verifiedAmplificationCount · uniqueAmplifiers · countsByCategory
 
 Count unique entities by stable identity; never count one amplification twice.
 
+**A record is an act; an amplifier is a person.** The identity is `entity_type` + `entity_name`
+(case-insensitive). `verifiedAmplificationCount` and `countsByCategory` count acts;
+`uniqueAmplifiers` counts people. Everything a reader sees *about people* counts people: the
+Crossover numbers and examples, and the Amplified By grid, which shows one card per person listing
+every act. The `/evidence` list stays one row per act, because it is a list of evidence.
+
 ### Amplifier and Crossover selectors (`src/lib/metrics/amplification.ts`)
 
 `AMPLIFICATION_CATEGORY_LABELS` / `AMPLIFICATION_ACTION_LABELS` — the fixed, neutral labels from
@@ -532,16 +583,22 @@ enum addition that omits its label fails to compile instead of rendering a raw k
 descending, with a deterministic tie-break on smallest `id` (lexicographic) — the same reasoning
 as `compareArchiveOrder` in `src/lib/metrics/archive.ts`.
 
-`selectAmplifiers(amplifications: Amplification[]): Amplification[]` — the verified, sorted
-amplifier list the Amplified By grid (docs/HOMEPAGE.md §9) renders directly. No filters, no
-pagination.
+`selectAmplifiers(amplifications: Amplification[]): Amplification[]` — the verified, sorted list
+of acts, one per record, which `/evidence` renders. No filters, no pagination.
+
+`selectAmplifierGroups(amplifications: Amplification[]): { identity, records }[]` — the same
+records grouped by person for the Amplified By grid (docs/HOMEPAGE.md §9). A group sits where its
+person's first record sits in `compareAmplifierOrder`, so a featured act lifts the whole card;
+records inside a group are date-descending (tie: smallest `id`), so `records[0]` is the latest act,
+and its name, role and category describe the person on the card.
 
 `selectCrossoverCategories(amplifications: Amplification[]): { category, label, count, examples }[]`
 — Crossover categories (docs/HOMEPAGE.md §8) that have at least one verified record, in the
 schema's fixed enum order (`government, politics, journalism, media, business, tech, public_figure,
 other`) so node position in `CrossoverMap` is a pure function of this array's order, never
-hand-positioned. Categories with a count of `0` are omitted entirely. `examples` holds up to 3 real
-entity names per category, in `compareAmplifierOrder`. Read 2026-09-20 (15 verified amplifications)
+hand-positioned. Categories with a count of `0` are omitted entirely. `count` is the number of
+distinct people in the category, not of records. `examples` holds up to 3 distinct real entity
+names per category, in `compareAmplifierOrder`. Read 2026-09-20 (15 verified amplifications)
 this resolves to `GOVERNMENT 2 · POLITICS 7 · MEDIA 3 · TECH 1 · PUBLIC FIGURES 2`; `JOURNALISM`,
 `BUSINESS` and `OTHER` are absent (zero records) — a dated reading, never a target to match.
 

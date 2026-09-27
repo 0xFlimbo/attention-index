@@ -52,7 +52,7 @@ function emptyCategoryCounts(): Record<AmplificationCategory, number> {
 }
 
 /** Stable identity for "unique amplifiers" — entity type paired with name (docs/DATA.md §10). */
-function amplifierIdentity(amp: Amplification): string {
+export function amplifierIdentity(amp: Amplification): string {
   return `${amp.entity_type}:${amp.entity_name.toLowerCase()}`;
 }
 
@@ -102,6 +102,39 @@ export function selectAmplifiers(amplifications: Amplification[]): Amplification
   return amplifications.filter(isVerifiedRecord).slice().sort(compareAmplifierOrder);
 }
 
+/** One amplifier and every verified act of theirs, newest act first. */
+export interface AmplifierGroup {
+  identity: string;
+  records: Amplification[];
+}
+
+/**
+ * docs/HOMEPAGE.md §9 — one card per person, not per act. Groups follow the
+ * position of each amplifier's first record under `compareAmplifierOrder`, so
+ * a featured act lifts the whole card. Acts inside a group are date-descending
+ * (tie: smallest id), which makes `records[0]` the most recent act — the one
+ * whose role and category describe the person as they are now
+ * (docs/DATA.md §6: the category follows the role at the time of the act).
+ */
+export function selectAmplifierGroups(amplifications: Amplification[]): AmplifierGroup[] {
+  const groups = new Map<string, Amplification[]>();
+  for (const amp of selectAmplifiers(amplifications)) {
+    const identity = amplifierIdentity(amp);
+    const records = groups.get(identity);
+    if (records) records.push(amp);
+    else groups.set(identity, [amp]);
+  }
+
+  return [...groups].map(([identity, records]) => ({
+    identity,
+    records: records.slice().sort((a, b) => {
+      if (a.date !== b.date) return a.date > b.date ? -1 : 1;
+      if (a.id === b.id) return 0;
+      return a.id < b.id ? -1 : 1;
+    }),
+  }));
+}
+
 /** One Crossover category's derived counts and real examples (docs/HOMEPAGE.md §8). */
 export interface CrossoverCategoryData {
   category: AmplificationCategory;
@@ -118,21 +151,28 @@ const CROSSOVER_EXAMPLE_LIMIT = 3;
  * least one verified record, in the schema's fixed enum order (so node
  * position is a pure function of this array's order, never hand-positioned).
  * Categories with a count of `0` are omitted entirely, never rendered with a
- * zero. Examples are the first `CROSSOVER_EXAMPLE_LIMIT` entity names in
+ * zero. `count` is the number of distinct amplifiers in the category, not of
+ * acts: a person who quoted two posts is one person under one number.
+ * Examples are the first `CROSSOVER_EXAMPLE_LIMIT` distinct entity names in
  * `compareAmplifierOrder` (featured first, then most recent) — real names
- * only, never invented.
+ * only, never invented, never repeated.
  */
 export function selectCrossoverCategories(amplifications: Amplification[]): CrossoverCategoryData[] {
   const eligible = amplifications.filter(isVerifiedRecord).slice().sort(compareAmplifierOrder);
 
   return amplificationCategoryEnum.options
     .map((category) => {
-      const records = eligible.filter((amp) => amp.category === category);
+      const people = new Map<string, string>();
+      for (const amp of eligible) {
+        const identity = amplifierIdentity(amp);
+        if (amp.category === category && !people.has(identity)) people.set(identity, amp.entity_name);
+      }
+      const names = [...people.values()];
       return {
         category,
         label: AMPLIFICATION_CATEGORY_LABELS[category],
-        count: records.length,
-        examples: records.slice(0, CROSSOVER_EXAMPLE_LIMIT).map((amp) => amp.entity_name),
+        count: names.length,
+        examples: names.slice(0, CROSSOVER_EXAMPLE_LIMIT),
       };
     })
     .filter((entry) => entry.count > 0);

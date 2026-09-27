@@ -122,6 +122,16 @@ export default function MethodologyPage() {
               or @LayoffAI.
             </li>
           </ul>
+          {/* docs/DATA.md §6 — who is recorded as an amplifier, and in which category. */}
+          <p className="text-body mt-6 max-w-prose text-ink-soft">
+            An amplification is recorded when an identified person or organization publicly quotes,
+            replies to, mentions or shares a @LayoffAI post. Identity is confirmed through a source
+            other than the account itself, and an account that cannot be tied to a real person is
+            not recorded, whatever its size. The content of the act is not judged. A role is stated
+            only where an independent source confirms it. Anyone who holds, has held or is seeking
+            elected office is listed under politics. A public figure is listed on a confirmed role
+            or on an audience of at least 100,000 followers, shown with the date it was observed.
+          </p>
           <p className="text-body mt-6 max-w-prose text-ink-soft">
             The archive is manually curated by the maintainer from publicly visible sources. It is
             not an automated crawl and does not claim to contain every public post, repost or

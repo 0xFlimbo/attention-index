@@ -1,5 +1,128 @@
 [
   {
+    "id": "post-layoffai-2101662662362812551",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-09-20",
+    "title": "Amazon layoffs compared with its H-1B filings",
+    "subject": "Amazon",
+    "summary": "The post says Amazon has laid off more than 30,000 employees since 2025 while filing Labor Condition Applications for more than 42,000 H-1B workers over the same period, and asks whether the company will be investigated.",
+    "url": "https://x.com/LayoffAI/status/2101662662362812551",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "Amazon",
+      "H-1B",
+      "layoffs"
+    ],
+    "observations": [
+      {
+        "views": 153275,
+        "likes": 8573,
+        "reposts": 2452,
+        "replies": 208,
+        "bookmarks": 329,
+        "observed_at": "2026-09-27",
+        "source": "api"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-27"
+  },
+  {
+    "id": "post-layoffai-2100571724026638499",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-09-17",
+    "title": "College sports rosters with no American players",
+    "subject": "International student athletes",
+    "summary": "Quoting a Just the News post, the post names three U.S. university teams it says have no American players, Arizona State and Iowa State women's golf and University of Idaho tennis, and argues that athletes on F-1 visas cost less because they cannot earn NIL income.",
+    "url": "https://x.com/LayoffAI/status/2100571724026638499",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "F-1 visas",
+      "college sports",
+      "international students"
+    ],
+    "observations": [
+      {
+        "views": 279645,
+        "likes": 3610,
+        "reposts": 518,
+        "replies": 86,
+        "bookmarks": 365,
+        "observed_at": "2026-09-27",
+        "source": "api"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-27"
+  },
+  {
+    "id": "post-layoffai-2099505547649110440",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-09-14",
+    "title": "Leaked Oracle layoff emails",
+    "subject": "Oracle layoffs",
+    "summary": "The post shares images of what it describes as Oracle layoff emails, headed \"Immediate Action Required\" and signed \"Oracle Leadership\", which tell employees it is their last working day and that severance will be sent through DocuSign.",
+    "url": "https://x.com/LayoffAI/status/2099505547649110440",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "Oracle",
+      "layoffs"
+    ],
+    "observations": [
+      {
+        "views": 252076,
+        "likes": 1162,
+        "reposts": 214,
+        "replies": 43,
+        "bookmarks": 213,
+        "observed_at": "2026-09-27",
+        "source": "api"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-27"
+  },
+  {
+    "id": "post-layoffai-2099488301564473569",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-09-14",
+    "title": "New round of Oracle layoffs",
+    "subject": "Oracle layoffs",
+    "summary": "The post reports that a new round of Oracle layoffs has started and that cuts will reach double-digit percentages on some teams, and links the timing to Larry Ellison cancelling a planned stock sale and to the company's data center spending.",
+    "url": "https://x.com/LayoffAI/status/2099488301564473569",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "Oracle",
+      "layoffs",
+      "data centers"
+    ],
+    "observations": [
+      {
+        "views": 147218,
+        "likes": 213,
+        "reposts": 53,
+        "replies": 8,
+        "bookmarks": 21,
+        "observed_at": "2026-09-27",
+        "source": "api"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-27"
+  },
+  {
     "id": "post-layoffai-2099180586858393814",
     "platform": "x",
     "account": "@LayoffAI",
@@ -40,6 +163,38 @@
     "verified_at": "2026-09-16"
   },
   {
+    "id": "post-layoffai-2098762331899482337",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-09-12",
+    "title": "Trine University report addressed to officials",
+    "subject": "Trine University",
+    "summary": "A reply in the thread of the Trine University post: it tags four accounts, among them the Assistant Attorney General for Civil Rights, and links LayoffHedge's full report on Trine University and other Day 1 CPT schools.",
+    "url": "https://x.com/LayoffAI/status/2098762331899482337",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "higher education",
+      "international students",
+      "Trine University",
+      "Day 1 CPT"
+    ],
+    "observations": [
+      {
+        "views": 111924,
+        "likes": 2271,
+        "reposts": 503,
+        "replies": 35,
+        "bookmarks": 118,
+        "observed_at": "2026-09-27",
+        "source": "api"
+      }
+    ],
+    "screenshot": null,
+    "notes": "A reply by @LayoffAI to its own post post-layoffai-2098762091423203710. Tracked as a post of its own because it carries content of its own: the link to the full report.",
+    "verified_at": "2026-09-27"
+  },
+  {
     "id": "post-layoffai-2098762091423203710",
     "platform": "x",
     "account": "@LayoffAI",
@@ -78,6 +233,97 @@
     "screenshot": null,
     "notes": null,
     "verified_at": "2026-09-16"
+  },
+  {
+    "id": "post-layoffai-2097498068706832557",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-09-09",
+    "title": "Researcher's resignation post on AI lab safety",
+    "subject": "AI labs",
+    "summary": "Quoting a post by a researcher who says he has resigned after three years of pretraining work at OpenAI and Anthropic, the post relays his claim that the labs are racing toward self-improving AI without acting responsibly, and his call for pacing agreements and temporary capability bans.",
+    "url": "https://x.com/LayoffAI/status/2097498068706832557",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "AI",
+      "AI labs"
+    ],
+    "observations": [
+      {
+        "views": 53404,
+        "likes": 634,
+        "reposts": 103,
+        "replies": 28,
+        "bookmarks": 97,
+        "observed_at": "2026-09-27",
+        "source": "api"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-27"
+  },
+  {
+    "id": "post-layoffai-2097377191419863524",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-09-08",
+    "title": "Cognizant leadership team after press coverage",
+    "subject": "Cognizant",
+    "summary": "The post says 11 of 16 leadership positions at Cognizant are held by Indian executives, and that the company added and highlighted its non-Indian leaders only after negative press coverage.",
+    "url": "https://x.com/LayoffAI/status/2097377191419863524",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "Cognizant",
+      "corporate leadership"
+    ],
+    "observations": [
+      {
+        "views": 127390,
+        "likes": 2190,
+        "reposts": 396,
+        "replies": 58,
+        "bookmarks": 138,
+        "observed_at": "2026-09-27",
+        "source": "api"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-27"
+  },
+  {
+    "id": "post-layoffai-2097304170835382730",
+    "platform": "x",
+    "account": "@LayoffAI",
+    "published_at": "2026-09-08",
+    "title": "White male labor force participation and suicide rate",
+    "subject": "U.S. labor force participation",
+    "summary": "Quoting LayoffHedge's own post on August job gains by gender, the post says white male labor force participation is at an all-time low and the white male suicide rate is near all-time highs, and attaches an image.",
+    "url": "https://x.com/LayoffAI/status/2097304170835382730",
+    "status": "verified",
+    "featured": false,
+    "tags": [
+      "labor force participation",
+      "employment",
+      "gender"
+    ],
+    "observations": [
+      {
+        "views": 109957,
+        "likes": 2930,
+        "reposts": 597,
+        "replies": 155,
+        "bookmarks": 528,
+        "observed_at": "2026-09-27",
+        "source": "api"
+      }
+    ],
+    "screenshot": null,
+    "notes": null,
+    "verified_at": "2026-09-27"
   },
   {
     "id": "post-layoffai-2096250047679574269",

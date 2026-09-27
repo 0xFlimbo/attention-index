@@ -162,7 +162,9 @@ the evidence clearly establishes one.
 **Roles** — concise and accurate at the time of the event: `U.S. Senator`, `Journalist`,
 `Founder & CEO`, `Technology reporter`. Names without honorifics: `Jane Doe`.
 
-**Follower counts** — contextual only, always with observation date, never framed as people reached.
+**Follower counts** — contextual only, always with observation date, never framed as people reached,
+never summed. Shown on public figures only, where the audience is the reason the person is listed
+(docs/DATA.md §6); for everyone else the role is the point.
 
 **Media context** — describe what happened, not what it supposedly proves.
 

@@ -56,7 +56,7 @@ Everything the site shows can be brought up to date by hand, in this order. Each
 and independent — run the ones that are due.
 
 ```bash
-# 1. Post metrics — the headline numbers. ~$0.16, X API.
+# 1. Post metrics — the headline numbers. ~$0.20, X API.
 pnpm refresh:metrics -- --fetch
 pnpm refresh:metrics -- --from tracked-post-metrics-<day>.json --write
 
@@ -100,7 +100,7 @@ never by hand.
 **Commands.**
 ```bash
 pnpm refresh:metrics                                    # plan: no request, no write
-pnpm refresh:metrics -- --fetch                         # buy one reading — ~$0.16 for 32 posts
+pnpm refresh:metrics -- --fetch                         # buy one reading — ~$0.20 for 40 posts
 pnpm refresh:metrics -- --from <file>                    # show a reading already paid for, free
 pnpm refresh:metrics -- --from <file> --write            # append it to data/posts.json
 ```
@@ -297,7 +297,7 @@ pnpm sweep:quotes -- --post <id> --dry-run          # no report file written
 (phase one, no `expansions` — `author_id` rides along free), profile resolution bills per user
 returned (phase two, one batched call for the top `--profiles` accounts, ranked by their own
 quote post's engagement). `--measure` (the default) is one billed request: it reads every tracked
-post's metrics, about $0.16 for 32 posts.
+post's metrics, about $0.005 a post ($0.20 for 40).
 
 **Reads and writes.** Strictly read-only against `data/` — never writes an amplification; promotion
 is a human edit. Per-post reports go to `research/quote-sweeps/<status-id>.json`. Every profile
@@ -442,6 +442,7 @@ pnpm check:visual --widths 390,1440
 pnpm check:visual --path /archive
 pnpm check:visual --anchor archive   # a section below the fold
 pnpm check:visual --out ./review-shots
+pnpm check:visual --port 3100        # when port 3000 already serves something else
 ```
 
 **Cost.** Free — a local browser only.
@@ -457,7 +458,9 @@ in the gitignored `.visual-check/` (or `--out`). Writes nothing to `data/` or `r
 - One thing at a time, in order: `debug` (typecheck/lint/test/validate/build, as separate commands)
   → `server` alone → `screens` (one browser, one context, `deviceScaleFactor` 1) → `close` (browser,
   then server, then verify the port is free). The script refuses to start under 3 GB of free RAM,
-  with no `.next` build, or if port 3000 is already serving.
+  with no `.next` build, or if its port (3000 unless `--port` is given) is already serving. On a
+  shared machine that server may belong to another project: move aside with `--port`, never stop
+  a process you did not start.
 - Never `fullPage` on a tall page or `deviceScaleFactor: 2`: a full-page raster at 2x can exhaust
   the memory of an 8 GB machine.
 - `--anchor <id>` appends a URL fragment rather than scripting a scroll, so the same capture works

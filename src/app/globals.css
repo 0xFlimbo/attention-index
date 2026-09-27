@@ -434,3 +434,8 @@ section[id] {
 .media-reference-entry {
   scroll-margin-top: 88px;
 }
+
+/* Same offset for one person's card in Amplified By (src/components/amplified-by.tsx). */
+.amplifier-entry {
+  scroll-margin-top: 88px;
+}

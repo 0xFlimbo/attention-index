@@ -110,8 +110,8 @@ localization · advanced search · network graphs · complex charts
 ```
 
 **Reddit is out of scope** — not a source, not a surface, not a record type. A subscriber count is
-a cumulative stock figure, the same shape as the follower counts this project already excludes, and
-no schema enum carries a Reddit member.
+a cumulative stock figure, the same shape as the follower counts this project never aggregates into
+a metric, and no schema enum carries a Reddit member.
 
 ---
 

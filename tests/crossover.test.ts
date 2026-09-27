@@ -1,12 +1,16 @@
 import { describe, expect, it } from "vitest";
 import {
   compareAmplifierOrder,
+  amplifierIdentity,
+  selectAmplifierGroups,
   selectAmplifiers,
   selectCrossoverCategories,
   AMPLIFICATION_CATEGORY_LABELS,
   AMPLIFICATION_ACTION_LABELS,
 } from "../src/lib/metrics/amplification";
 import { getAmplifications } from "../src/lib/data/amplifications";
+import { toAmplifierCardData } from "../src/components/amplifier-card";
+import { amplifierAnchorId } from "../src/components/amplified-by";
 import {
   amplificationActionEnum,
   amplificationCategoryEnum,
@@ -44,11 +48,15 @@ describe("selectCrossoverCategories — real dataset", () => {
   const amplifications = getAmplifications();
   const categories = selectCrossoverCategories(amplifications);
 
-  it("derives each category's count independently from the raw records, not from another selector's output", () => {
+  it("derives each category's count of distinct people independently from the raw records, not from another selector's output", () => {
     for (const category of amplificationCategoryEnum.options) {
-      const expectedCount = amplifications.filter(
-        (amp) => amp.status === "verified" && amp._placeholder !== true && amp.category === category,
-      ).length;
+      const expectedCount = new Set(
+        amplifications
+          .filter(
+            (amp) => amp.status === "verified" && amp._placeholder !== true && amp.category === category,
+          )
+          .map((amp) => `${amp.entity_type}:${amp.entity_name.toLowerCase()}`),
+      ).size;
       const entry = categories.find((c) => c.category === category);
       expect(entry?.count ?? 0).toBe(expectedCount);
     }
@@ -93,8 +101,9 @@ describe("selectCrossoverCategories — real dataset", () => {
         if (a.date !== b.date) return a.date > b.date ? -1 : 1;
         return a.id < b.id ? -1 : 1;
       })
-      .slice(0, 3)
-      .map((amp) => amp.entity_name);
+      .map((amp) => amp.entity_name)
+      .filter((name, index, names) => names.indexOf(name) === index)
+      .slice(0, 3);
 
     const politicsEntry = categories.find((entry) => entry.category === "politics");
     expect(politicsEntry?.examples).toEqual(expectedTop3);
@@ -200,5 +209,98 @@ describe("empty dataset", () => {
 
   it("selectAmplifiers returns an empty array, no throw", () => {
     expect(selectAmplifiers([])).toEqual([]);
+  });
+});
+
+describe("one person, several acts — docs/DATA.md §6 counting rule", () => {
+  const personAOlder = makeAmplification({
+    id: "amp-person-a-1",
+    category: "public_figure",
+    entity_name: "Person A",
+    date: "2026-08-12",
+    evidence_url: "https://x.com/a/status/1",
+  });
+  const personANewer = makeAmplification({
+    id: "amp-person-a-2",
+    category: "public_figure",
+    entity_name: "Person A",
+    date: "2026-09-21",
+    evidence_url: "https://x.com/a/status/2",
+    follower_count: 1480934,
+    follower_count_observed_at: "2026-09-27",
+  });
+  const other = makeAmplification({
+    id: "amp-person-b",
+    category: "public_figure",
+    entity_name: "Person B",
+    date: "2026-09-01",
+  });
+  const amplifications = [personAOlder, other, personANewer];
+
+  it("Crossover counts the person once and never repeats the name among the examples", () => {
+    const [entry] = selectCrossoverCategories(amplifications);
+    expect(entry?.count).toBe(2);
+    expect(entry?.examples).toEqual(["Person A", "Person B"]);
+  });
+
+  it("groups every act of a person into one group, newest act first", () => {
+    const groups = selectAmplifierGroups(amplifications);
+    expect(groups.map((group) => group.identity)).toEqual([
+      amplifierIdentity(personANewer),
+      amplifierIdentity(other),
+    ]);
+    expect(groups[0]?.records.map((record) => record.id)).toEqual(["amp-person-a-2", "amp-person-a-1"]);
+  });
+
+  it("orders groups by the person's strongest record, so a featured act lifts the whole card", () => {
+    const featuredOld = { ...personAOlder, featured: true };
+    const groups = selectAmplifierGroups([other, personANewer, featuredOld]);
+    expect(groups.map((group) => group.records.length)).toEqual([2, 1]);
+    expect(groups[0]?.identity).toBe(amplifierIdentity(personANewer));
+  });
+
+  it("the /evidence list still has one row per act", () => {
+    expect(selectAmplifiers(amplifications)).toHaveLength(3);
+  });
+
+  it("the card lists every act and takes the follower count from the newest act", () => {
+    const [group] = selectAmplifierGroups(amplifications);
+    const card = toAmplifierCardData(group!, new Map(), "@LayoffAI");
+    expect(card.acts.map((act) => act.evidenceUrl)).toEqual([
+      "https://x.com/a/status/2",
+      "https://x.com/a/status/1",
+    ]);
+    expect(card.followerCount).toBe(1480934);
+    expect(card.followerCountObservedAt).toBe("2026-09-27");
+  });
+
+  it("shows a follower count on public_figure only — for any other category the role is the point", () => {
+    const officeholder = makeAmplification({
+      id: "amp-officeholder",
+      category: "politics",
+      entity_name: "Officeholder",
+      follower_count: 500000,
+      follower_count_observed_at: "2026-09-27",
+    });
+    const [group] = selectAmplifierGroups([officeholder]);
+    const card = toAmplifierCardData(group!, new Map(), "@LayoffAI");
+    expect(card.followerCount).toBeNull();
+    expect(card.followerCountObservedAt).toBeNull();
+  });
+});
+
+describe("amplifierAnchorId — one link target per card", () => {
+  it("slugs the name", () => {
+    expect(amplifierAnchorId("Harmeet K. Dhillon")).toBe("amplifier-harmeet-k-dhillon");
+    expect(amplifierAnchorId("U.S. Department of Labor Office of Inspector General")).toBe(
+      "amplifier-u-s-department-of-labor-office-of-inspector-general",
+    );
+  });
+
+  it("is unique across every card the real dataset renders", () => {
+    const ids = selectAmplifierGroups(getAmplifications()).map((group) =>
+      amplifierAnchorId(group.records[0]!.entity_name),
+    );
+    expect(new Set(ids).size).toBe(ids.length);
   });
 });

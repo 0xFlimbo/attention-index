@@ -27,10 +27,13 @@ it is the single owner of the data contract, and this file does not repeat it.
 
 A record cannot move to `status: "verified"` without evidence a stranger can check:
 
-- **post** — `url` (the original public post), `metrics.views`, `metrics.observed_at` (the date
-  you personally observed that view count — not the publish date).
+- **post** — `url` (the original public post), and an entry in `observations` with `views`,
+  `observed_at` (the date the view count was read — not the publish date) and `source`.
 - **amplification** — `evidence_url` (the public post, article or clip that shows the
-  amplification happening).
+  amplification happening), plus an independent source tying the account to a real person or
+  organization. Pseudonymous accounts are not recorded, whatever their size; a role is written only
+  where a source other than the account confirms it. Who qualifies, and in which category, is
+  `docs/DATA.md §6`.
 - **media** — `url` (the article or reference itself).
 
 Every `verified` record also needs `verified_at` — the date the evidence was checked. Store raw
