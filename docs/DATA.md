@@ -272,7 +272,7 @@ person in `politics`.
 | `media` | news **organisations** posting as themselves | the account is the outlet, not a person | 4 |
 | `business` | companies and executives outside technology | acting in that commercial role | **0** |
 | `tech` | technology companies and their executives | acting in that role | 1 |
-| `public_figure` | identified people whose public standing fits none of the above: commentators, hosts, activists, creators | a verified role that places them nowhere else, **or at least 100,000 followers** on the account that acted | 10 records, 9 people |
+| `public_figure` | identified people whose public standing fits none of the above: commentators, hosts, activists, creators | a verified role that places them nowhere else, **or at least 100,000 followers** on the account that acted | 15 records, 14 people |
 | `other` | anything genuinely outside the seven | — | 0 |
 
 **`politics` is elected office, not political talk.** Anyone who holds, has held or is seeking an
