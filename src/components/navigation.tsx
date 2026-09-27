@@ -105,20 +105,27 @@ export function Navigation({ repositoryUrl }: NavigationProps) {
         aria-label="Primary"
         className="container-editorial flex h-16 items-center justify-between md:h-[72px]"
       >
-        <NavLink href="/" className="text-sm font-bold tracking-tight text-ink md:text-base">
-          {/* Mobile: "LH / ATTENTION INDEX"; desktop: the full brand line — docs/DESIGN.md §6 */}
-          <span className="md:hidden">LH / ATTENTION INDEX</span>
-          <span className="hidden md:inline">LAYOFFHEDGE / ATTENTION INDEX</span>
+        <NavLink
+          href="/"
+          className="whitespace-nowrap text-sm font-bold tracking-tight text-ink md:text-base"
+        >
+          {/*
+            docs/DESIGN.md §6 — the short "LH / ATTENTION INDEX" below `lg`, the full
+            brand line from `lg` up. At `md` the full line (~280px) beside five links
+            overflows a 768px viewport and wraps onto two lines; the short form fits.
+          */}
+          <span className="lg:hidden">LH / ATTENTION INDEX</span>
+          <span className="hidden lg:inline">LAYOFFHEDGE / ATTENTION INDEX</span>
           <span className="sr-only"> — home</span>
         </NavLink>
 
         {/* Desktop links */}
-        <ul className="hidden items-center gap-8 md:flex">
+        <ul className="hidden items-center gap-6 md:flex lg:gap-8">
           {NAV_ITEMS.map((item) => (
             <li key={item.label}>
               <NavLink
                 href={item.href}
-                className="text-metadata font-bold text-ink hover:text-accent-ink"
+                className="text-metadata whitespace-nowrap font-bold text-ink hover:text-accent-ink"
               >
                 {item.label}
               </NavLink>
@@ -130,7 +137,7 @@ export function Navigation({ repositoryUrl }: NavigationProps) {
                 href={repositoryUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-metadata font-bold text-ink hover:text-accent-ink"
+                className="text-metadata whitespace-nowrap font-bold text-ink hover:text-accent-ink"
               >
                 GITHUB <ExternalArrow /><span className="sr-only"> (opens in a new tab)</span>
               </a>

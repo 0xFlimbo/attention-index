@@ -302,6 +302,9 @@ LAYOFFHEDGE / ATTENTION INDEX          ATTENTION  CROSSOVER  ARCHIVE  SOURCES  G
 Sticky, ~64–72px, cream, thin bottom border. No floating navbar, no glass card, no pill nav,
 no large logo, no competing CTA. Sticky state may add a very light `backdrop-filter: blur(8px)`.
 Mobile: `LH / ATTENTION INDEX     MENU` opening a simple drawer or full-screen panel.
+Tablet (`md` to `lg`): the short `LH / ATTENTION INDEX` beside the full link row — the full brand
+line and five links do not fit 768px on one line. The full brand line starts at `lg`. No nav item
+ever wraps.
 
 ### Prose section
 

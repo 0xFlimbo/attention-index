@@ -58,6 +58,7 @@ Never render zeros or fake placeholders to fill space. Empty state copy: `No ver
 Desktop left `LAYOFFHEDGE / ATTENTION INDEX`, right `ATTENTION CROSSOVER ARCHIVE SOURCES GITHUB ↗`.
 Sticky, ~64–72px, cream, thin bottom border, optional very light blur after scroll.
 Mobile `LH / ATTENTION INDEX     MENU` → simple drawer/full-screen panel (shadcn Sheet allowed, restyled).
+Tablet (768–1023px) keeps the short brand beside the full link row (docs/DESIGN.md §6).
 `GITHUB ↗` is hidden or disabled while `project.json.repository_url` is `null`.
 
 ---
