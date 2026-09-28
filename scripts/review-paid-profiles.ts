@@ -5,6 +5,12 @@
  * a human should look at. **Makes no network request of any kind** — it is the
  * "the data is bought, the reading is free" pass.
  *
+ * An account is put in front of a human only when three things hold: a criterion
+ * fires, the paid posts show it acting on the project (docs/DATA.md §6 — no act,
+ * no record), and it is neither recorded nor already decided in the local
+ * register `research/amplifier-decisions.json`. Held accounts are listed apart,
+ * with the source that would reopen them.
+ *
  * Why it exists as a script rather than a one-off: `research/` grows every sweep,
  * and the review criteria have already changed twice. A stored pass can be re-run
  * over the whole corpus whenever a criterion moves, instead of re-deciding by
@@ -22,8 +28,25 @@ import { readFileSync, writeFileSync, existsSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 
 import { amplificationsFileSchema } from "../src/schemas/amplification.schema";
+import { postsFileSchema } from "../src/schemas/post.schema";
 import { knownAccountKeys, signalFlags } from "../src/lib/sweep/quote-candidates";
 import { collectUserObjects, mergeProfiles, type PaidProfile } from "../src/lib/sweep/profile-store";
+import {
+  actEvidenceUrl,
+  actsByAuthor,
+  collectPostObjects,
+  isProjectSearchFile,
+  projectPostIds,
+  projectSearchMatchIds,
+  selfAuthorIds,
+  type PaidPost,
+  type ProjectAct,
+} from "../src/lib/sweep/amplifier-acts";
+import {
+  amplifierDecisionsFileSchema,
+  findDecision,
+  type AmplifierDecision,
+} from "../src/lib/sweep/amplifier-decisions";
 import {
   buildLegislatorIndex,
   matchLegislators,
@@ -34,6 +57,8 @@ const ROOT = process.cwd();
 const RESEARCH_DIR = resolve(ROOT, "research");
 /** Shared with `sweep:quotes` — the one index of every profile already paid for. */
 const PROFILE_STORE = resolve(RESEARCH_DIR, "x-api-profiles.json");
+/** Local, maintained by hand: accounts screened and not recorded. */
+const DECISIONS = resolve(RESEARCH_DIR, "amplifier-decisions.json");
 
 const args = process.argv.slice(2);
 function flagValue(name: string): string | null {
@@ -53,10 +78,19 @@ const showEverything = args.includes("--all");
 /** A paid profile plus the research file it was recovered from. */
 type SourcedProfile = PaidProfile & { source: string };
 
-/** Every user object in every research file, deduplicated by account id. */
-function loadPaidProfiles(): Map<string, SourcedProfile> {
+/**
+ * Every user object and every post in every research file, each deduplicated
+ * by id. One walk, because both come out of the same paid responses.
+ */
+function loadPaidData(): {
+  profiles: Map<string, SourcedProfile>;
+  posts: PaidPost[];
+  searchMatchIds: Set<string>;
+} {
   const profiles = new Map<string, SourcedProfile>();
-  if (!existsSync(RESEARCH_DIR)) return profiles;
+  const posts: PaidPost[] = [];
+  const searchMatchIds = new Set<string>();
+  if (!existsSync(RESEARCH_DIR)) return { profiles, posts, searchMatchIds };
 
   const walk = (dir: string): string[] =>
     readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
@@ -66,6 +100,7 @@ function loadPaidProfiles(): Map<string, SourcedProfile> {
     });
 
   for (const file of walk(RESEARCH_DIR)) {
+    if (file === DECISIONS) continue; // the register is maintained by hand, not paid data
     let parsed: unknown;
     try {
       parsed = JSON.parse(readFileSync(file, "utf-8"));
@@ -75,8 +110,25 @@ function loadPaidProfiles(): Map<string, SourcedProfile> {
     const label = file.slice(RESEARCH_DIR.length + 1).split("\\").join("/");
     const sourced = collectUserObjects(parsed).map((profile) => ({ ...profile, source: label }));
     mergeProfiles(profiles as Map<string, PaidProfile>, sourced);
+    posts.push(...collectPostObjects(parsed));
+    if (isProjectSearchFile(label, parsed)) {
+      for (const id of projectSearchMatchIds(parsed)) searchMatchIds.add(id);
+    }
   }
-  return profiles;
+  return { profiles, posts, searchMatchIds };
+}
+
+function loadDecisions(): AmplifierDecision[] {
+  if (!existsSync(DECISIONS)) {
+    console.log("No decisions register at research/amplifier-decisions.json — nothing is excluded.\n");
+    return [];
+  }
+  const parsed = amplifierDecisionsFileSchema.safeParse(JSON.parse(readFileSync(DECISIONS, "utf-8")));
+  if (!parsed.success) {
+    console.error("research/amplifier-decisions.json is invalid:\n" + parsed.error.message);
+    process.exit(1);
+  }
+  return parsed.data;
 }
 
 function loadLegislators(): Legislator[] {
@@ -96,25 +148,76 @@ function loadLegislators(): Legislator[] {
   return buildLegislatorIndex(readFileSync(current, "utf-8"), readFileSync(historical, "utf-8"));
 }
 
+type Row = {
+  profile: SourcedProfile;
+  followers: number;
+  matches: ReturnType<typeof matchLegislators>;
+  reasons: string[];
+  acts: ProjectAct[];
+  decision: AmplifierDecision | undefined;
+};
+
+function printRow({ profile, followers, matches, reasons, acts, decision }: Row): void {
+  console.log(
+    `@${profile.username}  "${profile.name}"  ${followers.toLocaleString()} followers` +
+      `  vt=${profile.verified_type ?? "absent"}  [${profile.source}]`,
+  );
+  if (reasons.length > 0) console.log(`   ${reasons.join(" · ")}`);
+  for (const { legislator, matchedOn } of matches.slice(0, 3)) {
+    console.log(
+      `   register: ${legislator.fullName} (${legislator.chamber}-${legislator.state}, ` +
+        `${legislator.era}) via ${matchedOn}`,
+    );
+  }
+  const bio = (profile.description ?? "").replace(/\s+/g, " ").trim();
+  if (bio) console.log(`   bio: ${bio.slice(0, 150)}`);
+  for (const act of acts) {
+    const target = act.targetId ? ` of ${act.targetId}` : "";
+    console.log(
+      `   act: ${act.kind}${target}  ${act.date ?? "undated"}  ${actEvidenceUrl(profile.username, act.postId)}`,
+    );
+  }
+  if (decision) {
+    console.log(`   ${decision.verdict} ${decision.decided_at}: ${decision.reason}`);
+    if (decision.reopen_if) console.log(`   reopen if: ${decision.reopen_if}`);
+  }
+  console.log();
+}
+
 function main(): void {
-  const profiles = loadPaidProfiles();
+  const { profiles, posts, searchMatchIds } = loadPaidData();
   const legislators = loadLegislators();
+  const decisions = loadDecisions();
   const amplifications = amplificationsFileSchema.parse(
     JSON.parse(readFileSync(resolve(ROOT, "data", "amplifications.json"), "utf-8")),
   );
+  const trackedPosts = postsFileSchema.parse(
+    JSON.parse(readFileSync(resolve(ROOT, "data", "posts.json"), "utf-8")),
+  );
   const known = knownAccountKeys(amplifications);
+
+  const selfIds = selfAuthorIds(profiles.values());
+  const trackedStatusIds = trackedPosts.flatMap((post) => post.url.match(/status\/(\d+)/)?.[1] ?? []);
+  const acts = actsByAuthor(
+    posts,
+    projectPostIds(trackedStatusIds, posts, selfIds),
+    selfIds,
+    searchMatchIds,
+  );
 
   console.log(
     `${profiles.size} distinct profiles already paid for · ` +
+      `${new Set(posts.map((post) => post.id)).size} paid posts, ` +
+      `${[...acts.values()].flat().length} of them acts on the project · ` +
       `${legislators.length} legislators in the register · ` +
-      `${known.size} accounts already known\n`,
+      `${known.size} accounts already known · ${decisions.length} decisions on file\n`,
   );
 
   const reviewed = [...profiles.values()].filter(
     (profile) => !known.has(`@${profile.username.toLowerCase()}`),
   );
 
-  const rows = reviewed.map((profile) => {
+  const rows = reviewed.map((profile): Row => {
     const followers = profile.public_metrics?.followers_count ?? 0;
     const matches = matchLegislators(
       { name: profile.name ?? "", username: profile.username, authorId: profile.id },
@@ -128,11 +231,23 @@ function main(): void {
       reasons.push(flags.find((flag) => flag.startsWith("role-phrase"))!);
     }
     if (followers >= followerFloor) reasons.push(`followers >= ${followerFloor.toLocaleString()}`);
-    return { profile, followers, matches, reasons };
+    return {
+      profile,
+      followers,
+      matches,
+      reasons,
+      acts: acts.get(profile.id) ?? [],
+      decision: findDecision(decisions, profile),
+    };
   });
+  rows.sort((a, b) => b.followers - a.followers);
 
-  const toRead = rows.filter((row) => row.reasons.length > 0);
-  toRead.sort((a, b) => b.followers - a.followers);
+  const flagged = rows.filter((row) => row.reasons.length > 0);
+  const held = flagged.filter((row) => row.decision?.verdict === "held");
+  const decided = flagged.filter((row) => row.decision && row.decision.verdict !== "held");
+  const undecided = flagged.filter((row) => !row.decision);
+  const toRead = undecided.filter((row) => row.acts.length > 0);
+  const noAct = undecided.filter((row) => row.acts.length === 0);
 
   // Each criterion's own yield, so a criterion that never fires can be retired
   // on evidence rather than kept because it sounds prudent.
@@ -147,22 +262,30 @@ function main(): void {
     console.log(`  ${String(count).padStart(4)}  ${name}`);
   }
 
-  console.log(`\n${toRead.length} of ${rows.length} accounts meet at least one criterion.\n`);
-  for (const { profile, followers, matches, reasons } of showEverything ? rows : toRead) {
-    console.log(
-      `@${profile.username}  "${profile.name}"  ${followers.toLocaleString()} followers` +
-        `  vt=${profile.verified_type ?? "absent"}  [${profile.source}]`,
-    );
-    console.log(`   ${reasons.join(" · ")}`);
-    for (const { legislator, matchedOn } of matches.slice(0, 3)) {
-      console.log(
-        `   register: ${legislator.fullName} (${legislator.chamber}-${legislator.state}, ` +
-          `${legislator.era}) via ${matchedOn}`,
-      );
-    }
-    const bio = (profile.description ?? "").replace(/\s+/g, " ").trim();
-    if (bio) console.log(`   bio: ${bio.slice(0, 150)}`);
-    console.log();
+  console.log(
+    `\n${flagged.length} of ${rows.length} accounts meet at least one criterion: ` +
+      `${toRead.length} to read · ${held.length} held · ${decided.length} decided · ` +
+      `${noAct.length} with no act in paid data.\n`,
+  );
+
+  console.log(`=== TO READ — a criterion, an act, not recorded, not decided (${toRead.length}) ===\n`);
+  toRead.forEach(printRow);
+
+  console.log(`=== HELD — waiting on a source (${held.length}) ===\n`);
+  held.forEach(printRow);
+
+  // An act is required before anything can be recorded (docs/DATA.md §6), so
+  // these are counted by default. "No act in paid data" is not "no act": the
+  // account may have acted in a post nobody paid to read.
+  console.log(`=== NO ACT IN PAID DATA (${noAct.length}) — listed with --all ===\n`);
+  console.log(`=== DECIDED — out or noted (${decided.length}) — listed with --all ===\n`);
+  if (showEverything) {
+    console.log("--- no act in paid data ---\n");
+    noAct.forEach(printRow);
+    console.log("--- decided ---\n");
+    decided.forEach(printRow);
+    console.log("--- meeting no criterion ---\n");
+    rows.filter((row) => row.reasons.length === 0).forEach(printRow);
   }
 
   /*

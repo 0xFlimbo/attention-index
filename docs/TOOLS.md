@@ -336,21 +336,33 @@ matching caught 2.
 
 ## 9. `pnpm review:profiles`
 
-**What it is for.** Re-reads every profile already paid for and reports which accounts a human
-should look at, with the criterion that fired. Makes no network request of any kind — the reading
-is free, only the underlying data was expensive, and the review criteria have already changed more
-than once since profiles started accumulating.
+**What it is for.** Re-reads every profile and post already paid for and reports which accounts a
+human should look at, with the criterion that fired and the act that makes them recordable. Makes
+no network request of any kind — the reading is free, only the underlying data was expensive, and
+the review criteria have already changed more than once since profiles started accumulating.
+
+An account is listed **to read** only when all of these hold: a criterion fires; the paid posts
+show it acting on the project (a quote of or reply to a @LayoffAI post, or a post naming the
+handle, the brand or the domain — `docs/DATA.md §6`: no act, no record); it is not in
+`data/amplifications.json`; and it is not in the decisions register. Held accounts are listed apart
+with the source that would reopen them.
 
 **Commands.**
 ```bash
-pnpm review:profiles                  # every account meeting at least one criterion
+pnpm review:profiles                  # to read + held, and counts of the other groups
 pnpm review:profiles -- --floor 1000  # lower the follower criterion (default 5,000)
-pnpm review:profiles -- --all         # print every account, criterion or not
+pnpm review:profiles -- --all         # also list no-act, decided and no-criterion accounts
 ```
 
 **Cost.** Free.
 
-**Reads and writes.** Reads every `.json` under `research/` and `data/`. Writes nothing.
+**Reads and writes.** Reads every `.json` under `research/` and `data/`, and the decisions register
+`research/amplifier-decisions.json` if present — local like the rest of `research/`, kept by hand:
+one entry per account screened and not recorded (`out`, `held` with `reopen_if`, or `noted` when
+the act sits in an existing record's notes), schema in `src/lib/sweep/amplifier-decisions.ts`. An
+account that went in is never repeated there. Writes one file, `research/x-api-profiles.json`, the
+id-keyed index of paid profiles that `sweep:quotes` reads before buying; it is rebuilt from the
+research files themselves and never a source of truth.
 
 **Credentials.** None.
 
@@ -358,11 +370,20 @@ pnpm review:profiles -- --all         # print every account, criterion or not
 - The follower floor (default 5,000) applies **only** to the follower criterion; a register match,
   a `government` verified_type, or a role phrase is reported at any account size.
 - The floor is inherited from a Track A reading, not invented here — see Measured.
+- "No act in paid data" is not "no act": the account may have acted in a post nobody paid to read.
+- A mention search result can show only a t.co link: the search matched the expanded URL the
+  response did not carry. Every result of a project search (a stored `query` naming the project, a
+  search archive entry, or a `track-a-` file) therefore counts as a mention; the posts under
+  `includes` do not, since they are what the results quoted.
+- A long post's full text is in `note_tweet` / `note_post`; a credit past 280 characters is only
+  there.
 
 **Measured.** Track A checked all 210 authors below 5,000 followers and found 16 with a role phrase
 and none with weight — that reading is where the default floor comes from. A pass over 448 accounts
 not yet recorded found: register match 3, government verified_type 0, role phrase 20, followers
-≥5,000 55.
+≥5,000 55. On 2026-09-28, 978 paid posts held 822 acts on the project; checked against the recorded
+X amplification records, the act was found for every one whose profile and post had been paid for
+(27 of 27).
 
 ---
 
