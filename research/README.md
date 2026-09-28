@@ -23,7 +23,7 @@ for this file.
 |---|---|---|
 | `x-api-<day>/raw/<label>-<time>.json` | `sweep:mentions`, `sweep:quotes`, `refresh:metrics`, `enrich:twitter` | every billed X API response, archived before anything parses it |
 | `x-api-profiles.json` | `sweep:quotes`, `review:profiles` | every X user profile ever paid for, accumulated across runs and keyed by account id, so nothing is bought twice |
-| `amplifier-decisions.json` | maintainer, by hand | accounts screened and not recorded — `out`, `held` or `noted`, with the reason — so `review:profiles` does not propose them again. Not paid data |
+| `amplifier-decisions.json` | maintainer, by hand | accounts screened and not recorded — `out`, `held` or `noted`, with the reason — so `review:profiles` does not propose them again, except an `out` for size once its follower line is reached. Not paid data |
 | `quote-sweeps/<status-id>.json` | `sweep:quotes` | one enumeration report per swept post — author ids, candidates, why pagination stopped |
 | `track-a-state.json` | `sweep:mentions` | the incremental high-water mark for the mention sweep, so a re-run only buys what is new |
 | `post-metrics/tracked-post-metrics-<date>.json` | `refresh:metrics`, `sweep:quotes` | a dated reading of every tracked post's public counters |

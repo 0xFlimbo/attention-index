@@ -19,9 +19,7 @@ export const amplificationCategoryEnum = z.enum([
   "journalism",
   "media",
   "business",
-  "tech",
   "public_figure",
-  "other",
 ]);
 
 export const amplificationActionEnum = z.enum([

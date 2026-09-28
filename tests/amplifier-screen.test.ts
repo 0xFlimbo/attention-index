@@ -21,6 +21,7 @@ import {
 import {
   amplifierDecisionsFileSchema,
   findDecision,
+  isDueForRecheck,
   type AmplifierDecision,
 } from "@/lib/sweep/amplifier-decisions";
 
@@ -166,5 +167,27 @@ describe("the decisions register", () => {
   it("refuses an `in` verdict: a recorded account lives in data/amplifications.json", () => {
     const recorded = [{ account: "@x", verdict: "in", reason: "recorded", decided_at: "2026-09-27" }];
     expect(amplifierDecisionsFileSchema.safeParse(recorded).success).toBe(false);
+  });
+
+  it("brings an account turned down for size back once a reading reaches the line", () => {
+    const small: AmplifierDecision = {
+      account: "@Small",
+      verdict: "out",
+      reason: "below 100,000",
+      decided_at: "2026-09-28",
+      recheck_at_followers: 100_000,
+    };
+    expect(isDueForRecheck(small, 99_999)).toBe(false);
+    expect(isDueForRecheck(small, 100_000)).toBe(true);
+    // A pseudonym is out whatever its size: no line, never due.
+    expect(isDueForRecheck(decisions[0], 5_000_000)).toBe(false);
+    expect(isDueForRecheck(undefined, 5_000_000)).toBe(false);
+  });
+
+  it("refuses a follower recheck on anything but an `out`", () => {
+    const held = [
+      { account: "@x", verdict: "held", reason: "no source", decided_at: "2026-09-27", reopen_if: "a source", recheck_at_followers: 100_000 },
+    ];
+    expect(amplifierDecisionsFileSchema.safeParse(held).success).toBe(false);
   });
 });

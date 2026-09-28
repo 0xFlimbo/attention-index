@@ -196,7 +196,7 @@ being amplified outside the crypto-native audience.
 ```
 
 Categories come from `amplifications.json` (`government, politics, journalism, media, business,
-tech, public_figure, other`) and are only shown when they have records.
+public_figure`) and are only shown when they have records.
 
 Preferred visual: LayoffHedge in the center, categories around it, simple SVG connectors,
 category counts, selected real examples, plus an accessible text equivalent below.

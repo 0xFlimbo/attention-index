@@ -18,9 +18,7 @@ export const AMPLIFICATION_CATEGORY_LABELS: Record<AmplificationCategory, string
   journalism: "JOURNALISM",
   media: "MEDIA",
   business: "BUSINESS",
-  tech: "TECH",
   public_figure: "PUBLIC FIGURES",
-  other: "OTHER",
 };
 
 /**

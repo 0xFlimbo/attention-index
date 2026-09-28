@@ -55,7 +55,7 @@ Optimize for `visual impact + clarity + credibility + source transparency`.
 ## 4. Four pillars
 
 1. **Attention** — public reach measured from public evidence (view thresholds, top post, totals).
-2. **Crossover** — audience beyond crypto: politics, government, journalism, media, business, tech.
+2. **Crossover** — audience beyond crypto: politics, government, journalism, media, business.
 3. **Evidence** — every major claim links to a public source.
 4. **Open source** — public dataset and code; contributions via GitHub PR with sources.
 

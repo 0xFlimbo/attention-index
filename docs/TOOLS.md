@@ -345,11 +345,12 @@ An account is listed **to read** only when all of these hold: a criterion fires;
 show it acting on the project (a quote of or reply to a @LayoffAI post, or a post naming the
 handle, the brand or the domain — `docs/DATA.md §6`: no act, no record); it is not in
 `data/amplifications.json`; and it is not in the decisions register. Held accounts are listed apart
-with the source that would reopen them.
+with the source that would reopen them. An account turned down only for its size is listed
+**to recheck** once a paid reading of it reaches the follower line its register entry names.
 
 **Commands.**
 ```bash
-pnpm review:profiles                  # to read + held, and counts of the other groups
+pnpm review:profiles                  # to read, to recheck, held, and counts of the other groups
 pnpm review:profiles -- --floor 1000  # lower the follower criterion (default 5,000)
 pnpm review:profiles -- --all         # also list no-act, decided and no-criterion accounts
 ```
@@ -360,7 +361,8 @@ pnpm review:profiles -- --all         # also list no-act, decided and no-criteri
 `research/amplifier-decisions.json` if present — local like the rest of `research/`, kept by hand:
 one entry per account screened and not recorded (`out`, `held` with `reopen_if`, or `noted` when
 the act sits in an existing record's notes), schema in `src/lib/sweep/amplifier-decisions.ts`. An
-account that went in is never repeated there. Writes one file, `research/x-api-profiles.json`, the
+`out` given to an identified person only for size carries `recheck_at_followers` (100,000, the
+`public_figure` line in `docs/DATA.md §6`). An account that went in is never repeated there. Writes one file, `research/x-api-profiles.json`, the
 id-keyed index of paid profiles that `sweep:quotes` reads before buying; it is rebuilt from the
 research files themselves and never a source of truth.
 
@@ -371,6 +373,9 @@ research files themselves and never a source of truth.
   a `government` verified_type, or a role phrase is reported at any account size.
 - The floor is inherited from a Track A reading, not invented here — see Measured.
 - "No act in paid data" is not "no act": the account may have acted in a post nobody paid to read.
+- "To recheck" sees only the latest reading someone paid for. An account that crossed the line
+  since its profile was last read stays silent until a sweep reads it again; re-reading the
+  watchlist on purpose is a `GET /2/users/by` at $0.010 per account.
 - A mention search result can show only a t.co link: the search matched the expanded URL the
   response did not carry. Every result of a project search (a stored `query` naming the project, a
   search archive entry, or a `track-a-` file) therefore counts as a mention; the posts under

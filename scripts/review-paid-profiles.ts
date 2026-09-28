@@ -45,6 +45,7 @@ import {
 import {
   amplifierDecisionsFileSchema,
   findDecision,
+  isDueForRecheck,
   type AmplifierDecision,
 } from "../src/lib/sweep/amplifier-decisions";
 import {
@@ -180,6 +181,9 @@ function printRow({ profile, followers, matches, reasons, acts, decision }: Row)
   if (decision) {
     console.log(`   ${decision.verdict} ${decision.decided_at}: ${decision.reason}`);
     if (decision.reopen_if) console.log(`   reopen if: ${decision.reopen_if}`);
+    if (decision.recheck_at_followers !== undefined) {
+      console.log(`   recheck at: ${decision.recheck_at_followers.toLocaleString()} followers`);
+    }
   }
   console.log();
 }
@@ -244,7 +248,12 @@ function main(): void {
 
   const flagged = rows.filter((row) => row.reasons.length > 0);
   const held = flagged.filter((row) => row.decision?.verdict === "held");
-  const decided = flagged.filter((row) => row.decision && row.decision.verdict !== "held");
+  // Turned down for size, and a later paid reading has reached the line: the
+  // decision no longer holds on its own terms, so it goes back to a human.
+  const recheck = rows.filter((row) => isDueForRecheck(row.decision, row.followers));
+  const decided = flagged.filter(
+    (row) => row.decision && row.decision.verdict !== "held" && !recheck.includes(row),
+  );
   const undecided = flagged.filter((row) => !row.decision);
   const toRead = undecided.filter((row) => row.acts.length > 0);
   const noAct = undecided.filter((row) => row.acts.length === 0);
@@ -264,12 +273,16 @@ function main(): void {
 
   console.log(
     `\n${flagged.length} of ${rows.length} accounts meet at least one criterion: ` +
-      `${toRead.length} to read · ${held.length} held · ${decided.length} decided · ` +
+      `${toRead.length} to read · ${recheck.length} to recheck · ${held.length} held · ` +
+      `${decided.length} decided · ` +
       `${noAct.length} with no act in paid data.\n`,
   );
 
   console.log(`=== TO READ — a criterion, an act, not recorded, not decided (${toRead.length}) ===\n`);
   toRead.forEach(printRow);
+
+  console.log(`=== RECHECK — turned down for size, now at the line (${recheck.length}) ===\n`);
+  recheck.forEach(printRow);
 
   console.log(`=== HELD — waiting on a source (${held.length}) ===\n`);
   held.forEach(printRow);

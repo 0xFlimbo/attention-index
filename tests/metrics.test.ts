@@ -45,7 +45,7 @@ function makeAmplification(
     entity_name: "Test Person",
     role: null,
     organization: null,
-    category: "other",
+    category: "public_figure",
     action: "other",
     date: "2026-01-01",
     platform: "x",
@@ -163,7 +163,7 @@ describe("getAmplificationMetrics", () => {
       makeAmplification({
         id: "amp-d",
         entity_name: "Carol",
-        category: "tech",
+        category: "business",
         status: "needs_review",
         _placeholder: true,
       }),

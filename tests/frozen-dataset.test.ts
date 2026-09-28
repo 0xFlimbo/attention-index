@@ -86,10 +86,8 @@ describe("frozen dataset (2026-09-20) — derived figures", () => {
       politics: 6,
       journalism: 0,
       media: 0,
-      business: 0,
-      tech: 1,
+      business: 1,
       public_figure: 1,
-      other: 0,
     });
 
     // Four categories hold no record, so the Crossover map draws four nodes
@@ -97,7 +95,7 @@ describe("frozen dataset (2026-09-20) — derived figures", () => {
     expect(selectCrossoverCategories(frozenAmplifications).map((c) => c.label)).toEqual([
       "GOVERNMENT",
       "POLITICS",
-      "TECH",
+      "BUSINESS",
       "PUBLIC FIGURES",
     ]);
   });

@@ -30,17 +30,42 @@ export const amplifierDecisionSchema = z
     reason: z.string().min(1),
     decided_at: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
     reopen_if: z.string().min(1).optional(),
+    /**
+     * An identified person turned away only for audience (docs/DATA.md §6: below
+     * 100,000, `public_figure` is closed whatever the role). Accounts grow, so the
+     * review puts them back in front of a human once a paid reading reaches this.
+     */
+    recheck_at_followers: z.number().int().positive().optional(),
     /** Where the identity or role was looked for, so the search is not repeated blind. */
     sources_checked: z.array(z.string()).optional(),
   })
   .refine((decision) => decision.verdict !== "held" || decision.reopen_if !== undefined, {
     message: "a held account needs `reopen_if`, or it can never be reopened",
     path: ["reopen_if"],
-  });
+  })
+  .refine(
+    (decision) => decision.verdict === "out" || decision.recheck_at_followers === undefined,
+    {
+      message: "only an `out` for size can be rechecked on followers",
+      path: ["recheck_at_followers"],
+    },
+  );
 
 export const amplifierDecisionsFileSchema = z.array(amplifierDecisionSchema);
 
 export type AmplifierDecision = z.infer<typeof amplifierDecisionSchema>;
+
+/**
+ * Whether a decision turned down for size is due for another look. It can only
+ * see the latest reading someone paid for: an account that crossed the line
+ * since its profile was last read stays silent until a sweep reads it again.
+ */
+export function isDueForRecheck(
+  decision: AmplifierDecision | undefined,
+  followers: number,
+): boolean {
+  return decision?.recheck_at_followers !== undefined && followers >= decision.recheck_at_followers;
+}
 
 /** The decision on an account, by id first and handle second. */
 export function findDecision(

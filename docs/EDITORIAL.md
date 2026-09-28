@@ -312,7 +312,7 @@ Loading (rare): `Loading records…`. Errors: `This source could not be opened.`
 
 Archive filters use thresholds (`ALL · >1M · >5M · >10M`), never `MEGA VIRAL`.
 Category labels stay stable and neutral: `GOVERNMENT · POLITICS · JOURNALISM · MEDIA · BUSINESS ·
-TECH · PUBLIC FIGURES · OTHER`.
+PUBLIC FIGURES`.
 
 Link text must make sense out of context — `View original post`, never `Click here`.
 
