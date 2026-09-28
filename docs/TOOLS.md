@@ -103,6 +103,7 @@ pnpm refresh:metrics                                    # plan: no request, no w
 pnpm refresh:metrics -- --fetch                         # buy one reading — ~$0.20 for 40 posts
 pnpm refresh:metrics -- --from <file>                    # show a reading already paid for, free
 pnpm refresh:metrics -- --from <file> --write            # append it to data/posts.json
+pnpm refresh:metrics -- --read-before <YYYY-MM-DD>       # plan, or --fetch, only posts last read before that date
 ```
 
 **Cost.** One `GET /2/tweets?ids=` request per 100 tracked posts; $0.005 per post returned
@@ -123,7 +124,11 @@ formatting and line endings, so the diff is only the appended lines.
 - `sweep:quotes --measure` (§8) saves its reading to the same folder in the same shape, so a
   reading bought by either tool can be applied here with `--from`.
 
-**Measured.** 2026-09-21: 32 posts read for $0.16 (~$0.005/post).
+**Measured.** 2026-09-21: 32 posts read for $0.16 (~$0.005/post). 2026-09-28, the same 32 read
+again with `--read-before 2026-09-27`: $0.16, +42,115 views in a week. Every post older than 16 days
+at the earlier reading grew by 0.2% or less; the most a post grew was 1.6%, at 9 days old. Views
+settle within about two weeks of publication, so re-reading old posts on their own buys almost
+nothing.
 
 ---
 

@@ -4,6 +4,7 @@ import {
   applyObservationAppends,
   observationFromPublicMetrics,
   planObservationAppends,
+  selectPostsReadBefore,
   statusIdFromUrl,
   type ApiPublicMetrics,
   type RefreshablePost,
@@ -91,6 +92,19 @@ describe("planObservationAppends", () => {
       "2026-09-21",
     );
     expect(outcomes.map((outcome) => outcome.kind)).toEqual(["skip", "skip"]);
+  });
+});
+
+describe("selectPostsReadBefore", () => {
+  const stale = post("post-a", "111", reading(1, "2026-09-17"), reading(2, "2026-09-21"));
+  const fresh = post("post-b", "222", reading(1, "2026-09-27"));
+
+  it("keeps a post whose latest reading is before the date, and drops one read on it", () => {
+    expect(selectPostsReadBefore([stale, fresh], "2026-09-27").map((p) => p.id)).toEqual(["post-a"]);
+  });
+
+  it("judges by the latest reading, not the first", () => {
+    expect(selectPostsReadBefore([stale], "2026-09-21")).toEqual([]);
   });
 });
 

@@ -72,6 +72,18 @@ export function observationFromPublicMetrics(
 }
 
 /**
+ * The posts whose latest reading is dated strictly before `date` — what
+ * `refresh:metrics --read-before` buys. A post read on `date` or later is left
+ * out of the request, so a refresh can re-read the stale part of the dataset
+ * without paying again for posts added a day ago.
+ */
+export function selectPostsReadBefore<T extends RefreshablePost>(posts: T[], date: string): T[] {
+  return posts.filter((post) =>
+    post.observations.every((observation) => observation.observed_at < date),
+  );
+}
+
+/**
  * What a refresh would do to each post, decided before anything is written.
  *
  * It appends only a reading dated strictly after the post's latest one. The

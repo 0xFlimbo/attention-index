@@ -4,6 +4,8 @@
  * pnpm refresh:metrics -- --from <file>         # use a reading already paid for
  * pnpm refresh:metrics -- --fetch --write       # ...and append it to data/posts.json
  * pnpm refresh:metrics -- --from <file> --write
+ * pnpm refresh:metrics -- --read-before <YYYY-MM-DD> [--fetch]
+ *                                               # only posts last read before that date
  *
  * The manual metric refresh (docs/TOOLS.md §3). Never called during
  * `next build`, rendering, or CI, and never scheduled: kept manual by
@@ -46,6 +48,7 @@ import { postsFileSchema } from "../src/schemas/post.schema";
 import {
   applyObservationAppends,
   planObservationAppends,
+  selectPostsReadBefore,
   statusIdFromUrl,
   type ApiPublicMetrics,
   type RefreshablePost,
@@ -81,6 +84,7 @@ const flagValue = (name: string): string | null => {
 const doFetch = args.includes("--fetch");
 const fromFile = flagValue("from");
 const doWrite = args.includes("--write");
+const readBefore = flagValue("read-before");
 
 // ---------------------------------------------------------------------------
 // Local files
@@ -236,8 +240,17 @@ async function main(): Promise<void> {
     console.error("Pass --fetch or --from, not both.");
     process.exit(1);
   }
+  if (args.includes("--read-before") && !/^\d{4}-\d{2}-\d{2}$/.test(readBefore ?? "")) {
+    console.error("--read-before needs a date, YYYY-MM-DD.");
+    process.exit(1);
+  }
+  if (readBefore && fromFile) {
+    console.error("--read-before chooses what --fetch buys; a stored reading is applied as it is.");
+    process.exit(1);
+  }
   const { raw, posts } = loadPosts();
-  const statusIds = posts.map((post) => statusIdFromUrl(post.url)).filter((id): id is string => id !== null);
+  const toRead = readBefore ? selectPostsReadBefore(posts, readBefore) : posts;
+  const statusIds = toRead.map((post) => statusIdFromUrl(post.url)).filter((id): id is string => id !== null);
   const latestStored = posts
     .flatMap((post) => post.observations.map((observation) => observation.observed_at))
     .sort()
@@ -246,7 +259,8 @@ async function main(): Promise<void> {
   if (!doFetch && !fromFile) {
     const requests = Math.ceil(statusIds.length / IDS_PER_REQUEST);
     console.log("refresh:metrics — plan only. No request is made and nothing is written.\n");
-    console.log(`  tracked posts with a status id   ${statusIds.length} of ${posts.length}`);
+    if (readBefore) console.log(`  last read before ${readBefore}       ${toRead.length} of ${posts.length}`);
+    console.log(`  posts to read with a status id   ${statusIds.length} of ${toRead.length}`);
     console.log(`  requests a fetch would make      ${requests}`);
     console.log(`  modelled cost                    $${(statusIds.length * COST_PER_POST).toFixed(2)}`);
     console.log(`  latest stored observation        ${latestStored ?? "none"}`);
@@ -257,7 +271,8 @@ async function main(): Promise<void> {
       console.log("\n  Readings already paid for and newer than anything stored — free to apply:");
       for (const file of unapplied) console.log(`    pnpm refresh:metrics -- --from ${basename(file)}`);
     }
-    console.log("\n  To buy a new reading: pnpm refresh:metrics -- --fetch");
+    const readBeforeFlag = readBefore ? ` --read-before ${readBefore}` : "";
+    console.log(`\n  To buy a new reading: pnpm refresh:metrics --${readBeforeFlag} --fetch`);
     return;
   }
 
