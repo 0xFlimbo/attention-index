@@ -37,6 +37,27 @@ export const AMPLIFICATION_ACTION_LABELS: Record<AmplificationAction, string> = 
   other: "REFERENCED",
 };
 
+/** The project itself, as an act's object when the act is not on a post. */
+export const PROJECT_NAME = "LayoffHedge";
+
+const ACTS_ON_A_POST: ReadonlySet<AmplificationAction> = new Set(["repost", "quote_post", "reply"]);
+
+/**
+ * What an act was performed on, for the line "QUOTE-POSTED @LAYOFFAI".
+ *
+ * A repost, quote or reply acts on a post, so the account that wrote it is
+ * named — even when that post is not tracked (a quoted @LayoffAI reply).
+ * A share, citation, interview or mention acts on the project: the site, a
+ * tool, a report, the name. Naming the X account there would claim a post
+ * nobody touched ("SHARED @LAYOFFAI" for someone who shared layoffhedge.com).
+ */
+export function amplificationActTarget(
+  action: AmplificationAction,
+  officialXAccount: string,
+): string {
+  return ACTS_ON_A_POST.has(action) ? officialXAccount : PROJECT_NAME;
+}
+
 export interface AmplificationMetrics {
   verifiedAmplificationCount: number;
   uniqueAmplifierCount: number;

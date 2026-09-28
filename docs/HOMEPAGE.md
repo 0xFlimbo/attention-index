@@ -242,6 +242,11 @@ REPOSTED @LAYOFFAI
 VIEW EVIDENCE ↗
 ```
 
+The action names what it acted on: `@LAYOFFAI` for a repost, quote or reply (an act on a post,
+tracked or not), `LAYOFFHEDGE` for a share, citation, interview or mention (an act on the site, a
+tool, a report or the name — `SHARED LAYOFFHEDGE`, never `SHARED @LAYOFFAI` for someone who shared
+the site).
+
 Fields supported: name, role, category, action, date, related LayoffHedge post, evidence URL,
 optional portrait, optional follower count (always with its observation date).
 

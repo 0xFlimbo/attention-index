@@ -274,6 +274,27 @@ describe("one person, several acts — docs/DATA.md §6 counting rule", () => {
     expect(card.followerCountObservedAt).toBe("2026-09-27");
   });
 
+  it("names the X account for an act on a post and the project for anything else", () => {
+    const acts = (["quote_post", "reply", "repost", "share", "citation", "mention"] as const).map(
+      (action, index) =>
+        makeAmplification({ id: `amp-act-${index}`, category: "politics", entity_name: "Actor", action }),
+    );
+    const [group] = selectAmplifierGroups(acts);
+    const card = toAmplifierCardData(group!, new Map(), "@LayoffAI");
+    const targets = Object.fromEntries(
+      card.acts.map((act) => [acts.find((a) => a.id === act.id)!.action, act.target]),
+    );
+    // A quote of an untracked @LayoffAI post (related_post_id null) is still on the account.
+    expect(targets).toEqual({
+      quote_post: "@LayoffAI",
+      reply: "@LayoffAI",
+      repost: "@LayoffAI",
+      share: "LayoffHedge",
+      citation: "LayoffHedge",
+      mention: "LayoffHedge",
+    });
+  });
+
   it("shows a follower count on public_figure only — for any other category the role is the point", () => {
     const officeholder = makeAmplification({
       id: "amp-officeholder",

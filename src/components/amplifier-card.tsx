@@ -1,6 +1,10 @@
 import type { Amplification } from "@/schemas/amplification.schema";
 import type { Post } from "@/schemas/post.schema";
-import { AMPLIFICATION_ACTION_LABELS, type AmplifierGroup } from "@/lib/metrics/amplification";
+import {
+  AMPLIFICATION_ACTION_LABELS,
+  amplificationActTarget,
+  type AmplifierGroup,
+} from "@/lib/metrics/amplification";
 import { formatCount } from "@/lib/format/number";
 import { formatDate } from "@/lib/format/date";
 import { ExternalArrow } from "./external-arrow";
@@ -9,6 +13,8 @@ import { ExternalArrow } from "./external-arrow";
 export interface AmplifierActData {
   id: string;
   actionLabel: string;
+  /** What the act was on: the X account for a post, the project for anything else. */
+  target: string;
   date: string;
   relatedPostSubject: string | null;
   evidenceUrl: string;
@@ -26,7 +32,6 @@ export interface AmplifierCardData {
   id: string;
   entityName: string;
   role: string | null;
-  handle: string;
   acts: AmplifierActData[];
   followerCount: number | null;
   followerCountObservedAt: string | null;
@@ -42,6 +47,7 @@ export interface AmplifierCardData {
 function toAmplifierActData(
   amplification: Amplification,
   verifiedPostsById: ReadonlyMap<string, Post>,
+  officialXAccount: string,
 ): AmplifierActData {
   const relatedPost =
     amplification.related_post_id !== null
@@ -51,6 +57,7 @@ function toAmplifierActData(
   return {
     id: amplification.id,
     actionLabel: AMPLIFICATION_ACTION_LABELS[amplification.action],
+    target: amplificationActTarget(amplification.action, officialXAccount),
     date: amplification.date,
     relatedPostSubject: relatedPost !== null ? (relatedPost.subject ?? relatedPost.title) : null,
     evidenceUrl: amplification.evidence_url,
@@ -80,8 +87,9 @@ export function toAmplifierCardData(
     id: latest.id,
     entityName: latest.entity_name,
     role: latest.role,
-    handle: officialXAccount,
-    acts: group.records.map((record) => toAmplifierActData(record, verifiedPostsById)),
+    acts: group.records.map((record) =>
+      toAmplifierActData(record, verifiedPostsById, officialXAccount),
+    ),
     followerCount: showsFollowers ? latest.follower_count : null,
     followerCountObservedAt: showsFollowers ? latest.follower_count_observed_at : null,
   };
@@ -89,16 +97,15 @@ export function toAmplifierCardData(
 
 interface AmplifierActProps {
   act: AmplifierActData;
-  handle: string;
   evidenceLabel: string;
 }
 
-function AmplifierAct({ act, handle, evidenceLabel }: AmplifierActProps) {
+function AmplifierAct({ act, evidenceLabel }: AmplifierActProps) {
   return (
     <>
       <div className="mt-5">
         <p className="text-metadata text-ink">
-          {act.actionLabel} {handle}
+          {act.actionLabel} {act.target}
         </p>
         <p className="text-metadata mt-1 text-ink-soft">{formatDate(act.date)}</p>
       </div>
@@ -162,14 +169,13 @@ export function AmplifierCard({ data }: AmplifierCardProps) {
       )}
 
       {data.acts.length === 1 && onlyAct !== undefined ? (
-        <AmplifierAct act={onlyAct} handle={data.handle} evidenceLabel={data.entityName} />
+        <AmplifierAct act={onlyAct} evidenceLabel={data.entityName} />
       ) : (
         <ul>
           {data.acts.map((act) => (
             <li key={act.id}>
               <AmplifierAct
                 act={act}
-                handle={data.handle}
                 evidenceLabel={`${data.entityName}, ${formatDate(act.date)}`}
               />
             </li>
