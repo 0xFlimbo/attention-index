@@ -311,7 +311,11 @@ pnpm sweep:mentions -- --sweep --dry-run      # fetch, report to stdout, write n
 resource returned (`docs/PROVIDERS.md §2`).
 
 **Reads and writes.** Strictly read-only against `data/` — it reports candidates and prints what a
-human must confirm and where (`verificationClaims()`, §1). State lives in
+human must confirm and where (`verificationClaims()`, §1). An author already in the decisions
+register (§9) gets one line with its ruling instead of a card; a held one, or one turned down for
+size that has reached its line, stays a candidate with the ruling beside it. A recorded person's
+post that no record of theirs accounts for is listed apart: on another post it is a record of its
+own (`docs/DATA.md §6`, one act, one record). State lives in
 `research/track-a-state.json`: the `since_id` high-water mark, the window covered, one line per
 run — written only after a successful sweep, from the API's own `newest_id`.
 
@@ -397,6 +401,11 @@ handle, the brand or the domain — `docs/DATA.md §6`: no act, no record); it i
 `data/amplifications.json`; and it is not in the decisions register. Held accounts are listed apart
 with the source that would reopen them. An account turned down only for its size is listed
 **to recheck** once a paid reading of it reaches the follower line its register entry names.
+
+Recorded people are nobody's candidates, so a section of their own lists their acts in paid data
+that no record accounts for — an act on another post is a record of its own. A record accounts
+for a post through its `evidence_url` or a status id cited in its `notes`, so an act that was read
+and ruled on leaves the list once its id is written into the notes.
 
 **Commands.**
 ```bash

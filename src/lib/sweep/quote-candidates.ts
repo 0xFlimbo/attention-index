@@ -242,11 +242,17 @@ export function verificationClaims(user: QuotingAccount, flags: readonly string[
     }
   }
 
-  // Said for every candidate, flagged or not: the act is what is recorded, and
-  // it is the check that has disqualified the most accounts so far.
+  // Said for every candidate, flagged or not: docs/DATA.md §6 needs an act and
+  // an identity before anything else. Identity is the check that turns away the
+  // most accounts. The act is read for what it is, never for what it says: the
+  // content test once applied to X (a slogan, a bare link) was withdrawn on
+  // 2026-09-27, and a post that looked like a bare link was an X Article.
   claims.push(
-    "read the post itself — a bare link, a slogan or a reproduction of someone else's article " +
-      "carries no act of its own and is archived regardless of who posted it",
+    "identity — a source other than this account must link the handle to a named person or to " +
+      "a publication under its standard name (their own site, an employer or outlet page, an " +
+      "encyclopaedic entry, an official register); a pseudonymous account is not recorded",
+    "read the post itself — confirm it quotes, replies to, names or shares the project; on X " +
+      "its content is not judged, and a post showing only a t.co link may be an X Article",
   );
   return claims;
 }

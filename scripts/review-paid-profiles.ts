@@ -39,6 +39,7 @@ import {
   projectPostIds,
   projectSearchMatchIds,
   selfAuthorIds,
+  unaccountedActs,
   type PaidPost,
   type ProjectAct,
 } from "../src/lib/sweep/amplifier-acts";
@@ -277,9 +278,32 @@ function main(): void {
       `${decided.length} decided · ` +
       `${noAct.length} with no act in paid data.\n`,
   );
+  // Recorded people are not candidates, so the groups above leave them out;
+  // their acts on other posts are records of their own and are listed apart.
+  const unaccounted = unaccountedActs(amplifications, acts, profiles.values());
+  console.log(
+    `${unaccounted.length} act(s) by recorded ` +
+      "people that no record accounts for.\n",
+  );
 
   console.log(`=== TO READ — a criterion, an act, not recorded, not decided (${toRead.length}) ===\n`);
   toRead.forEach(printRow);
+
+  console.log(
+    `=== RECORDED — an act no record accounts for (${unaccounted.length}) ===\n` +
+      "  cite the status id in the record's notes once it is ruled on, and it leaves this list\n",
+  );
+  for (const { entityName, username, act, samePost } of unaccounted) {
+    const target = act.targetId ? ` of ${act.targetId}` : "";
+    console.log(
+      `${entityName}  @${username}  ${act.kind}${target}  ${act.date ?? "undated"}  ` +
+        `${actEvidenceUrl(username, act.postId)}\n   ${
+          samePost
+            ? "same post as a record: one act, evidence for its notes"
+            : "another post: a record of its own, if it holds"
+        }\n`,
+    );
+  }
 
   console.log(`=== RECHECK — turned down for size, now at the line (${recheck.length}) ===\n`);
   recheck.forEach(printRow);

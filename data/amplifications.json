@@ -361,7 +361,7 @@
     "country": null,
     "featured": false,
     "portrait": null,
-    "notes": "Credits LayoffHedge as the publisher of the report \"The Degree Nobody Finishes: Inside the Day 1 CPT Schools\". The citation sits past the point where the stored API text truncates; recovered in full 2026-09-21. A second post by the same account was archived, not recorded: it reproduces article prose and carries no act of its own.",
+    "notes": "Credits LayoffHedge as the publisher of the report \"The Degree Nobody Finishes: Inside the Day 1 CPT Schools\". The citation sits past the point where the stored API text truncates; recovered in full 2026-09-21. A second post by the same account, 2074091356998218033, is a separate record (a mention).",
     "status": "verified",
     "verified_at": "2026-09-21"
   },
@@ -792,6 +792,28 @@
     "featured": false,
     "portrait": null,
     "notes": "Shares layoffhedge.com with a video attached, as a site that tracks major layoffs in 2026. Found by the mentions sweep of 2026-09-29. Identity: the site of his company, Esposito Intellectual Enterprises (eie.rocks), links this account and linkedin.com/in/brianjesposito as his. Role: Diamond Lake Minerals (OTC: DLMI) names him its CEO on its own site (diamondlakeminerals.com), and StockTitan and Proactive Investors report him in the role in 2026. Country: EIE was founded in New York. Not written: the other roles in his bio (investor, advisor, speaker).",
+    "status": "verified",
+    "verified_at": "2026-09-29"
+  },
+  {
+    "id": "amp-owen-gregorian-2074091356998218033",
+    "entity_type": "person",
+    "entity_name": "Owen Gregorian",
+    "role": "Online news commentator",
+    "organization": null,
+    "category": "public_figure",
+    "action": "mention",
+    "date": "2026-07-06",
+    "platform": "x",
+    "account": "@OwenGregorian",
+    "evidence_url": "https://x.com/OwenGregorian/status/2074091356998218033",
+    "related_post_id": null,
+    "follower_count": 169201,
+    "follower_count_observed_at": "2026-09-27",
+    "country": null,
+    "featured": false,
+    "portrait": null,
+    "notes": "Posts the text of Newsweek's \"H-1B Visas Skyrocket Despite Trump Admin Crackdown\" (media-newsweek-2026-07-03), which names LayoffHedge as the source of the renewal figures; the credit is Newsweek's, so the act is a mention, not a citation. The name sits past the point where the stored API text truncates; read in full 2026-09-21. Archived that day as a reproduction of article prose, recorded 2026-09-29: on X the content of an act is not judged. Identity, role and follower count as on his other record.",
     "status": "verified",
     "verified_at": "2026-09-29"
   }

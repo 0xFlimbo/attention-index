@@ -211,3 +211,95 @@ export function actsByAuthor(
 export function actEvidenceUrl(username: string, postId: string): string {
   return `https://x.com/${username}/status/${postId}`;
 }
+
+/** The fields of an amplification record this module reads. */
+export interface RecordedAct {
+  entity_name: string;
+  account?: string | null;
+  evidence_url: string;
+  notes?: string | null;
+  related_post_id?: string | null;
+}
+
+/**
+ * The status ids a person's records already account for: each record's
+ * evidence URL, and every status id its notes cite — an edit, a second
+ * account, a post read and archived. Citing the id in `notes` is how a post
+ * that was ruled on stops being reported as new.
+ */
+export function recordedStatusIds(records: readonly RecordedAct[]): Set<string> {
+  const ids = new Set<string>();
+  for (const record of records) {
+    for (const match of `${record.evidence_url} ${record.notes ?? ""}`.matchAll(/\d{15,}/g)) {
+      ids.add(match[0]);
+    }
+  }
+  return ids;
+}
+
+export interface UnaccountedAct {
+  entityName: string;
+  username: string;
+  act: ProjectAct;
+  /**
+   * The act points at a post one of this person's records already covers: one
+   * act, extra evidence for that record's notes (docs/DATA.md §6). Otherwise it
+   * is a candidate for a record of its own.
+   */
+  samePost: boolean;
+}
+
+/** The handle a record acted from, lower-cased: `account` first, the evidence URL second. */
+function recordHandle(record: RecordedAct): string | null {
+  const handle =
+    record.account?.replace(/^@/, "") ??
+    record.evidence_url.match(/(?:x|twitter)\.com\/([^/?#]+)\/status\//i)?.[1];
+  return handle ? handle.toLowerCase() : null;
+}
+
+/**
+ * Acts in paid data by accounts already recorded, which no record of that
+ * person accounts for.
+ *
+ * The screening tools drop recorded accounts, because a recorded person is not
+ * a candidate. But "one act, one record" makes a recorded person's act on
+ * another post a record of its own, and without this nothing reports it. Grouped
+ * by person, so an act from a second account of the same person is checked
+ * against every record of theirs.
+ */
+export function unaccountedActs(
+  records: readonly RecordedAct[],
+  acts: ReadonlyMap<string, readonly ProjectAct[]>,
+  profiles: Iterable<{ id: string; username: string }>,
+): UnaccountedAct[] {
+  const idByHandle = new Map<string, { id: string; username: string }>();
+  for (const profile of profiles) idByHandle.set(profile.username.toLowerCase(), profile);
+
+  const byPerson = new Map<string, RecordedAct[]>();
+  for (const record of records) {
+    byPerson.set(record.entity_name, [...(byPerson.get(record.entity_name) ?? []), record]);
+  }
+
+  const found: UnaccountedAct[] = [];
+  for (const [entityName, personRecords] of byPerson) {
+    const covered = recordedStatusIds(personRecords);
+    const targets = new Set(
+      personRecords.flatMap((record) => record.related_post_id?.match(/(\d{15,})$/)?.[1] ?? []),
+    );
+    const handles = new Set(personRecords.flatMap((record) => recordHandle(record) ?? []));
+    for (const handle of handles) {
+      const profile = idByHandle.get(handle);
+      if (!profile) continue;
+      for (const act of acts.get(profile.id) ?? []) {
+        if (covered.has(act.postId)) continue;
+        found.push({
+          entityName,
+          username: profile.username,
+          act,
+          samePost: act.targetId !== null && targets.has(act.targetId),
+        });
+      }
+    }
+  }
+  return found.sort((a, b) => (a.act.date ?? "").localeCompare(b.act.date ?? ""));
+}

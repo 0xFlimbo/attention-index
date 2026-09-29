@@ -267,12 +267,15 @@ describe("verificationClaims", () => {
     expect(claims.some((claim) => claim.includes("namesake"))).toBe(true);
   });
 
-  it("always asks for the act to be read, even for an unflagged account", () => {
-    // The check that has disqualified the most accounts: a 1.48M-follower
-    // account was rejected because its post was a slogan and a link.
+  it("always asks for identity and the act, even for an unflagged account", () => {
+    // docs/DATA.md §6: an act and an identity come first. Identity turns away
+    // the most accounts; the act is not judged on its content, a test withdrawn
+    // on 2026-09-27 after a 1.48M-follower account had been rejected for a slogan.
     const claims = verificationClaims({ username: "someone", name: "Someone" }, []);
-    expect(claims).toHaveLength(1);
-    expect(claims[0]).toContain("bare link");
+    expect(claims).toHaveLength(2);
+    expect(claims[0]).toContain("pseudonymous account is not recorded");
+    expect(claims[1]).toContain("content is not judged");
+    expect(claims.join(" ")).not.toMatch(/slogan|archived regardless/);
   });
 
   it("never returns a verdict, only a claim and its test", () => {

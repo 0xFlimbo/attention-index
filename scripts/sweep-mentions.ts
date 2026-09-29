@@ -49,7 +49,21 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
 
-import { amplificationsFileSchema } from "../src/schemas/amplification.schema";
+import { amplificationsFileSchema, type Amplification } from "../src/schemas/amplification.schema";
+import { postsFileSchema } from "../src/schemas/post.schema";
+import {
+  actEvidenceUrl,
+  actsByAuthor,
+  unaccountedActs,
+  type PaidPost,
+  type UnaccountedAct,
+} from "../src/lib/sweep/amplifier-acts";
+import {
+  amplifierDecisionsFileSchema,
+  findDecision,
+  isDueForRecheck,
+  type AmplifierDecision,
+} from "../src/lib/sweep/amplifier-decisions";
 import {
   knownAccountKeys,
   signalFlags,
@@ -71,6 +85,8 @@ const PROFILE_STORE = resolve(RESEARCH_DIR, "x-api-profiles.json");
 const LEGISLATORS_DIR = resolve(RESEARCH_DIR, "x-api-2026-09-20");
 /** The `since_id` high-water mark, so an incremental never re-buys a paid window. */
 const STATE_FILE = resolve(RESEARCH_DIR, "track-a-state.json");
+/** Local, kept by hand: accounts screened and not recorded (`review:profiles`). */
+const DECISIONS = resolve(RESEARCH_DIR, "amplifier-decisions.json");
 
 const SEARCH_URL = "https://api.x.com/2/tweets/search/all";
 const COUNTS_URL = "https://api.x.com/2/tweets/counts/all";
@@ -173,6 +189,7 @@ interface ApiTweet {
   created_at?: string;
   text?: string;
   note_tweet?: { text?: string } | string;
+  referenced_tweets?: { type: string; id: string }[];
   entities?: Record<string, unknown>;
   public_metrics?: Record<string, number>;
 }
@@ -296,6 +313,47 @@ function loadLegislatorIndex(): Legislator[] {
   return buildLegislatorIndex(readFileSync(current, "utf-8"), readFileSync(historical, "utf-8"));
 }
 
+/** The register is optional: without it nothing is excluded, as in `review:profiles`. */
+function loadDecisions(): AmplifierDecision[] {
+  if (!existsSync(DECISIONS)) return [];
+  const parsed = amplifierDecisionsFileSchema.safeParse(JSON.parse(readFileSync(DECISIONS, "utf-8")));
+  if (!parsed.success) {
+    console.error("research/amplifier-decisions.json is invalid:\n" + parsed.error.message);
+    process.exit(1);
+  }
+  return parsed.data;
+}
+
+/** Status ids of the tracked posts, so a quote or reply of one is read as such. */
+function loadTrackedStatusIds(): Set<string> {
+  const posts = postsFileSchema.parse(
+    JSON.parse(readFileSync(resolve(DATA_DIR, "posts.json"), "utf-8")),
+  );
+  return new Set(posts.flatMap((post) => post.url.match(/status\/(\d+)/)?.[1] ?? []));
+}
+
+/**
+ * The window's posts as acts. Every post a project search returns names the
+ * project, including one whose text shows only a t.co link, so each is at
+ * least a mention; a quote or reply of a tracked post is read as that.
+ */
+function windowActs(tweets: readonly ApiTweet[], trackedIds: ReadonlySet<string>) {
+  const posts: PaidPost[] = tweets.flatMap((tweet) =>
+    tweet.author_id
+      ? [
+          {
+            id: tweet.id,
+            author_id: tweet.author_id,
+            text: fullPostText(tweet).text,
+            created_at: tweet.created_at,
+            referenced_tweets: tweet.referenced_tweets,
+          },
+        ]
+      : [],
+  );
+  return actsByAuthor(posts, trackedIds, new Set(), new Set(posts.map((post) => post.id)));
+}
+
 /** The fullest text a post offers: `note_tweet` when longer, otherwise `text`. */
 function fullPostText(tweet: ApiTweet): { text: string; truncated: boolean } {
   const stub = (tweet.text ?? "").trim();
@@ -383,16 +441,41 @@ interface Candidate {
   verify: string[];
 }
 
+/** An author the register already ruled on: reported in one line, not read again. */
+interface DecidedAuthor {
+  account: string;
+  followers: number | null;
+  evidence_url: string;
+  verdict: AmplifierDecision["verdict"];
+  decided_at: string;
+  reason: string;
+}
+
+interface SweepResult {
+  candidates: Candidate[];
+  decided: DecidedAuthor[];
+  /** Acts in the window by people already recorded that no record accounts for. */
+  unaccounted: UnaccountedAct[];
+  pages: SearchPage[];
+  newestId: string | null;
+  posts: number;
+}
+
 async function sweep(
   token: string,
   since: string,
   known: Set<string>,
   store: Map<string, PaidProfile>,
   legislators: Legislator[],
-): Promise<{ candidates: Candidate[]; pages: SearchPage[]; newestId: string | null; posts: number }> {
+  decisions: readonly AmplifierDecision[],
+  amplifications: readonly Amplification[],
+  trackedIds: ReadonlySet<string>,
+): Promise<SweepResult> {
   const pages: SearchPage[] = [];
   const byAuthor = new Map<string, { tweet: ApiTweet; user: ApiUser }>();
   const seenPostIds = new Set<string>();
+  const windowTweets: ApiTweet[] = [];
+  const windowUsers = new Map<string, ApiUser>();
   let pageToken: string | undefined;
   let newestId: string | null = null;
   let barren = 0;
@@ -429,9 +512,11 @@ async function sweep(
       if (seenPostIds.has(tweet.id)) continue;
       seenPostIds.add(tweet.id);
       fresh += 1;
+      windowTweets.push(tweet);
       if (!tweet.author_id) continue;
       const user = users.get(tweet.author_id);
       if (!user) continue;
+      windowUsers.set(user.id, user);
       const held = byAuthor.get(tweet.author_id);
       // Keep the account's loudest post: one row per account to read.
       const signal = (metrics: ApiTweet) =>
@@ -457,6 +542,7 @@ async function sweep(
   }
 
   const candidates: Candidate[] = [];
+  const decided: DecidedAuthor[] = [];
   for (const { tweet, user } of byAuthor.values()) {
     const account = `@${user.username.toLowerCase()}`;
     if (known.has(account)) continue;
@@ -476,6 +562,27 @@ async function sweep(
     // the report, not put in front of a human.
     if (followers < READING_FLOOR && flags.length === 0) continue;
 
+    // Already ruled on: one line with the reason, not a card to write again.
+    // A held account and one turned down for size that has reached its line
+    // stay candidates, with the ruling beside them.
+    const decision = findDecision(decisions, user);
+    const evidenceUrl = `https://x.com/${user.username}/status/${tweet.id}`;
+    if (decision?.verdict === "held") {
+      flags.push(`held ${decision.decided_at}: reopen if ${decision.reopen_if}`);
+    } else if (decision && isDueForRecheck(decision, followers)) {
+      flags.push(`recheck: out ${decision.decided_at} for size, now ${followers.toLocaleString()}`);
+    } else if (decision) {
+      decided.push({
+        account: `@${user.username}`,
+        followers,
+        evidence_url: evidenceUrl,
+        verdict: decision.verdict,
+        decided_at: decision.decided_at,
+        reason: decision.reason,
+      });
+      continue;
+    }
+
     const text = fullPostText(tweet);
     candidates.push({
       account: `@${user.username}`,
@@ -483,7 +590,7 @@ async function sweep(
       followers,
       verified_type: user.verified_type ?? null,
       description: (user.description ?? "").replace(/\s+/g, " ").trim(),
-      evidence_url: `https://x.com/${user.username}/status/${tweet.id}`,
+      evidence_url: evidenceUrl,
       posted_at: tweet.created_at ? tweet.created_at.slice(0, 10) : null,
       post_text: text.text,
       text_recovered_from_note: text.truncated,
@@ -494,7 +601,15 @@ async function sweep(
   }
 
   candidates.sort((a, b) => (b.followers ?? 0) - (a.followers ?? 0));
-  return { candidates, pages, newestId, posts: seenPostIds.size };
+  decided.sort((a, b) => (b.followers ?? 0) - (a.followers ?? 0));
+  // Recorded people are dropped above, being no one's candidates; an act of
+  // theirs on another post is still a record of its own (docs/DATA.md §6).
+  const unaccounted = unaccountedActs(
+    amplifications,
+    windowActs(windowTweets, trackedIds),
+    windowUsers.values(),
+  );
+  return { candidates, decided, unaccounted, pages, newestId, posts: seenPostIds.size };
 }
 
 // ---------------------------------------------------------------------------
@@ -508,6 +623,9 @@ async function main(): Promise<void> {
   const store = loadProfileStore();
   const legislators = loadLegislatorIndex();
   const state = loadState();
+  // Read before anything is billed, so an invalid register stops the run for free.
+  const decisions = loadDecisions();
+  const trackedIds = loadTrackedStatusIds();
 
   const sinceId = sinceIdArg ?? state?.since_id ?? null;
   const since = startTimeArg
@@ -549,7 +667,16 @@ async function main(): Promise<void> {
     return;
   }
 
-  const { candidates, pages, newestId, posts } = await sweep(token, since, known, store, legislators);
+  const { candidates, decided, unaccounted, pages, newestId, posts } = await sweep(
+    token,
+    since,
+    known,
+    store,
+    legislators,
+    decisions,
+    amplifications,
+    trackedIds,
+  );
 
   const stamp = new Date().toISOString();
   const day = stamp.slice(0, 10);
@@ -564,11 +691,18 @@ async function main(): Promise<void> {
     );
     writeFileSync(
       resolve(outDir, "track-a-report.json"),
-      JSON.stringify({ swept_at: stamp, query: QUERY, window: since, posts, candidates }, null, 2),
+      JSON.stringify(
+        { swept_at: stamp, query: QUERY, window: since, posts, candidates, decided, unaccounted },
+        null,
+        2,
+      ),
     );
   }
 
-  console.log(`\n${posts} distinct post(s) · ${candidates.length} candidate(s) to read`);
+  console.log(
+    `\n${posts} distinct post(s) · ${candidates.length} candidate(s) to read · ` +
+      `${decided.length} already decided · ${unaccounted.length} act(s) by recorded people`,
+  );
   for (const candidate of candidates) {
     console.log(`\n  ${candidate.account}  ${candidate.name}  (${candidate.followers} followers)`);
     if (candidate.flags.length > 0) console.log(`    ${candidate.flags.join(" · ")}`);
@@ -576,6 +710,26 @@ async function main(): Promise<void> {
     console.log(`    "${candidate.post_text.replace(/\s+/g, " ").slice(0, 150)}"`);
     console.log("    must verify before recording:");
     for (const claim of candidate.verify) console.log(`      - ${claim}`);
+  }
+
+  if (decided.length > 0) console.log("\nalready decided (research/amplifier-decisions.json):");
+  for (const author of decided) {
+    console.log(
+      `  ${author.account}  (${author.followers} followers)  ${author.verdict} ${author.decided_at}: ` +
+        `${author.reason}\n    ${author.evidence_url}`,
+    );
+  }
+
+  if (unaccounted.length > 0) console.log("\nrecorded people, an act no record accounts for:");
+  for (const { entityName, username, act, samePost } of unaccounted) {
+    console.log(
+      `  ${entityName}  @${username}  ${act.kind}  ${act.date ?? "undated"}  ` +
+        `${actEvidenceUrl(username, act.postId)}\n    ${
+          samePost
+            ? "same post as a record: one act, evidence for its notes"
+            : "another post: a record of its own, if it holds"
+        }`,
+    );
   }
 
   if (newestId && !isDryRun) {

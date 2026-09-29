@@ -15,8 +15,11 @@ import {
   isProjectSearchFile,
   projectPostIds,
   projectSearchMatchIds,
+  recordedStatusIds,
   selfAuthorIds,
+  unaccountedActs,
   type PaidPost,
+  type ProjectAct,
 } from "@/lib/sweep/amplifier-acts";
 import {
   amplifierDecisionsFileSchema,
@@ -189,5 +192,70 @@ describe("the decisions register", () => {
       { account: "@x", verdict: "held", reason: "no source", decided_at: "2026-09-27", reopen_if: "a source", recheck_at_followers: 100_000 },
     ];
     expect(amplifierDecisionsFileSchema.safeParse(held).success).toBe(false);
+  });
+});
+
+describe("acts by recorded people", () => {
+  /*
+   * The screening lists drop recorded accounts, and "one act, one record" makes
+   * a recorded person's act on another post a record of its own. On 2026-09-29
+   * this was checked by hand; the one act it found in all paid data was a post
+   * ruled on in 2026-09 whose id the record's notes never cited.
+   */
+  const act = (postId: string, targetId: string | null = null): ProjectAct => ({
+    kind: targetId ? "quote_post" : "mention",
+    postId,
+    authorId: "7",
+    date: "2026-09-26",
+    targetId,
+  });
+  const record = {
+    entity_name: "Jane Doe",
+    account: "@JaneDoe",
+    evidence_url: "https://x.com/JaneDoe/status/111111111111111111",
+    notes: "An edited version, 222222222222222222, is the same act.",
+    related_post_id: "post-layoffai-900000000000000000",
+  };
+  const profiles = [{ id: "7", username: "janedoe" }];
+
+  it("counts the evidence URL and every id the notes cite as accounted for", () => {
+    expect([...recordedStatusIds([record])]).toEqual(["111111111111111111", "222222222222222222"]);
+  });
+
+  it("reports an act on another post, and not the acts the record already holds", () => {
+    const acts = new Map([["7", [act("111111111111111111"), act("222222222222222222"), act("333333333333333333")]]]);
+    const found = unaccountedActs([record], acts, profiles);
+    expect(found.map((entry) => entry.act.postId)).toEqual(["333333333333333333"]);
+    expect(found[0]).toMatchObject({ entityName: "Jane Doe", username: "janedoe", samePost: false });
+  });
+
+  it("marks a second act on a post the record covers as evidence, not a new record", () => {
+    const acts = new Map([["7", [act("444444444444444444", "900000000000000000")]]]);
+    expect(unaccountedActs([record], acts, profiles)[0]!.samePost).toBe(true);
+  });
+
+  it("finds the account from the evidence URL when `account` is empty", () => {
+    const acts = new Map([["7", [act("333333333333333333")]]]);
+    expect(unaccountedActs([{ ...record, account: null }], acts, profiles)).toHaveLength(1);
+  });
+
+  it("checks every account of one person against all of that person's records", () => {
+    const second = {
+      ...record,
+      account: "@JaneDoeTX",
+      evidence_url: "https://x.com/JaneDoeTX/status/555555555555555555",
+      notes: null,
+    };
+    const acts = new Map([
+      ["7", [act("555555555555555555")]],
+      ["8", [act("111111111111111111")]],
+    ]);
+    const found = unaccountedActs([record, second], acts, [...profiles, { id: "8", username: "JaneDoeTX" }]);
+    expect(found).toEqual([]);
+  });
+
+  it("says nothing about an account whose profile was never bought", () => {
+    const acts = new Map([["7", [act("333333333333333333")]]]);
+    expect(unaccountedActs([record], acts, [])).toEqual([]);
   });
 });
