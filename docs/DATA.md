@@ -715,6 +715,40 @@ syndicated record, and `Names LayoffHedge as a source` for a featured one. A fea
 prints its **criterion**, not the word "featured": there is no star, badge or icon anywhere in
 this system.
 
+### Share cards (`src/lib/metrics/share-cards.ts`)
+
+The `/share` page (`docs/HOMEPAGE.md §18`). `selectShareCards(input: { posts, amplifications,
+mediaReferences, officialXAccount }): ShareCard[]` returns the cards in page order, each
+`{ id, hook, figure, claim, detail, asOf, dateKind, evidenceHref, evidenceLabel }`; one selector per
+card, each returning `null` when its records are gone, and a `null` card is not rendered. Every
+figure comes from a selector above or from the two below:
+
+```text
+medianObservedViews(posts)   the middle latest reading of the eligible posts, or the mean of the
+                             two middle readings for an even count; null for no posts
+postsOver500K(posts)         eligible posts whose latest reading is >= 500,000
+```
+
+Both read `latestObservation`, the same one-reading-per-post rule as `getAttentionMetrics`.
+
+What each card counts, where it is not an existing figure:
+
+- **Officeholders** — `politics` records whose stored `role` reads as a sitting U.S.
+  Representative, a former one, or a governor. Candidates and state legislators are in `politics`
+  (§6) but not in this count, because the card says "officeholders".
+- **Cited work** — original references whose `cited_work` is not `none`, and the publications
+  among them; originals only, like `originalReferencesByCitedWork`.
+- **Crossover** — the sum of the non-media Crossover nodes, with the media node (outlets) given as
+  its own number: two units, never added together.
+
+`asOf` is `latestObservationDate` for the view cards, `dataLastUpdated` for the record cards, and
+the post's own `observed_at` for the most viewed post. `sharePostText(card, officialXAccount)` is
+the text a "Post on X" link pre-fills — hook, figure and claim, date, the account, then the
+`$LAYOFF` cashtag — and `shareIntentUrl` adds the evidence section of this site as the link. The
+cashtag is in that text only, never in a field the page renders (maintainer decision, 2026-09-29).
+The two names a hook may carry are read from records chosen by id in the file (declared curation);
+the sentence goes when its record does.
+
 ### Crossover
 Descriptive counts and real examples only. **Never invent** Crossover Score, Influence Score,
 Attention Quality Score or similar pseudo-precision.

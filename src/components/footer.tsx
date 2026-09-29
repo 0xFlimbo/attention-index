@@ -7,7 +7,7 @@ import { ExternalArrow } from "./external-arrow";
 
 /**
  * docs/HOMEPAGE.md §14, docs/EDITORIAL.md §8 — the site footer (section 11).
- * Server Component, rendered on all five routes as a sibling after
+ * Server Component, rendered on every route as a sibling after
  * `</main>` (same per-page placement as `<Navigation />`, not lifted into
  * `layout.tsx`). Cream/soft-cream, a thin 1px top divider — no `border-t-2`
  * (docs/DESIGN.md §5 fixes borders at 1px; a prior batch's review had to
@@ -110,6 +110,9 @@ export function Footer({ project }: FooterProps) {
             */}
             <Link href="/about" className="text-ink underline-offset-2 hover:underline">
               ABOUT
+            </Link>
+            <Link href="/share" className="text-ink underline-offset-2 hover:underline">
+              SHARE
             </Link>
             <a
               href={project.official_project_url}

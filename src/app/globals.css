@@ -439,3 +439,8 @@ section[id] {
 .amplifier-entry {
   scroll-margin-top: 88px;
 }
+
+/* Same offset for one card on /share (src/components/share-card.tsx). */
+.share-card {
+  scroll-margin-top: 88px;
+}

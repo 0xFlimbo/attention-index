@@ -4,10 +4,10 @@ import { dataLastUpdated } from "@/lib/metrics/last-updated";
 import { SITE_URL } from "@/lib/site-url";
 
 /**
- * docs/ENGINEERING.md §6 — "Sitemap covers the five routes." Deferred until
+ * docs/ENGINEERING.md §6 — "Sitemap covers the six routes." Deferred until
  * it needs an absolute canonical URL (`SITE_URL`), which did not
  * exist until the Vercel deployment target was confirmed. No invented routes:
- * exactly the five real ones this site ships (`docs/ENGINEERING.md §6`'s own
+ * exactly the six real ones this site ships (`docs/ENGINEERING.md §6`'s own
  * route table) — no `/methodology#anchor`-style entries, no route that
  * doesn't exist.
  *
@@ -29,6 +29,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/evidence", priority: 0.8 },
     { path: "/methodology", priority: 0.5 },
     { path: "/about", priority: 0.5 },
+    { path: "/share", priority: 0.5 },
   ];
 
   return routes.map(({ path, priority }) => ({

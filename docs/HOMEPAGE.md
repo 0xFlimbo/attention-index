@@ -26,7 +26,7 @@ The homepage is a **scroll-driven editorial story backed by verifiable data**, n
 Anchors: `#top #attention #crossover #amplified #archive #references #evidence #project`.
 
 `#project` is the closing line (`§13`). Like every other section anchor it exists for
-deep-linking and for review captures, not for navigation — `§3` fixes the nav at five entries.
+deep-linking and for review captures, not for navigation — `§3` fixes the nav entries.
 
 Rhythm rule: alternate large editorial statements → data blocks → archive/database views →
 evidence blocks. Never "heading + four rounded cards" repeated down the page.
@@ -60,6 +60,7 @@ Sticky, ~64–72px, cream, thin bottom border, optional very light blur after sc
 Mobile `LH / ATTENTION INDEX     MENU` → simple drawer/full-screen panel (shadcn Sheet allowed, restyled).
 Tablet (768–1023px) keeps the short brand beside the full link row (docs/DESIGN.md §6).
 `GITHUB ↗` is hidden or disabled while `project.json.repository_url` is `null`.
+`SHARE` (`/share`, §18) joins the row from `lg` up and the mobile panel; at 768 it does not fit.
 
 ---
 
@@ -495,7 +496,7 @@ LAYOFFHEDGE ATTENTION INDEX
 Independent community project built from public data.
 Not affiliated with, operated by, or endorsed by LayoffHedge.
 
-DATA   METHODOLOGY   GITHUB   SOURCES   ABOUT   OFFICIAL LAYOFFHEDGE ↗
+DATA   METHODOLOGY   GITHUB   SOURCES   ABOUT   SHARE   OFFICIAL LAYOFFHEDGE ↗
 
 LAST DATA UPDATE
 SEP 16 2026
@@ -555,3 +556,46 @@ Open Graph artwork in cream/black/red editorial style — never token-first meta
 - [ ] No glassmorphism / crypto visuals / oversized rounded cards / decorative charts
 - [ ] Reduced-motion mode visually complete
 - [ ] Page still looks credible with all animation disabled
+
+---
+
+## 18. Share page (`/share`)
+
+Not a homepage section: a route of its own, owned here because it reuses the homepage's figures and
+voice. One card per aggregate figure, each ready to be posted on X by anyone who wants to.
+
+```text
+NOT A ONE-OFF.                       ← hook, one line, sentence case
+17                                   ← derived figure, stat-cell size, ink
+tracked @LayoffAI posts above 1M observed views, 27 above 500K
+                                     ← optional supporting line, page only
+──────────────
+VIEWS AS OF SEP 28 2026
+OPEN ARCHIVE →    POST ON X ↗
+```
+
+- **Every figure is derived** by `selectShareCards` (`docs/DATA.md §10`), never typed in. A card
+  whose records are gone is not rendered; a named sentence whose record is gone is dropped and the
+  figure stays.
+- **Aggregates first.** A card names at most one or two people or outlets, as plain text, never as
+  an @-tag. Government records are named by department, not by person.
+- **The hook** is short, declarative and true on the card's own figure (`Not a one-off.` needs two
+  or more posts above 1M). The claim, the labels and the banned list are `docs/EDITORIAL.md`'s.
+- **The date** says what it is: `VIEWS AS OF` (the latest post reading), `DATA AS OF`
+  (`dataLastUpdated`), or `OBSERVED` (one post's own reading).
+- **Two links, both plain.** The evidence link goes to the section of this site that holds the
+  figure's records (`/archive`, `/evidence#…`, `/methodology#…`, `/#crossover`). `POST ON X ↗` is
+  `https://x.com/intent/post?text=…&url=…`: the text is hook, figure, claim and date, then
+  `@LayoffAI` and `$LAYOFF`; the `url` is the same evidence section on this site. No client
+  script, no share counter.
+- **The cashtag is in the post text only** (maintainer decision, 2026-09-29). The page supplies
+  material that other people choose to post and can edit before posting; the page itself never
+  shows `$LAYOFF`, so a reader of the site does not see it. It is the only place the token appears.
+- **Under 280 characters**, counting the link at X's fixed 23.
+- Grid of flat 1px-bordered cards: one column at 390, two at 768, three from `lg`. Each card sits on
+  a four-row subgrid (hook, figure, claim with its detail, links), so the figures and the links line
+  up across a row whatever the length of each hook. The page carries
+  the independence line under its intro, like `/archive`.
+- Linked from the footer (`SHARE`) and the nav from `lg` up. At 768 the nav row has no room for a
+  sixth link (measured: 20px left beside the short brand, 3px under a scrollbar), so there it is in
+  the mobile panel and the footer only.

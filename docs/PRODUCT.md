@@ -146,6 +146,7 @@ Methodology must say this explicitly.
 /evidence      browsable source ledger — verification
 /methodology   definitions and calculation rules — trust
 /about         independence and purpose — context
+/share         derived figures ready to post on X — distribution (docs/HOMEPAGE.md §18)
 ```
 
 Optional later: `/amplified`, `/references`, `/timeline`.

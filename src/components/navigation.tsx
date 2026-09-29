@@ -13,6 +13,13 @@ import { ExternalArrow } from "./external-arrow";
 interface NavItem {
   label: string;
   href: string;
+  /**
+   * Hidden from the desktop row below `lg`. The row at 768px is measured
+   * (Manrope 700 advance widths): with SHARE it keeps 20px between the short
+   * brand and the first link, 3px under a 17px scrollbar, so SHARE starts at
+   * `lg` there and stays in the mobile panel, which has room.
+   */
+  fromLg?: boolean;
 }
 
 const NAV_ITEMS: readonly NavItem[] = [
@@ -23,6 +30,7 @@ const NAV_ITEMS: readonly NavItem[] = [
   { label: "CROSSOVER", href: "/#crossover" },
   { label: "ARCHIVE", href: "/archive" },
   { label: "SOURCES", href: "/evidence" },
+  { label: "SHARE", href: "/share", fromLg: true },
 ];
 
 interface NavigationProps {
@@ -122,7 +130,7 @@ export function Navigation({ repositoryUrl }: NavigationProps) {
         {/* Desktop links */}
         <ul className="hidden items-center gap-6 md:flex lg:gap-8">
           {NAV_ITEMS.map((item) => (
-            <li key={item.label}>
+            <li key={item.label} className={item.fromLg ? "hidden lg:block" : undefined}>
               <NavLink
                 href={item.href}
                 className="text-metadata whitespace-nowrap font-bold text-ink hover:text-accent-ink"

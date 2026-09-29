@@ -163,6 +163,7 @@ external font requests).
 /evidence     browsable list of posts / amplifications / media — a simple table is enough
 /methodology  statically authored prose (not generated from code)
 /about        purpose, independence, open source, official links, GitHub
+/share        derived figures with a pre-filled "Post on X" link (docs/HOMEPAGE.md §18)
 ```
 
 Methodology must explain: source definitions, observation dates, view-count limitations,
@@ -178,7 +179,7 @@ Inclusion in the archive documents public reach; it does not verify every claim 
 
 Anchors are native; smooth scrolling optional and reduced-motion aware.
 
-Sitemap covers the five routes; robots indexes public routes only (`src/app/sitemap.ts`,
+Sitemap covers the six routes; robots indexes public routes only (`src/app/sitemap.ts`,
 `src/app/robots.ts`). Both read `SITE_URL` (`src/lib/site-url.ts`), the single source of truth for
 that URL — `NEXT_PUBLIC_SITE_URL` if set, else the canonical Vercel deployment. Each route carries
 its own `metadata` (title, description, OG/Twitter text fields). Every route that declares its own
