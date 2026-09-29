@@ -61,6 +61,17 @@ export interface ShareCardInput {
  */
 export const SHARE_CASHTAG = "$LAYOFF";
 
+/**
+ * The hooks a card falls back to when the record its own hook names is gone.
+ * Kept here so `share:review` can tell a fallen-back card from a written one.
+ */
+export const FALLBACK_HOOKS = {
+  amplifiers: "Every act on the record.",
+  press: "Not only crypto media.",
+  investigation: "Newsrooms report its investigations.",
+  districtsPost: "One post, many accounts.",
+} as const;
+
 /** X counts every link as 23 characters, whatever its length. */
 export const X_LINK_LENGTH = 23;
 export const X_POST_LIMIT = 280;
@@ -206,7 +217,7 @@ export function selectAmplifiersCard(input: ShareCardInput, asOf: string): Share
 
   return {
     id: "amplifiers",
-    hook: hook.length > 0 ? hook.join(" ") : "Every act on the record.",
+    hook: hook.length > 0 ? hook.join(" ") : FALLBACK_HOOKS.amplifiers,
     figure: formatCount(uniqueAmplifierCount),
     claim: `identified public ${plural(uniqueAmplifierCount, "account has", "accounts have")} amplified LayoffHedge on X, every act linked to its source`,
     detail: null,
@@ -286,7 +297,7 @@ export function selectPressCard(input: ShareCardInput, asOf: string): ShareCard 
     hook:
       broadcast !== undefined
         ? `${broadcast.publication} put the H-1B chart on air, crediting LayoffHedge.`
-        : "Not only crypto media.",
+        : FALLBACK_HOOKS.press,
     figure: formatCount(verifiedMediaReferenceCount),
     claim: `press ${plural(verifiedMediaReferenceCount, "reference", "references")} across ${formatCount(uniquePublicationCount)} ${plural(uniquePublicationCount, "publication", "publications")}${named ? `, ${NAMED_PUBLICATION} among them` : ""}`,
     detail: null,
@@ -559,7 +570,7 @@ export function selectInvestigationCard(input: ShareCardInput, asOf: string): Sh
     hook:
       quoted !== ""
         ? `One investigation, ${numberWord(offices)} federal ${plural(offices, "office", "offices")}.`
-        : "Newsrooms report its investigations.",
+        : FALLBACK_HOOKS.investigation,
     figure: formatCount(newsrooms),
     claim: `${plural(newsrooms, "newsroom", "newsrooms")} reported LayoffHedge's investigations${quoted}`,
     detail: null,
@@ -592,7 +603,7 @@ export function selectDistrictsPostCard(input: ShareCardInput, asOf: string): Sh
 
   return {
     id: "districts-post",
-    hook: congress ? "Members of Congress quote-posted this one." : "One post, many accounts.",
+    hook: congress ? "Members of Congress quote-posted this one." : FALLBACK_HOOKS.districtsPost,
     figure: formatCount(accounts),
     claim: `identified accounts amplified a single ${input.officialXAccount} post on ${DISTRICTS_POST_DESCRIPTION}${politicians > 0 ? `, ${formatCount(politicians)} ${plural(politicians, "politician", "politicians")} among them` : ""}`,
     detail: null,
@@ -668,6 +679,65 @@ export function selectTopPostCard(input: ShareCardInput): ShareCard | null {
     evidenceHref: "/archive",
     evidenceLabel: "OPEN ARCHIVE",
   };
+}
+
+/** Every card id in page order: what the page shows when every card has its records. */
+export const SHARE_CARD_IDS = [
+  "officeholders",
+  "amplifiers",
+  "observed-views",
+  "cited-work",
+  "h1b-data",
+  "layoff-data",
+  "investigation",
+  "press",
+  "posts-above-1m",
+  "median-post",
+  "government",
+  "districts-post",
+  "site-and-tools",
+  "newsroom-countries",
+  "crossover",
+  "named-as-source",
+  "top-post",
+] as const;
+
+/** One record or name a card chose by hand, and whether the dataset still holds it verified. */
+export interface CuratedReference {
+  card: string;
+  what: string;
+  found: boolean;
+}
+
+/**
+ * Every hand-chosen id and name in this file, checked against the data. A
+ * `false` means a card has lost a sentence, a name, or itself.
+ */
+export function curatedReferences(input: ShareCardInput): CuratedReference[] {
+  const amplification = (id: string) =>
+    input.amplifications.some((record) => record.id === id && isVerifiedRecord(record));
+  const media = (id: string) =>
+    input.mediaReferences.some((reference) => reference.id === id && isVerifiedRecord(reference));
+  const post = (id: string) => input.posts.some((entry) => entry.id === id && isVerifiedRecord(entry));
+  const publication = (name: string) =>
+    input.mediaReferences.some((reference) => reference.publication === name && isVerifiedRecord(reference));
+
+  const workNames = Object.entries(WORK_CARD_NAMES).flatMap(([work, names]) =>
+    (names ?? []).map((name) => ({
+      card: work === "h1b_data" ? "h1b-data" : "layoff-data",
+      what: `publication ${name} citing ${work}`,
+      found: originalsCiting(input, work as MediaCitedWork).some((reference) => reference.publication === name),
+    })),
+  );
+
+  return [
+    { card: "amplifiers", what: `amplification ${HOOK_AMPLIFICATION_ID}`, found: amplification(HOOK_AMPLIFICATION_ID) },
+    { card: "press", what: `media ${HOOK_MEDIA_ID}`, found: media(HOOK_MEDIA_ID) },
+    { card: "press", what: `publication ${NAMED_PUBLICATION}`, found: publication(NAMED_PUBLICATION) },
+    ...workNames,
+    { card: "investigation", what: `post ${INVESTIGATION_POST_ID}`, found: post(INVESTIGATION_POST_ID) },
+    { card: "districts-post", what: `post ${DISTRICTS_POST_ID}`, found: post(DISTRICTS_POST_ID) },
+  ];
 }
 
 /** Every card in page order, `null` cards dropped. */

@@ -130,6 +130,7 @@ Occasional, run by hand, never part of a build or CI. Full detail in `TOOLS.md`.
 | `pnpm sweep:web` | asks a web-search index which pages cite the project, and diffs them against the dataset | yes | **paid** (~$0.005/query; Google News through Serper runs on free credits) |
 | `pnpm review:profiles` | re-reads profiles already paid for, reports who to look at | **no** | free |
 | `pnpm check:visual` | screenshots the site at three widths | local browser | free |
+| `pnpm share:review` | prints the posts the share page offers today, and what drifted from the copy as written | **no** | free |
 
 The paid ones need a credential in `.env.local` — `X_BEARER_TOKEN` for the four X tools,
 `BRAVE_SEARCH_API_KEY` and `SERPER_API_KEY` for the web sweep — and spend real money per request.

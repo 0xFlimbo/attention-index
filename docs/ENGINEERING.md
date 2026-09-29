@@ -115,7 +115,7 @@ import: `related-post-reference.ts`, `placeholder.ts`, `publication-name.ts`. Sc
 from here rather than exporting their own helpers, so a test can exercise the rule without
 running the script's `main()`.
 
-**`src/lib/sweep/`** — the same arrangement for the discovery tools (`docs/TOOLS.md §12`):
+**`src/lib/sweep/`** — the same arrangement for the discovery tools (`docs/TOOLS.md §13`):
 `quote-candidates.ts` holds the judgements `pnpm sweep:quotes` makes about a quote post (is this a
 quote of *this* post, is this account already recorded, what is worth a human's attention) as pure
 functions with no I/O. Nothing the site renders imports it. It lives here for the reason
@@ -235,10 +235,12 @@ cannot drift out of sync the way a copy of the JSON block used to.
 | `review:profiles` | re-read already-paid-for profiles | `docs/TOOLS.md §9` |
 | `sweep:web` | web-search discovery sweep | `docs/TOOLS.md §10` |
 | `check:visual` | browser review pass at three widths | `docs/TOOLS.md §11` |
+| `share:review` | print the `/share` posts as they now read, and what drifted from the copy | `docs/TOOLS.md §12` |
 
-None of the maintenance tools (`refresh:metrics` through `check:visual`) is part of the pre-deploy
-pipeline below: `check:visual` must not run alongside a build, and the rest make outbound requests
-to third-party services.
+None of the maintenance tools (`refresh:metrics` through `share:review`) is part of the pre-deploy
+pipeline below: `check:visual` must not run alongside a build, `review:profiles` and
+`share:review` are reports for a person to read, and the rest make outbound requests to
+third-party services.
 
 Pre-deploy pipeline:
 

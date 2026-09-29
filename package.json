@@ -23,7 +23,8 @@
     "review:profiles": "tsx scripts/review-paid-profiles.ts",
     "sweep:mentions": "tsx scripts/sweep-mentions.ts",
     "sweep:web": "tsx scripts/sweep-web.ts",
-    "refresh:metrics": "tsx scripts/refresh-post-metrics.ts"
+    "refresh:metrics": "tsx scripts/refresh-post-metrics.ts",
+    "share:review": "tsx scripts/review-share-cards.ts"
   },
   "dependencies": {
     "next": "16.3.5",

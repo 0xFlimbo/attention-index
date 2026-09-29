@@ -70,6 +70,7 @@ pnpm sweep:mentions                                                  # X mention
 pnpm sweep:mentions -- --sweep                                       # ...and fetches it, paid per post
 
 # 3. Before committing any change to data/.
+pnpm share:review                                                    # the /share posts as they now read; free
 pnpm validate:data && pnpm check:production-data && pnpm typecheck && pnpm lint && pnpm test && pnpm build
 ```
 
@@ -565,7 +566,39 @@ in the gitignored `.visual-check/` (or `--out`). Writes nothing to `data/` or `r
 
 ---
 
-## 12. The shared sweep modules
+## 12. `pnpm share:review`
+
+**What it is for.** `/share` rebuilds its cards from the data on every build, so a refresh needs no
+edit there. What can drift is the copy around the figures. This prints every post the page would
+offer today — the exact text a "Post on X" link pre-fills, and the length X will count — and lists
+what no longer reads as written (`src/lib/metrics/share-review.ts`):
+
+- a card not built, because its records are gone or below its floor (`Not a one-off.` needs two
+  posts above 1M);
+- a hook fallen back to its plain form, because the record it names is gone;
+- a hand-chosen record id or publication name no longer among verified records;
+- a post over 280 characters, or within 20 of it.
+
+**Commands.**
+```bash
+pnpm share:review
+```
+
+**Cost.** Free. Reads `data/` only; no network request; writes nothing.
+
+**When.** After a refresh, a sweep or a press import, before the deploy — step 3 of §2. It exits 1
+only for a post over 280 characters, the one state `/share` must never ship (the test suite checks
+the same bound); every other line is for a person to read.
+
+**Adding or changing a card** is editorial work, not a run of this tool: each figure is derived by
+a selector in `src/lib/metrics/share-cards.ts`, its hook must be true on its own figure, its words
+follow `docs/EDITORIAL.md`, and the rules of the page are `docs/HOMEPAGE.md §18`. A new card is
+added to `SHARE_CARD_IDS`, and any hand-chosen id or name to `curatedReferences`, so this review
+keeps watching it.
+
+---
+
+## 13. The shared sweep modules
 
 The discovery tools are thin scripts over pure modules in `src/lib/sweep/`, unit-tested without a
 disk or an API call, so a rule fixed in one tool is fixed in every tool that shares the module.
