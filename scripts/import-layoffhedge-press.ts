@@ -1,5 +1,5 @@
 /**
- * pnpm import:press
+ * pnpm import:press [-- --dry-run]
  *
  * One-time / occasional seed of `data/media.json` from https://layoffhedge.com/press
  * (docs/TOOLS.md §5). Never fetched at build or runtime.
@@ -244,6 +244,32 @@ function backupMediaFile(): string {
   return backupDir;
 }
 
+/**
+ * `--dry-run`: nothing is written to `data/`. The cards a real run would add,
+ * and the month-only cards it would skip, go to a URL list in the format
+ * `check:media-mentions --urls` reads, so the candidates are read before any
+ * record exists. Before this flag the only way to see them was to import and
+ * revert.
+ */
+const dryRun = process.argv.slice(2).includes("--dry-run");
+const CANDIDATE_LIST = resolve(CACHE_DIR, "press-candidates.txt");
+
+function writeCandidateList(added: MediaReference[], monthOnly: { url: string; label: string }[]): void {
+  const lines = [
+    "# import:press --dry-run — candidates from layoffhedge.com/press, nothing written to data/.",
+    "# Read with: pnpm check:media-mentions -- --urls .cache/press-candidates.txt",
+    ...added.map((record) => `${record.url}  ${record.publication} · ${record.published_at}`),
+    ...monthOnly.map((card) => `${card.url}  ${card.label}`),
+  ];
+  mkdirSync(CACHE_DIR, { recursive: true });
+  writeFileSync(CANDIDATE_LIST, `${lines.join("\n")}\n`);
+  console.log(
+    `\nDry run — data/media.json left unchanged. ${added.length + monthOnly.length} candidate URL(s) ` +
+      `written to .cache/press-candidates.txt\n` +
+      "Next: pnpm check:media-mentions -- --urls .cache/press-candidates.txt",
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
@@ -274,6 +300,7 @@ async function main(): Promise<void> {
   const added: MediaReference[] = [];
   const skippedDuplicate: string[] = [];
   const skippedDatePrecision: string[] = [];
+  const skippedDatePrecisionCards: { url: string; label: string }[] = [];
   const skippedUnparseableDate: string[] = [];
   const publicationCounts = new Map<string, number>();
   const usedIds = new Set(existing.map((record) => record.id));
@@ -290,6 +317,7 @@ async function main(): Promise<void> {
     const { outlet, dateText, precision, iso } = parseOutletDate(card.outletDateText);
     if (precision === "month") {
       skippedDatePrecision.push(`${outlet} · ${dateText} — ${card.title} (${card.url})`);
+      skippedDatePrecisionCards.push({ url: card.url, label: `${outlet} · ${dateText} (month only)` });
       continue;
     }
     if (precision === "unknown" || !iso) {
@@ -358,7 +386,7 @@ async function main(): Promise<void> {
   }
 
   console.log(`\nDiscovered: ${cards.length}`);
-  console.log(`Added: ${added.length}`);
+  console.log(`${dryRun ? "New (dry run, not written)" : "Added"}: ${added.length}`);
   console.log(`Duplicates skipped (already in media.json or repeated on the page): ${skippedDuplicate.length}`);
   console.log(`Skipped — month/year-only date, day precision unavailable: ${skippedDatePrecision.length}`);
   for (const line of skippedDatePrecision) console.log(`  - ${line}`);
@@ -372,7 +400,14 @@ async function main(): Promise<void> {
     for (const [publication, count] of [...publicationCounts.entries()].sort((a, b) => b[1] - a[1])) {
       console.log(`  ${publication}: ${count}`);
     }
+  }
 
+  if (dryRun) {
+    writeCandidateList(added, skippedDatePrecisionCards);
+    return;
+  }
+
+  if (added.length > 0) {
     const backupDir = backupMediaFile();
     console.log(`\nBacked up data/media.json to ${backupDir}`);
 

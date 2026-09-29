@@ -40,6 +40,7 @@ import { resolve } from "node:path";
 import { mediaFileSchema } from "../src/schemas/media.schema";
 import { probePage, sleep, type ProbeResult, type ProbeTarget } from "../src/lib/sweep/page-probe";
 import { parseUrlList } from "../src/lib/sweep/url-list";
+import { metadataLines } from "../src/lib/sweep/page-metadata";
 
 const ROOT = process.cwd();
 const DATA_DIR = resolve(ROOT, "data");
@@ -144,7 +145,7 @@ async function main(): Promise<void> {
         `${String(result.httpStatus).padStart(3)}  ` +
         `${String(result.mentions.total).padStart(3)} mention(s) ` +
         `${result.mentions.brand ? "brand" : result.mentions.total > 0 ? "weak " : "     "}  ` +
-        `${result.via.padEnd(6)}  ${result.publication}`,
+        `${result.via.padEnd(7)}  ${result.publication}`,
     );
     if (index < selected.length - 1) await sleep(delayMs);
   }
@@ -166,13 +167,27 @@ async function main(): Promise<void> {
   console.log(`  name absent                 ${absent.length}`);
   console.log(`not retrievable               ${unreachable.length}`);
   console.log(`obtained via the proxy        ${results.filter((r) => r.via === "proxy").length}`);
+  console.log(`obtained via MSN's endpoint   ${results.filter((r) => r.via === "msn").length}`);
+  console.log(`obtained via Wayback          ${results.filter((r) => r.via === "wayback").length}`);
 
   if (brand.length > 0) {
     console.log("\nBrand form found — read these first:");
     for (const result of brand) {
       console.log(`  ${result.id}  ${result.publication}`);
+      console.log(`      ${result.url}`);
       const excerpt = result.mentions.excerpts[0];
       if (excerpt !== undefined) console.log(`      ${excerpt.slice(0, 200)}`);
+      if (result.via !== "direct") {
+        console.log(
+          `      read via  ${result.via}` +
+            (result.waybackSnapshot ? ` (snapshot ${result.waybackSnapshot}; its date is the capture's)` : ""),
+        );
+      }
+      // In record mode `publication` is the outlet's name; in URL mode it is only a label.
+      const ownName = urlsFile === null ? result.publication : undefined;
+      for (const line of metadataLines(result.metadata, result.url, ownName)) {
+        console.log(`      ${line}`);
+      }
     }
   }
   if (weakOnly.length > 0) {
@@ -191,6 +206,10 @@ async function main(): Promise<void> {
     console.log("\nNot retrievable:");
     for (const result of unreachable) {
       console.log(`  ${result.id}  ${result.publication}  (${result.httpStatus || result.error})`);
+      if (result.waybackUrl !== undefined) {
+        console.log(`      a Wayback copy exists, refused to this server — open it in a browser:`);
+        console.log(`      ${result.waybackUrl}`);
+      }
     }
   }
 

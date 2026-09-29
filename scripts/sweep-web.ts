@@ -97,6 +97,7 @@ import {
   type Ledger,
 } from "../src/lib/sweep/cost-ledger";
 import { probePage, sleep, type ProbeResult } from "../src/lib/sweep/page-probe";
+import { metadataLines } from "../src/lib/sweep/page-metadata";
 import {
   advanceMarks,
   emptySweepState,
@@ -869,6 +870,8 @@ async function sweep(queries: SweepQuery[], key: string): Promise<void> {
       console.log(`    ${hit.url}`);
       const excerpt = hit.mentions.excerpts[0];
       if (excerpt !== undefined) console.log(`    ${excerpt.slice(0, 200)}`);
+      if (hit.via !== "direct") console.log(`    read via  ${hit.via}${hit.waybackSnapshot ? ` (snapshot ${hit.waybackSnapshot})` : ""}`);
+      for (const line of metadataLines(hit.metadata, hit.url)) console.log(`    ${line}`);
     }
     if (weak.length > 0) {
       console.log("\n  Weak form only — a reason to read the page, never a reference:");

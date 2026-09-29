@@ -121,8 +121,8 @@ Occasional, run by hand, never part of a build or CI. Full detail in `TOOLS.md`.
 
 | Command | What it does | Network | Cost |
 |---|---|---|---|
-| `pnpm import:press` | imports the official press page as `needs_review` candidates | yes | free |
-| `pnpm check:media-mentions` | fetches an article — one already stored, or any list of URLs — and reports whether the page names the project | yes | free |
+| `pnpm import:press` | imports the official press page as `needs_review` candidates; `-- --dry-run` lists them without writing | yes | free |
+| `pnpm check:media-mentions` | fetches an article — one already stored, or any list of URLs — and reports whether the page names the project, with the date, byline and credited outlet the page states | yes | free |
 | `pnpm refresh:metrics` | takes a new reading of every tracked post's public counters and appends it to its history | yes | **paid** (~$0.005/post) |
 | `pnpm enrich:twitter` | fills post metadata from the X API | yes | **paid** (`--fetch`; plans free by default) |
 | `pnpm sweep:quotes` | enumerates who quoted a tracked post | yes | **paid** |

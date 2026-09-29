@@ -63,7 +63,9 @@ pnpm refresh:metrics -- --from tracked-post-metrics-<day>.json --write
 # 2. New coverage — discovery only; nothing becomes verified until a person has read the source.
 pnpm sweep:web -- --sweep --since-last --fetch                       # Brave, card, <= $0.065
 pnpm sweep:web -- --vendor serper-news --sweep --since-last --fetch  # Google News, free credits
-pnpm import:press                                                    # official press page, free; adds needs_review records
+pnpm import:press -- --dry-run                                       # official press page, free; lists candidates, writes nothing
+pnpm check:media-mentions -- --urls .cache/press-candidates.txt      # ...reads them, with date, byline and credited outlet
+pnpm import:press                                                    # ...then adds them as needs_review records
 pnpm sweep:mentions                                                  # X mentions since the last run: sizes it, $0.01 per 31 days
 pnpm sweep:mentions -- --sweep                                       # ...and fetches it, paid per post
 
@@ -182,7 +184,8 @@ gate, `docs/ENGINEERING.md §1`).
 
 **Commands.**
 ```bash
-pnpm import:press
+pnpm import:press -- --dry-run   # read the candidates first: nothing written to data/
+pnpm import:press                # write them as needs_review records
 ```
 
 **Cost.** Free — a plain page fetch, no paid API involved.
@@ -190,6 +193,9 @@ pnpm import:press
 **Reads and writes.** Fetches the live press page over HTTP. Writes new records to
 `data/media.json`, deduplicated by canonical article URL, every new import marked
 `status: "needs_review"`. Existing manually reviewed records are preserved untouched.
+`--dry-run` writes nothing to `data/`: it prints what a real run would add, and writes those cards
+and the month-only ones it would skip to `.cache/press-candidates.txt`, in the format
+`check:media-mentions --urls` reads (§6) — so every candidate can be read before a record exists.
 
 **Credentials.** None.
 
@@ -209,6 +215,23 @@ reports whether the page's own text names this project, with the sentence around
 Strictly read-only: it never writes to `data/`; promotion is always a human edit, because reading a
 fetched page with a located mention is exactly what the tool cannot do on its own.
 
+Under every page that names the project it also prints what the page states about itself, read
+from its JSON-LD or meta tags before the HTML is flattened (`src/lib/sweep/page-metadata.ts`):
+
+```text
+date      2026-09-13  (published 2026-09-13T23:46:53.000Z, json-ld)  · URL 2026-09-13
+author    Jayujyoti Mullick
+credited publisher  The American Bazaar  — the likely syndicated_from
+CHECK     UTC timestamp near midnight: the newsroom's own day may differ
+```
+
+The date is the one the timestamp states in its own offset; when a page states the same moment
+twice, the local offset wins over UTC. A `CHECK` line means a person decides the day: the
+timestamp and the URL's `/YYYY/MM/DD/` disagree, or a UTC timestamp falls within six hours of
+midnight, where the newsroom's own day may differ. `credited publisher` appears when the
+metadata's publisher is not the site itself (its `og:site_name`, the record's publication, or its
+host). Each line is a lead for the reading, never a value to copy into a record unread.
+
 **Commands.**
 ```bash
 pnpm check:media-mentions                              # every needs_review record
@@ -216,7 +239,7 @@ pnpm check:media-mentions -- --id media-forbes-…       # one record
 pnpm check:media-mentions -- --urls <file>             # a plain list of URLs in no file yet
 pnpm check:media-mentions -- --status needs_review      # filter by status (default needs_review)
 pnpm check:media-mentions -- --limit 10 --delay 1500
-pnpm check:media-mentions -- --no-proxy                # direct requests only
+pnpm check:media-mentions -- --no-proxy                # no proxy, no Wayback: the page itself (and MSN's endpoint)
 ```
 
 **Cost.** Free — publisher pages, not a paid API.
@@ -232,23 +255,37 @@ fetched page to `.cache/pages/<target-id>.txt`. Never touches canonical JSON.
 **Known traps.**
 - A hit means a form of the name is on the page — sidebar, related-links rail, unrelated quote. It
   is a reason to read the page, never a verification.
-- Two request paths with different headers: a direct request first, falling back through
-  `r.jina.ai` on any non-200 or on a 200 with no mention (this catches client-rendered pages whose
-  text is not in the served HTML). Sending the same headers to both silently disables the fallback
-  — direct and proxy headers are kept as separate constants for that reason.
+- **Four routes, and the report says which one read each page** (`direct`, `proxy`, `msn`,
+  `wayback`):
+  1. **MSN's content endpoint, first, for an MSN article.** MSN renders its pages in the browser:
+     on 2026-09-19 every route tried returned a few hundred bytes with no article in them. The
+     endpoint `https://assets.msn.com/content/view/v2/Detail/<locale>/<id>` — the id at the end of
+     an `ar-` URL, the locale in its path — returns the article as JSON, free and without a key:
+     `provider.name` is the outlet whose piece MSN carries (`syndicated_from`),
+     `publishedDateTime` the timestamp, `body` the full text. An item whose id starts `gm-`
+     answered HTTP 410 there, so it is not tried. Measured 2026-09-29.
+  2. **The page itself**, with a browser user-agent.
+  3. **`r.jina.ai`**, on any non-200 or on a 200 with no mention (this catches client-rendered
+     pages whose text is not in the served HTML). Direct and proxy headers are separate constants:
+     sending the same headers to both silently disabled the fallback once. **The proxy answers
+     200 even when the site refused it** and says so in the text ("Warning: Target URL returned
+     error 403"); that answer counts as the site's refusal, not as a read. When the proxy is the
+     only route that read a page, one more request asks it for the HTML
+     (`X-Return-Format: html`), because its text carries no metadata — the Tennessee Star answers
+     a server with a Cloudflare challenge and keeps its only timestamp in JSON-LD.
+  4. **The Wayback Machine**, only when all of the above failed. Its lookup and its snapshots are
+     throttled separately: on 2026-09-29 the lookup answered every time and the snapshot host
+     answered HTTP 429 every time, after pauses of up to 45 seconds. So a copy that exists but was
+     refused is still listed, with its address, under "Not retrievable" — a browser can open it. A
+     copy that was read is labelled with its snapshot timestamp, which is the capture's date, not
+     the article's.
+- A page whose article body is in its metadata but not in its visible text (NewsBreak shows a
+  teaser) is searched in both; the saved text marks where the metadata's body begins.
 - Default 3 s pacing between records: the proxy throttles a burst, and a throttled response reads
   exactly like a hard block.
 - Brand forms (`layoffhedge`, `layoffai`) and weak forms (`official layoff`, spaced `layoff AI`)
   are counted and reported apart — a page whose only hit is a weak form is listed as a reason to
   read it, never as a reference.
-- **MSN pages render client-side**: on 2026-09-19 every route tried returned a few hundred bytes
-  with no article in them, and the served HTML still holds no article. MSN's own content endpoint returns the article
-  as JSON, free and without a key: take the id at the end of the URL (`…/ar-AA27a2x3` →
-  `AA27a2x3`) and the locale in its path (`en-in`), and read
-  `https://assets.msn.com/content/view/v2/Detail/<locale>/<id>`. `provider.name` is the outlet
-  whose piece MSN carries (`syndicated_from`), `publishedDateTime` the publication timestamp,
-  `body` the full text to search for the mention. Measured 2026-09-29 on two `ar-` pages. An item
-  whose id starts `gm-` answered HTTP 410 on the same endpoint.
 
 ---
 
@@ -405,8 +442,9 @@ X amplification records, the act was found for every one whose profile and post 
 **What it is for.** Asks a web-search vendor which pages cite this project, diffs the results
 against `data/media.json`, and sorts them into the project's own surfaces, pages already recorded,
 link-only surfaces to archive on sight, and candidates. `--fetch` chains the free verification
-stage (§6's fetch-and-detect core) onto the run, so it can end with "N pages that name this
-project" rather than a bare URL list.
+stage (§6's fetch-and-detect core, all four routes) onto the run, so it can end with "N pages that
+name this project" rather than a bare URL list — each with the date, byline and credited outlet
+lines §6 describes.
 
 **Commands.**
 ```bash
@@ -525,7 +563,8 @@ disk or an API call, so a rule fixed in one tool is fixed in every tool that sha
 | `profile-store.ts` | recognising a paid user object and folding readings newest-first, so nothing is bought twice |
 | `raw-archive.ts` | where a billed response goes the moment it arrives (§1) |
 | `mention-patterns.ts` | what counts as this project's name on someone else's page, brand forms apart from weak ones (§6) |
-| `page-probe.ts` | the direct→proxy fetch-and-detect core both input modes of §6 share |
+| `page-probe.ts` | the fetch-and-detect core both input modes of §6 share: MSN's endpoint, direct, proxy, Wayback |
+| `page-metadata.ts` | what a page states about itself — timestamp, byline, publisher, article body — and the date checks (§6) |
 | `url-list.ts` | the `--urls` file format, and a readable unique id per target |
 | `web-search-results.ts` | normalising a result URL, diffing it against `data/media.json`, and the archive-on-sight verdict (§10) |
 | `web-queries.ts` | the versioned query set of the web sweep, and why each query is worded as it is (§10) |
