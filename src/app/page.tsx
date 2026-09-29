@@ -42,7 +42,7 @@ export default function Home() {
         />
         <StatGrid cells={gridCells} />
         <NarrativeBreak />
-        <CrossoverMap amplifications={amplifications} />
+        <CrossoverMap amplifications={amplifications} mediaReferences={mediaReferences} />
         <AmplifiedBy
           amplifications={amplifications}
           posts={posts}

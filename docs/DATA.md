@@ -576,7 +576,8 @@ Count unique entities by stable identity; never count one amplification twice.
 (case-insensitive). `verifiedAmplificationCount` and `countsByCategory` count acts;
 `uniqueAmplifiers` counts people. Everything a reader sees *about people* counts people: the
 Crossover numbers and examples, and the Amplified By grid, which shows one card per person listing
-every act. The `/evidence` list stays one row per act, because it is a list of evidence.
+every act. The one exception is the Crossover `media` node, which counts outlets across this file
+and `media.json` (§10). The `/evidence` list stays one row per act, because it is a list of evidence.
 
 ### Amplifier and Crossover selectors (`src/lib/metrics/amplification.ts`)
 
@@ -597,7 +598,7 @@ person's first record sits in `compareAmplifierOrder`, so a featured act lifts t
 records inside a group are date-descending (tie: smallest `id`), so `records[0]` is the latest act,
 and its name, role and category describe the person on the card.
 
-`selectCrossoverCategories(amplifications: Amplification[]): { category, label, count, examples }[]`
+`selectCrossoverCategories(amplifications: Amplification[], mediaReferences: MediaReference[]): { category, label, count, examples }[]`
 — Crossover categories (docs/HOMEPAGE.md §8) that have at least one verified record, in the
 schema's fixed enum order (`government, politics, journalism, media, business, public_figure`) so
 node position in `CrossoverMap` is a pure function of this array's order, never
@@ -607,6 +608,29 @@ names per category, in `compareAmplifierOrder`. Read 2026-09-20 (15 verified amp
 this resolved to `GOVERNMENT 2 · POLITICS 7 · MEDIA 3 · TECH 1 · PUBLIC FIGURES 2`, with
 `JOURNALISM`, `BUSINESS` and `OTHER` absent (zero records). `TECH` has since been folded into
 `BUSINESS` and `OTHER` removed (§6) — a dated reading, never a target to match.
+
+**The `media` node reads both files.** It counts distinct **outlets** that acted on X (`media`
+amplifications) or published about LayoffHedge (verified `media.json` records), each outlet once.
+The data stays separate — an article is still a `media.json` record and never an amplification
+(§6, §7); only the count is shared. Three rules decide it:
+
+- **Originals and republications alike** (maintainer, 2026-09-29). Crossover measures which
+  audiences the material reached, and a republication carries it to a new outlet's readers, as a
+  repost does on X. It is the set `uniquePublicationCount` counts, so the homepage never prints two
+  different publication figures for one question. The coverage figures below — originals,
+  countries, cited work — keep the counting rule and are unaffected.
+- **One outlet, one identity across files.** `outletIdentity`
+  (`src/lib/validation/publication-name.ts`) drops a leading "The", case and punctuation, so
+  `Tennessee Star` on X and `The Tennessee Star` in the press are one outlet; any other difference
+  in the name keeps two outlets apart. The name shown is the publication's, its standard public
+  form (`docs/EDITORIAL.md §5`).
+- **No crypto-native filter** (maintainer, 2026-09-29). "Outside the crypto-native audience"
+  describes the audience as a whole, not every outlet, so a crypto publication counts like any
+  other. There is no schema field for it.
+
+Its `examples` are the publications in `selectPublicationReferences` order, then outlets known only
+from X in `compareAmplifierOrder`. Read 2026-09-29 this resolved to `MEDIA 61` — 59 publications
+plus 4 outlets on X, 2 of them in both — a dated reading, never a target to match.
 
 ### Media (`media.json`)
 
@@ -651,7 +675,8 @@ because it is the only map in that object that does not count every eligible rec
 
 `/methodology` states every one of these in the reader's words and prints today's values live.
 None of them is on the homepage: `docs/HOMEPAGE.md §11` keeps the Public References section
-without a dominant number.
+without a dominant number. The press reaches the homepage's figures once, counted as outlets, in
+the Crossover `media` node (above).
 
 ### Media selectors (`src/lib/metrics/media.ts`)
 

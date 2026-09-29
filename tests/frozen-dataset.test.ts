@@ -90,14 +90,20 @@ describe("frozen dataset (2026-09-20) — derived figures", () => {
       public_figure: 1,
     });
 
-    // Four categories hold no record, so the Crossover map draws four nodes
-    // (docs/DATA.md §10) — the gap a discovery sweep is aimed at.
-    expect(selectCrossoverCategories(frozenAmplifications).map((c) => c.label)).toEqual([
+    // Two categories hold no record. MEDIA holds no amplification either, but
+    // its node reads both files (docs/DATA.md §10), so the press puts it on the
+    // map: 51 outlets, the 51 verified publications, none of them also on X in
+    // this file and no two of them one outlet once "The", case and punctuation
+    // are dropped. Re-derived by hand from the frozen files, not pasted.
+    const crossover = selectCrossoverCategories(frozenAmplifications, frozenMedia);
+    expect(crossover.map((c) => c.label)).toEqual([
       "GOVERNMENT",
       "POLITICS",
+      "MEDIA",
       "BUSINESS",
       "PUBLIC FIGURES",
     ]);
+    expect(crossover.find((c) => c.category === "media")?.count).toBe(51);
   });
 
   it("derives the media figures the dataset stood at", () => {

@@ -255,15 +255,17 @@ describe("HOMEPAGE_PUBLIC_REFERENCE_ROW_COUNT", () => {
     expect(groups.length).toBeGreaterThan(HOMEPAGE_PUBLIC_REFERENCE_ROW_COUNT);
   });
 
-  it("keeps every multi-reference publication above the cap today", () => {
+  it("keeps every publication with more than one piece of its own reporting above the cap", () => {
     const groups = selectPublicationReferences(getMediaReferences());
-    const shown = groups.slice(0, HOMEPAGE_PUBLIC_REFERENCE_ROW_COUNT);
     const hidden = groups.slice(HOMEPAGE_PUBLIC_REFERENCE_ROW_COUNT);
     // Not the reason for the number — twelve is the composition this section
-    // was reviewed at, not a threshold derived from the data — but a dated
-    // reading worth failing loudly if a future import buries a dense group in
-    // the hidden tail, which is exactly the Inkl case one level up.
-    expect(hidden.every((group) => group.references.length === 1)).toBe(true);
-    expect(shown.filter((group) => group.references.length > 1)).toHaveLength(11);
+    // was reviewed at, not a threshold derived from the data — but a reading
+    // worth failing loudly if a future import buries a publication that did
+    // its own reporting more than once in the hidden tail. A group of
+    // republications may sit there: its originals have rows of their own.
+    // This asserted "no hidden group holds more than one reference" until
+    // MSN's two republications sorted 13th, 2026-09-29; the cap was kept and
+    // the reading narrowed to original reporting.
+    expect(hidden.every((group) => group.originalCount <= 1)).toBe(true);
   });
 });

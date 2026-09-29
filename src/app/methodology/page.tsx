@@ -3,7 +3,7 @@ import { ogImageDescriptor, twitterImageDescriptor } from "@/lib/og-image-meta";
 import Link from "next/link";
 import { getPosts, getAmplifications, getMediaReferences, getProjectMetadata } from "@/lib/data";
 import { getAttentionMetrics } from "@/lib/metrics/attention";
-import { getAmplificationMetrics } from "@/lib/metrics/amplification";
+import { getAmplificationMetrics, selectCrossoverCategories } from "@/lib/metrics/amplification";
 import { getMediaMetrics } from "@/lib/metrics/media";
 import { dataLastUpdated } from "@/lib/metrics/last-updated";
 import { formatCount } from "@/lib/format/number";
@@ -65,6 +65,10 @@ export default function MethodologyPage() {
   const attention = getAttentionMetrics(posts);
   const amplificationMetrics = getAmplificationMetrics(amplifications);
   const mediaMetrics = getMediaMetrics(mediaReferences);
+  // The same figure the homepage's Crossover MEDIA node prints (docs/DATA.md §10).
+  const crossoverMediaCount =
+    selectCrossoverCategories(amplifications, mediaReferences).find((entry) => entry.category === "media")
+      ?.count ?? 0;
   // docs/DATA.md §9, §10 — derived, not a hand-typed project field. `null`
   // only when the dataset holds no verified record anywhere.
   const lastUpdated = dataLastUpdated(posts, amplifications, mediaReferences);
@@ -278,6 +282,17 @@ export default function MethodologyPage() {
             across {formatCount(mediaMetrics.uniquePublicationCount)} publications. Crossover
             category counts and Public References counts are the same style of derived count,
             grouped by category or publication instead of summed.
+          </p>
+
+          <p className="text-body mt-6 max-w-prose text-ink-soft">
+            One Crossover figure reads both kinds of record. The{" "}
+            <strong className="text-ink">media</strong> figure counts outlets, not people: every
+            outlet that posted about LayoffHedge on X or published about it, original reporting and
+            republications alike, each counted once even when it did both. Today that is{" "}
+            {formatCount(crossoverMediaCount)}{" "}
+            {crossoverMediaCount === 1 ? "outlet" : "outlets"}. An outlet is not filtered by
+            whether it covers crypto: the crossover is in the audience as a whole, not in every
+            outlet that carried the material. Every other Crossover figure counts who acted on X.
           </p>
         </ProseSection>
 

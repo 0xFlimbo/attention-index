@@ -30,3 +30,19 @@ export function splitSyndicationSuffix(outlet: string): {
 
   return { publication, syndicatedFrom };
 }
+
+/**
+ * docs/DATA.md §10 — one outlet's identity across the two files it can appear
+ * in: an amplification's `entity_name` and a media record's `publication`.
+ * The same outlet is written "Tennessee Star" on one side and "The Tennessee
+ * Star" on the other, so a leading article, case and punctuation are dropped
+ * before comparing. Nothing else is: two outlets whose names differ in any
+ * other letter stay two outlets.
+ */
+export function outletIdentity(name: string): string {
+  return name
+    .trim()
+    .toLowerCase()
+    .replace(/^the\s+/, "")
+    .replace(/[^\p{L}\p{N}]+/gu, "");
+}

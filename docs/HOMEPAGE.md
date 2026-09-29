@@ -46,7 +46,7 @@ A section must be able to disappear when the evidence is thin.
 |---|---|
 | Public References | ≥1 verified media record — the section renders and grows with the dataset; a row cap keeps it readable at scale (§11) |
 | Amplified By | enough verified amplifications for a real grid; otherwise fold examples into Crossover |
-| Crossover | ≥1 verified amplification; categories only shown if they have records |
+| Crossover | ≥1 verified amplification or media record; categories only shown if they have records |
 | Token | explicitly enabled; omitted in V1 |
 
 Never render zeros or fake placeholders to fill space. Empty state copy: `No verified records yet.`
@@ -193,10 +193,21 @@ TO CULTURE.
 
 Publicly documented examples of LayoffHedge content
 being amplified outside the crypto-native audience.
+
+The media figure counts outlets that posted on X or
+published about LayoffHedge. The other figures count
+who acted on X, each once.
 ```
 
 Categories come from `amplifications.json` (`government, politics, journalism, media, business,
-public_figure`) and are only shown when they have records.
+public_figure`) and are only shown when they have records. **`MEDIA` is the one summary of X and
+the press** (maintainer, 2026-09-29): it counts distinct outlets across `amplifications.json` and
+`media.json`, originals and republications alike, each outlet once, with no crypto-native filter —
+the rule is `docs/DATA.md §10`'s. Before this it counted only outlets that acted on X, and printed
+a single-digit figure over a press record ten times larger. The second paragraph of the subtitle
+exists because the row of numbers mixes two units: every other node counts who acted on X
+("who", not "people" — one government entry is an office). The detail sections are unchanged:
+Amplified By is X, Public References is the press.
 
 Preferred visual: LayoffHedge in the center, categories around it, simple SVG connectors,
 category counts, selected real examples, plus an accessible text equivalent below.
@@ -347,6 +358,10 @@ index must not borrow. A featured reference prints its **criterion** rather than
 
 **The section still has no figure of its own.** The country and provenance metrics live on
 `/methodology` and, per record, on `/evidence`; this section keeps no dominant number of its own.
+The press's headline figure is at the top of the page instead, in the Crossover `MEDIA` node
+(§8), which counts these publications as outlets together with the outlets that acted on X. A
+row of figures here was planned for this on 2026-09-28 and replaced the next day: a number lower
+on the page would not have corrected the one at the top.
 
 ### The row cap
 

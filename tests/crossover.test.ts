@@ -9,6 +9,7 @@ import {
   AMPLIFICATION_ACTION_LABELS,
 } from "../src/lib/metrics/amplification";
 import { getAmplifications } from "../src/lib/data/amplifications";
+import { getMediaReferences } from "../src/lib/data/media";
 import { toAmplifierCardData } from "../src/components/amplifier-card";
 import { amplifierAnchorId } from "../src/components/amplified-by";
 import {
@@ -17,6 +18,7 @@ import {
   type Amplification,
   type AmplificationCategory,
 } from "../src/schemas/amplification.schema";
+import type { MediaReference } from "../src/schemas/media.schema";
 
 function makeAmplification(
   overrides: Partial<Amplification> & { id: string; category: AmplificationCategory },
@@ -44,48 +46,156 @@ function makeAmplification(
   };
 }
 
+function makeMediaReference(
+  overrides: Partial<MediaReference> & { id: string; publication: string },
+): MediaReference {
+  return {
+    title: "Test title",
+    reference_type: "article",
+    published_at: "2026-01-01",
+    url: `https://example.com/${overrides.id}`,
+    author: null,
+    country: null,
+    provenance: "original",
+    syndicated_from: null,
+    cited_work: "none",
+    context: null,
+    related_post_id: null,
+    featured: false,
+    logo: null,
+    archive_url: null,
+    notes: null,
+    status: "verified",
+    verified_at: "2026-01-02",
+    ...overrides,
+  };
+}
+
+describe("selectCrossoverCategories — the media node reads both files", () => {
+  const outletOnX = makeAmplification({
+    id: "amp-tennessee-star",
+    category: "media",
+    entity_type: "organization",
+    entity_name: "Tennessee Star",
+  });
+
+  it("counts an outlet in both files once, whatever the leading article", () => {
+    const media = [makeMediaReference({ id: "media-star", publication: "The Tennessee Star" })];
+    const [entry] = selectCrossoverCategories([outletOnX], media);
+    expect(entry?.category).toBe("media");
+    expect(entry?.count).toBe(1);
+    expect(entry?.examples).toEqual(["The Tennessee Star"]);
+  });
+
+  it("counts a publication's several references, and its republications, as one outlet each", () => {
+    const media = [
+      makeMediaReference({ id: "media-a-1", publication: "Outlet A" }),
+      makeMediaReference({ id: "media-a-2", publication: "Outlet A" }),
+      makeMediaReference({
+        id: "media-b-1",
+        publication: "Outlet B",
+        provenance: "syndicated",
+        syndicated_from: "Outlet A",
+      }),
+    ];
+    const [entry] = selectCrossoverCategories([outletOnX], media);
+    expect(entry?.count).toBe(3);
+  });
+
+  it("does not count a needs_review, archived or placeholder media record", () => {
+    const media = [
+      makeMediaReference({ id: "media-verified", publication: "Verified Outlet" }),
+      makeMediaReference({
+        id: "media-needs-review",
+        publication: "Unreviewed Outlet",
+        status: "needs_review",
+        verified_at: null,
+      }),
+      makeMediaReference({ id: "media-archived", publication: "Archived Outlet", status: "archived" }),
+      makeMediaReference({
+        id: "media-placeholder",
+        publication: "Placeholder Outlet",
+        status: "needs_review",
+        verified_at: null,
+        _placeholder: true,
+      }),
+    ];
+    const [entry] = selectCrossoverCategories([], media);
+    expect(entry?.count).toBe(1);
+    expect(entry?.examples).toEqual(["Verified Outlet"]);
+  });
+
+  it("draws the media node from the press alone, and leaves every other node to X", () => {
+    const person = makeAmplification({ id: "amp-person", category: "politics", entity_name: "Person" });
+    const media = [makeMediaReference({ id: "media-only", publication: "Press Only" })];
+    expect(
+      selectCrossoverCategories([person], media).map((entry) => [entry.category, entry.count]),
+    ).toEqual([
+      ["politics", 1],
+      ["media", 1],
+    ]);
+  });
+
+  it("names publications first, in Public References order, then outlets known only from X", () => {
+    const media = [
+      makeMediaReference({ id: "media-small", publication: "Small Outlet" }),
+      makeMediaReference({ id: "media-large-1", publication: "Large Outlet" }),
+      makeMediaReference({ id: "media-large-2", publication: "Large Outlet" }),
+    ];
+    const xOnly = makeAmplification({
+      id: "amp-x-only",
+      category: "media",
+      entity_type: "organization",
+      entity_name: "X Only Outlet",
+      date: "2026-09-01",
+    });
+    const [entry] = selectCrossoverCategories([xOnly, outletOnX], media);
+    expect(entry?.count).toBe(4);
+    expect(entry?.examples).toEqual(["Large Outlet", "Small Outlet", "X Only Outlet"]);
+  });
+});
+
 describe("selectCrossoverCategories — real dataset", () => {
   const amplifications = getAmplifications();
-  const categories = selectCrossoverCategories(amplifications);
+  const mediaReferences = getMediaReferences();
+  const categories = selectCrossoverCategories(amplifications, mediaReferences);
 
-  it("derives each category's count of distinct people independently from the raw records, not from another selector's output", () => {
+  // Plain reimplementation of the counting rule, not a call to the selector or
+  // to `outletIdentity`: people by entity type + name, and for `media` outlets
+  // by name with a leading "The", case and punctuation dropped, across both files.
+  function expectedMembers(category: AmplificationCategory): Set<string> {
+    const outlet = (name: string) => name.toLowerCase().replace(/^the /, "").replace(/[^a-z0-9]/g, "");
+    const verifiedAmps = amplifications.filter(
+      (amp) => amp.status === "verified" && amp._placeholder !== true && amp.category === category,
+    );
+    if (category !== "media") {
+      return new Set(verifiedAmps.map((amp) => `${amp.entity_type}:${amp.entity_name.toLowerCase()}`));
+    }
+    return new Set([
+      ...verifiedAmps.map((amp) => outlet(amp.entity_name)),
+      ...mediaReferences
+        .filter((reference) => reference.status === "verified" && reference._placeholder !== true)
+        .map((reference) => outlet(reference.publication)),
+    ]);
+  }
+
+  it("derives each category's count independently from the raw records, not from another selector's output", () => {
     for (const category of amplificationCategoryEnum.options) {
-      const expectedCount = new Set(
-        amplifications
-          .filter(
-            (amp) => amp.status === "verified" && amp._placeholder !== true && amp.category === category,
-          )
-          .map((amp) => `${amp.entity_type}:${amp.entity_name.toLowerCase()}`),
-      ).size;
       const entry = categories.find((c) => c.category === category);
-      expect(entry?.count ?? 0).toBe(expectedCount);
+      expect(entry?.count ?? 0).toBe(expectedMembers(category).size);
     }
   });
 
   it("excludes zero-count categories entirely", () => {
-    const zeroCategories = amplificationCategoryEnum.options.filter(
-      (category) => !categories.some((entry) => entry.category === category),
-    );
-    for (const category of zeroCategories) {
-      const rawCount = amplifications.filter(
-        (amp) => amp.status === "verified" && amp._placeholder !== true && amp.category === category,
-      ).length;
-      expect(rawCount).toBe(0);
-    }
-    // The complement of the check above, and the reason this assertion is a
-    // relationship rather than the list of four categories it used to name:
-    // A discovery sweep exists to put records into journalism, media and business,
-    // so a literal set here fails on exactly the record such a sweep is hunting
-    // for. The dated literal is kept against frozen
-    // input in `tests/frozen-dataset.test.ts`.
+    // A relationship rather than the list of categories it used to name: a
+    // discovery sweep exists to put records into journalism, media and
+    // business, so a literal set here fails on exactly the record such a sweep
+    // is hunting for. The dated literal is kept against frozen input in
+    // `tests/frozen-dataset.test.ts`.
     const nonEmpty = amplificationCategoryEnum.options.filter(
-      (category) =>
-        amplifications.filter(
-          (amp) =>
-            amp.status === "verified" && amp._placeholder !== true && amp.category === category,
-        ).length > 0,
+      (category) => expectedMembers(category).size > 0,
     );
-    expect(categories.map((entry) => entry.category).sort()).toEqual([...nonEmpty].sort());
+    expect(categories.map((entry) => entry.category)).toEqual(nonEmpty);
   });
 
   it("caps examples at 3 real entity names, in featured-first/date-descending order", () => {
@@ -131,7 +241,7 @@ describe("selectCrossoverCategories / selectAmplifiers — eligibility", () => {
       }),
     ];
 
-    const categories = selectCrossoverCategories(amplifications);
+    const categories = selectCrossoverCategories(amplifications, []);
     expect(categories).toHaveLength(1);
     expect(categories[0]?.count).toBe(1);
     expect(categories[0]?.examples).toEqual(["Verified Entity"]);
@@ -204,7 +314,7 @@ describe("label maps — exhaustiveness", () => {
 
 describe("empty dataset", () => {
   it("selectCrossoverCategories returns an empty array, no throw", () => {
-    expect(selectCrossoverCategories([])).toEqual([]);
+    expect(selectCrossoverCategories([], [])).toEqual([]);
   });
 
   it("selectAmplifiers returns an empty array, no throw", () => {
@@ -238,7 +348,7 @@ describe("one person, several acts — docs/DATA.md §6 counting rule", () => {
   const amplifications = [personAOlder, other, personANewer];
 
   it("Crossover counts the person once and never repeats the name among the examples", () => {
-    const [entry] = selectCrossoverCategories(amplifications);
+    const [entry] = selectCrossoverCategories(amplifications, []);
     expect(entry?.count).toBe(2);
     expect(entry?.examples).toEqual(["Person A", "Person B"]);
   });

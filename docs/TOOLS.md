@@ -241,6 +241,14 @@ fetched page to `.cache/pages/<target-id>.txt`. Never touches canonical JSON.
 - Brand forms (`layoffhedge`, `layoffai`) and weak forms (`official layoff`, spaced `layoff AI`)
   are counted and reported apart — a page whose only hit is a weak form is listed as a reason to
   read it, never as a reference.
+- **MSN pages render client-side**: on 2026-09-19 every route tried returned a few hundred bytes
+  with no article in them, and the served HTML still holds no article. MSN's own content endpoint returns the article
+  as JSON, free and without a key: take the id at the end of the URL (`…/ar-AA27a2x3` →
+  `AA27a2x3`) and the locale in its path (`en-in`), and read
+  `https://assets.msn.com/content/view/v2/Detail/<locale>/<id>`. `provider.name` is the outlet
+  whose piece MSN carries (`syndicated_from`), `publishedDateTime` the publication timestamp,
+  `body` the full text to search for the mention. Measured 2026-09-29 on two `ar-` pages. An item
+  whose id starts `gm-` answered HTTP 410 on the same endpoint.
 
 ---
 

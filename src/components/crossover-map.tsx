@@ -1,4 +1,5 @@
 import type { Amplification } from "@/schemas/amplification.schema";
+import type { MediaReference } from "@/schemas/media.schema";
 import { selectCrossoverCategories, type CrossoverCategoryData } from "@/lib/metrics/amplification";
 import { formatCount } from "@/lib/format/number";
 import { SectionEyebrow } from "./section-eyebrow";
@@ -9,14 +10,17 @@ import { SectionEyebrow } from "./section-eyebrow";
  * decides its own visibility. Renders when at least one category has a
  * verified record; `selectCrossoverCategories` already excludes zero-count
  * categories, so an empty result here is exactly "zero verified
- * amplifications" (docs/HOMEPAGE.md §2) and the whole section disappears.
+ * amplifications and zero verified media records" (docs/HOMEPAGE.md §2) and
+ * the whole section disappears.
  */
 interface CrossoverMapProps {
   amplifications: Amplification[];
+  /** Read for the MEDIA node only, which counts outlets from both files (docs/DATA.md §10). */
+  mediaReferences: MediaReference[];
 }
 
-export function CrossoverMap({ amplifications }: CrossoverMapProps) {
-  const categories = selectCrossoverCategories(amplifications);
+export function CrossoverMap({ amplifications, mediaReferences }: CrossoverMapProps) {
+  const categories = selectCrossoverCategories(amplifications, mediaReferences);
   if (categories.length === 0) return null;
 
   return (
@@ -41,6 +45,16 @@ export function CrossoverMap({ amplifications }: CrossoverMapProps) {
           <p className="text-body mt-4 max-w-2xl text-ink-soft">
             Publicly documented examples of LayoffHedge content being amplified outside the
             crypto-native audience.
+          </p>
+          {/*
+            The MEDIA node counts outlets from both files, every other node
+            counts who acted on X (docs/HOMEPAGE.md §8), so the section says
+            which unit each is in rather than letting the row of numbers read
+            as one unit. "Who", not "people": one government entry is an office.
+          */}
+          <p className="text-body mt-3 max-w-2xl text-ink-soft">
+            The media figure counts outlets that posted on X or published about LayoffHedge. The
+            other figures count who acted on X, each once.
           </p>
         </div>
 

@@ -4,7 +4,10 @@ import {
   type AmplificationAction,
   type AmplificationCategory,
 } from "@/schemas/amplification.schema";
+import type { MediaReference } from "@/schemas/media.schema";
 import { isVerifiedRecord } from "@/lib/data/eligibility";
+import { selectPublicationReferences } from "@/lib/metrics/media";
+import { outletIdentity } from "@/lib/validation/publication-name";
 
 /**
  * docs/EDITORIAL.md §9 — fixed, neutral category labels for the Crossover
@@ -175,18 +178,34 @@ const CROSSOVER_EXAMPLE_LIMIT = 3;
  * Examples are the first `CROSSOVER_EXAMPLE_LIMIT` distinct entity names in
  * `compareAmplifierOrder` (featured first, then most recent) — real names
  * only, never invented, never repeated.
+ *
+ * `media` is the one node read from both files: it counts distinct outlets
+ * that acted on X or published about LayoffHedge, originals and republications
+ * alike, each outlet once (`outletIdentity`). An article stays a media record
+ * and never becomes an amplification; only the count is shared. Its examples
+ * lead with the publications in Public References order, then outlets known
+ * only from X in `compareAmplifierOrder`.
  */
-export function selectCrossoverCategories(amplifications: Amplification[]): CrossoverCategoryData[] {
+export function selectCrossoverCategories(
+  amplifications: Amplification[],
+  mediaReferences: MediaReference[],
+): CrossoverCategoryData[] {
   const eligible = amplifications.filter(isVerifiedRecord).slice().sort(compareAmplifierOrder);
 
   return amplificationCategoryEnum.options
     .map((category) => {
-      const people = new Map<string, string>();
-      for (const amp of eligible) {
-        const identity = amplifierIdentity(amp);
-        if (amp.category === category && !people.has(identity)) people.set(identity, amp.entity_name);
+      const members = new Map<string, string>();
+      if (category === "media") {
+        for (const group of selectPublicationReferences(mediaReferences)) {
+          const identity = outletIdentity(group.publication);
+          if (!members.has(identity)) members.set(identity, group.publication);
+        }
       }
-      const names = [...people.values()];
+      for (const amp of eligible) {
+        const identity = category === "media" ? outletIdentity(amp.entity_name) : amplifierIdentity(amp);
+        if (amp.category === category && !members.has(identity)) members.set(identity, amp.entity_name);
+      }
+      const names = [...members.values()];
       return {
         category,
         label: AMPLIFICATION_CATEGORY_LABELS[category],
