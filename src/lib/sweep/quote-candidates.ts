@@ -113,6 +113,21 @@ export const ROLE_PHRASES = [
 ] as const;
 
 /**
+ * The three-letter titles, matched as whole words; every other phrase stays a
+ * substring. Measured 2026-09-29 over 707 paid profiles: as substrings these
+ * four flagged 11 accounts on "director", "actor", "collector", "cool",
+ * "Victor" and the like, and not one of the 11 held the title. Whole words on
+ * every phrase was measured too and rejected: it also drops plurals and joined
+ * forms ("founders", "photojournalist"), which are real role claims.
+ */
+const WHOLE_WORD_PHRASES: ReadonlySet<string> = new Set(["ceo", "cto", "cfo", "coo"]);
+
+function containsPhrase(haystack: string, phrase: string): boolean {
+  if (!WHOLE_WORD_PHRASES.has(phrase)) return haystack.includes(phrase);
+  return new RegExp(`(?<![a-z0-9])${phrase}(?![a-z0-9])`).test(haystack);
+}
+
+/**
  * Whether this entry is a quote **of this post**, rather than a reply inside
  * one of its quote threads.
  *
@@ -169,7 +184,7 @@ export function signalFlags(user: QuotingAccount): string[] {
   // account claims a public role", and a parody account claims nothing.
   if (!user.parody) {
     const haystack = `${user.description ?? ""} ${user.name}`.toLowerCase();
-    const matched = ROLE_PHRASES.filter((phrase) => haystack.includes(phrase));
+    const matched = ROLE_PHRASES.filter((phrase) => containsPhrase(haystack, phrase));
     if (matched.length > 0) flags.push(`role-phrase: ${matched.slice(0, 3).join(", ")}`);
   }
 

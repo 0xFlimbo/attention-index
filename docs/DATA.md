@@ -272,7 +272,7 @@ places a person in `politics`.
 | `politics` | people who hold, have held or have sought **elected office** | an elected office on the record, current, former or sought, won or lost | 11 — five members of Congress, a sitting governor, three former legislators, two former congressional candidates |
 | `journalism` | **individual** reporters, editors, publishers, correspondents, columnists | that is their job when they act, confirmed by the outlet | 2 — a named outlet's columnist and a news site's publisher, each confirmed against the outlet's own pages |
 | `media` | news **organisations** posting as themselves | the account is the outlet, not a person | 4 |
-| `business` | companies and their executives and investors, **technology included** | acting in that commercial role | 2 |
+| `business` | companies and their executives and investors, **technology included** | acting in that commercial role | 3 — a technology executive, a private-equity partner, a listed company's CEO |
 | `public_figure` | identified people whose public standing fits none of the above: commentators, hosts, activists, creators | **at least 100,000 followers** on the account that acted | 16 records, 15 people |
 
 **`politics` is elected office, not political talk.** Anyone who holds, has held, is seeking or

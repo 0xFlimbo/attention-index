@@ -319,6 +319,11 @@ run — written only after a successful sweep, from the API's own `newest_id`.
 
 **Known traps.**
 - Sizing is the default; only `--sweep` bills.
+- `--sweep` sizes the window again before fetching, so sizing first and then sweeping pays the
+  `counts` request twice ($0.01 extra, measured 2026-09-29). It is the price of seeing the cost
+  before spending it; skip the separate sizing run only when the window is already known.
+- The fetch includes each author's profile (`expansions=author_id`), billed with it: there is no
+  separate approval step for profiles on this track.
 - The state mark moves only forwards, and only after success: a mark that moves backwards re-buys
   a paid window, one that moves forwards after a failure silently skips posts nobody has seen.
 - After a gap longer than 30 days, pass `--start-time` explicitly rather than trusting `--since-id`

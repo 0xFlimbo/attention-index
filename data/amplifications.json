@@ -772,5 +772,27 @@
     "notes": "Quote-posted the analysis of H-1B filings by Texas congressional district. Identity: the show notes of Coffee and a Mike episode #1316, \"Kevin DeAnna\" (2026-02-18), link this account under \"Follow Kevin\"; held from 2026-09-27 until a source other than the account was found. Role: his Wikipedia entry states he has hosted a podcast produced by American Renaissance, and that he has written as \"Gregory Hood\" and \"James Kirkpatrick\".",
     "status": "verified",
     "verified_at": "2026-09-28"
+  },
+  {
+    "id": "amp-brian-j-esposito-2103815687395278989",
+    "entity_type": "person",
+    "entity_name": "Brian J. Esposito",
+    "role": "CEO, Diamond Lake Minerals",
+    "organization": "Diamond Lake Minerals",
+    "category": "business",
+    "action": "share",
+    "date": "2026-09-26",
+    "platform": "x",
+    "account": "@brianjesposito",
+    "evidence_url": "https://x.com/brianjesposito/status/2103815687395278989",
+    "related_post_id": null,
+    "follower_count": null,
+    "follower_count_observed_at": null,
+    "country": "US",
+    "featured": false,
+    "portrait": null,
+    "notes": "Shares layoffhedge.com with a video attached, as a site that tracks major layoffs in 2026. Found by the mentions sweep of 2026-09-29. Identity: the site of his company, Esposito Intellectual Enterprises (eie.rocks), links this account and linkedin.com/in/brianjesposito as his. Role: Diamond Lake Minerals (OTC: DLMI) names him its CEO on its own site (diamondlakeminerals.com), and StockTitan and Proactive Investors report him in the role in 2026. Country: EIE was founded in New York. Not written: the other roles in his bio (investor, advisor, speaker).",
+    "status": "verified",
+    "verified_at": "2026-09-29"
   }
 ]

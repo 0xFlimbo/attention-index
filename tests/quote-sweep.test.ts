@@ -136,6 +136,27 @@ describe("signalFlags", () => {
     expect(flags.some((flag) => flag.includes("governor"))).toBe(true);
   });
 
+  it("matches the three-letter titles as whole words only", () => {
+    // Real false positives from paid profiles: "Victor", "director", "cool".
+    for (const name of ["Victor Goenka", "Creative director", "Patriot before it was cool"]) {
+      expect(signalFlags({ username: "x", name }).some((f) => f.startsWith("role-phrase"))).toBe(false);
+    }
+    expect(signalFlags({ username: "x", name: "A Name", description: "CTO @acme, ex-CEO" })).toContainEqual(
+      "role-phrase: ceo, cto",
+    );
+    expect(signalFlags({ username: "x", name: "A Name", description: "Founder/CFO" })).toContainEqual(
+      "role-phrase: founder, cfo",
+    );
+  });
+
+  it("keeps the longer phrases as substrings, so plurals and joined forms still flag", () => {
+    for (const description of ["one of the founders", "photojournalist"]) {
+      expect(signalFlags({ username: "x", name: "A Name", description }).some((f) => f.startsWith("role-phrase"))).toBe(
+        true,
+      );
+    }
+  });
+
   it("flags a large following at the inclusive boundary", () => {
     expect(
       signalFlags({
