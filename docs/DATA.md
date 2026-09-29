@@ -740,14 +740,23 @@ What each card counts, where it is not an existing figure:
   among them; originals only, like `originalReferencesByCitedWork`.
 - **Crossover** — the sum of the non-media Crossover nodes, with the media node (outlets) given as
   its own number: two units, never added together.
+- **LayoffHedge's work, read through what others did with it.** One card per cited work (H-1B
+  filings data, layoff data: originals citing it and their publications). Investigations: the
+  publications with an original reference citing one, and the government accounts that acted on the
+  @LayoffAI post that carried one, tied through `related_post_id`; no media record is tied to a
+  post, so the newsroom count covers every investigation and the post is named as one of them. The
+  H-1B districts post: distinct accounts with an act on it, politicians among them. The site and
+  tools: distinct accounts whose act was a share, citation or mention, former members of Congress
+  among them (by role).
 
 `asOf` is `latestObservationDate` for the view cards, `dataLastUpdated` for the record cards, and
 the post's own `observed_at` for the most viewed post. `sharePostText(card, officialXAccount)` is
 the text a "Post on X" link pre-fills — hook, figure and claim, date, the account, then the
 `$LAYOFF` cashtag — and `shareIntentUrl` adds the evidence section of this site as the link. The
 cashtag is in that text only, never in a field the page renders (maintainer decision, 2026-09-29).
-The two names a hook may carry are read from records chosen by id in the file (declared curation);
-the sentence goes when its record does.
+The names a card may carry, and the two posts the investigation and districts cards describe, are
+chosen by id or name in the file (declared curation); a sentence goes when its record does, and the
+districts card goes with its post.
 
 ### Crossover
 Descriptive counts and real examples only. **Never invent** Crossover Score, Influence Score,

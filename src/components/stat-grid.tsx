@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { AttentionGridCell } from "@/lib/metrics/attention-grid";
 import { SectionEyebrow } from "./section-eyebrow";
 import { StatCell } from "./stat-cell";
@@ -30,6 +31,19 @@ export function StatGrid({ cells }: StatGridProps) {
           </div>
         ))}
       </div>
+
+      {/*
+        The way into /share from where the figures have just been read. The id
+        and its sticky-nav offset let `check:visual --anchor share-these-figures`
+        reach it: the grid is taller than one viewport.
+      */}
+      <Link
+        id="share-these-figures"
+        href="/share"
+        className="text-metadata mt-8 inline-block scroll-mt-22 font-bold text-ink underline-offset-2 hover:underline md:mt-10"
+      >
+        SHARE THESE FIGURES <span aria-hidden="true">→</span>
+      </Link>
     </section>
   );
 }

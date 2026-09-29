@@ -1,5 +1,5 @@
 import type { Amplification, AmplificationAction, AmplificationCategory } from "@/schemas/amplification.schema";
-import type { MediaReference } from "@/schemas/media.schema";
+import type { MediaCitedWork, MediaReference } from "@/schemas/media.schema";
 import type { Post } from "@/schemas/post.schema";
 import { isVerifiedRecord } from "@/lib/data/eligibility";
 import { getAttentionMetrics } from "@/lib/metrics/attention";
@@ -434,6 +434,208 @@ export function selectCrossoverCard(input: ShareCardInput, asOf: string): ShareC
   };
 }
 
+/*
+ * Cards on LayoffHedge's own work, read through what others did with it: the
+ * press citing a dataset, newsrooms reporting an investigation, accounts
+ * sharing the site and tools. The work is named only as `docs/EDITORIAL.md`
+ * names it — a description, never a rating.
+ */
+
+function numberWord(count: number): string {
+  const words = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
+  return words[count] ?? formatCount(count);
+}
+
+/** Original references citing one work, and the publications among them. */
+function originalsCiting(input: ShareCardInput, work: MediaCitedWork): MediaReference[] {
+  return input.mediaReferences.filter(
+    (reference) =>
+      isVerifiedRecord(reference) && reference.provenance === "original" && reference.cited_work === work,
+  );
+}
+
+/** Publications a work card may name, in this order, each only if it cites that work. */
+const WORK_CARD_NAMES: Partial<Record<MediaCitedWork, readonly string[]>> = {
+  h1b_data: ["Newsweek", "Fox News"],
+  layoff_data: ["IBTimes UK"],
+};
+
+function selectWorkCard(
+  input: ShareCardInput,
+  asOf: string,
+  work: MediaCitedWork,
+  id: string,
+  hook: string,
+): ShareCard | null {
+  const citing = originalsCiting(input, work);
+  const label = formatCitedWork(work);
+  if (citing.length === 0 || label === null) return null;
+  const publications = new Set(citing.map((reference) => reference.publication));
+  const named = (WORK_CARD_NAMES[work] ?? []).filter((name) => publications.has(name));
+
+  return {
+    id,
+    hook,
+    figure: formatCount(citing.length),
+    claim: `original press ${plural(citing.length, "piece", "pieces")} in ${formatCount(publications.size)} ${plural(publications.size, "publication", "publications")} ${plural(citing.length, "cites", "cite")} LayoffHedge's ${label.replace(/^the /, "")}${named.length > 0 ? `, ${joinWords(named, "and")} among them` : ""}`,
+    detail: "Republications are not counted.",
+    asOf,
+    dateKind: "data",
+    evidenceHref: "/methodology#cited-work",
+    evidenceLabel: "METHODOLOGY",
+  };
+}
+
+/** Card — original press pieces citing the H-1B filings data. */
+export function selectH1BDataCard(input: ShareCardInput, asOf: string): ShareCard | null {
+  return selectWorkCard(input, asOf, "h1b_data", "h1b-data", "The H-1B data made the news.");
+}
+
+/** Card — original press pieces citing the layoff data. */
+export function selectLayoffDataCard(input: ShareCardInput, asOf: string): ShareCard | null {
+  return selectWorkCard(input, asOf, "layoff_data", "layoff-data", "Its layoff numbers get quoted.");
+}
+
+/**
+ * The @LayoffAI post that carried an investigation, chosen by id (declared
+ * curation). No media record is tied to a post (`related_post_id` is null on
+ * all of them), so the newsroom count covers every investigation and the post
+ * is named as one of them — true however many investigations there are.
+ */
+const INVESTIGATION_POST_ID = "post-layoffai-2098762091423203710";
+const INVESTIGATION_DESCRIPTION = "Trine University's international enrollment";
+
+/**
+ * `["Department of Justice", "Department of Labor"]` → `the Justice and Labor
+ * Departments`; any other name is kept whole (`the X and the Y`).
+ */
+function shortDepartments(departments: string[]): string {
+  const prefix = /^Department of /;
+  if (!departments.every((name) => prefix.test(name))) return `the ${departments.join(" and the ")}`;
+  const names = departments.map((name) => name.replace(prefix, ""));
+  return `the ${joinWords(names, "and")} ${plural(names.length, "Department", "Departments")}`;
+}
+
+/** An act as a past-tense verb taking the post as its object: "accounts … quote-posted the one on …". */
+const PAST_TENSE_ACTS: Record<AmplificationAction, string> = {
+  repost: "reposted",
+  quote_post: "quote-posted",
+  reply: "replied to",
+  mention: "mentioned",
+  share: "shared",
+  citation: "cited",
+  interview: "discussed",
+  other: "referenced",
+};
+
+/** Card — newsrooms reporting LayoffHedge's investigations, and the federal accounts that quoted one. */
+export function selectInvestigationCard(input: ShareCardInput, asOf: string): ShareCard | null {
+  const reporting = originalsCiting(input, "investigation");
+  const newsrooms = new Set(reporting.map((reference) => reference.publication)).size;
+  if (newsrooms === 0) return null;
+
+  const post = input.posts.find((entry) => entry.id === INVESTIGATION_POST_ID && isVerifiedRecord(entry));
+  const government = input.amplifications.filter(
+    (record) =>
+      isVerifiedRecord(record) && record.category === "government" && record.related_post_id === INVESTIGATION_POST_ID,
+  );
+  const offices = new Set(government.map(amplifierIdentity)).size;
+  const departments = [
+    ...new Set(
+      government
+        .map((record) => record.organization)
+        .filter((organization): organization is string => organization !== null)
+        .map((organization) => organization.replace(/^U\.S\. /, "")),
+    ),
+  ];
+  const verbs = joinWords([...new Set(government.map((record) => PAST_TENSE_ACTS[record.action]))], "or");
+  const quoted =
+    post !== undefined && offices > 0 && departments.length > 0
+      ? `. Accounts at ${shortDepartments(departments)} ${verbs} the one on ${INVESTIGATION_DESCRIPTION}`
+      : "";
+
+  return {
+    id: "investigation",
+    hook:
+      quoted !== ""
+        ? `One investigation, ${numberWord(offices)} federal ${plural(offices, "office", "offices")}.`
+        : "Newsrooms report its investigations.",
+    figure: formatCount(newsrooms),
+    claim: `${plural(newsrooms, "newsroom", "newsrooms")} reported LayoffHedge's investigations${quoted}`,
+    detail: null,
+    asOf,
+    dateKind: "data",
+    evidenceHref: "/evidence#media",
+    evidenceLabel: "VIEW EVIDENCE",
+  };
+}
+
+/**
+ * The post with the most recorded acts, chosen by id (declared curation) so
+ * the neutral description beside it stays true: it describes this post, not
+ * whichever post leads next month.
+ */
+const DISTRICTS_POST_ID = "post-layoffai-2087170419027526094";
+const DISTRICTS_POST_DESCRIPTION = "H-1B growth by congressional district";
+
+/** Card — how many identified accounts amplified the one H-1B districts post. */
+export function selectDistrictsPostCard(input: ShareCardInput, asOf: string): ShareCard | null {
+  const post = input.posts.find((entry) => entry.id === DISTRICTS_POST_ID && isVerifiedRecord(entry));
+  if (post === undefined) return null;
+  const acts = input.amplifications.filter(
+    (record) => isVerifiedRecord(record) && record.related_post_id === DISTRICTS_POST_ID,
+  );
+  const accounts = new Set(acts.map(amplifierIdentity)).size;
+  if (accounts < 2) return null;
+  const politicians = new Set(acts.filter((record) => record.category === "politics").map(amplifierIdentity)).size;
+  const congress = acts.some((record) => holdsRole(record, SITTING_REPRESENTATIVE));
+
+  return {
+    id: "districts-post",
+    hook: congress ? "Members of Congress quote-posted this one." : "One post, many accounts.",
+    figure: formatCount(accounts),
+    claim: `identified accounts amplified a single ${input.officialXAccount} post on ${DISTRICTS_POST_DESCRIPTION}${politicians > 0 ? `, ${formatCount(politicians)} ${plural(politicians, "politician", "politicians")} among them` : ""}`,
+    detail: null,
+    asOf,
+    dateKind: "data",
+    evidenceHref: "/evidence#amplifications",
+    evidenceLabel: "VIEW EVIDENCE",
+  };
+}
+
+/** Acts on the project rather than on a post, as past-tense verbs in a fixed order. */
+const ACTS_ON_THE_PROJECT: [AmplificationAction, string][] = [
+  ["share", "shared"],
+  ["citation", "cited"],
+  ["mention", "mentioned"],
+];
+
+/** Card — identified accounts that shared, cited or mentioned the site, data and tools on X. */
+export function selectSiteAndToolsCard(input: ShareCardInput, asOf: string): ShareCard | null {
+  const actions = new Set(ACTS_ON_THE_PROJECT.map(([action]) => action));
+  const acts = input.amplifications.filter((record) => isVerifiedRecord(record) && actions.has(record.action));
+  const accounts = new Set(acts.map(amplifierIdentity)).size;
+  if (accounts === 0) return null;
+  const verbs = ACTS_ON_THE_PROJECT.filter(([action]) => acts.some((record) => record.action === action)).map(
+    ([, verb]) => verb,
+  );
+  const formerMembers = new Set(
+    acts.filter((record) => holdsRole(record, FORMER_REPRESENTATIVE)).map(amplifierIdentity),
+  ).size;
+
+  return {
+    id: "site-and-tools",
+    hook: "Not just the posts. The site itself.",
+    figure: formatCount(accounts),
+    claim: `identified ${plural(accounts, "account", "accounts")} ${joinWords(verbs, "or")} LayoffHedge's site, data and tools on X${formerMembers > 0 ? `, ${numberWord(formerMembers)} former ${plural(formerMembers, "member", "members")} of Congress among them` : ""}`,
+    detail: null,
+    asOf,
+    dateKind: "data",
+    evidenceHref: "/evidence#amplifications",
+    evidenceLabel: "VIEW EVIDENCE",
+  };
+}
+
 /** Card 11 — references that meet the featured criterion ("Names LayoffHedge as a source"). */
 export function selectNamedAsSourceCard(input: ShareCardInput, asOf: string): ShareCard | null {
   const { featuredReferenceCount } = getMediaMetrics(input.mediaReferences);
@@ -482,10 +684,15 @@ export function selectShareCards(input: ShareCardInput): ShareCard[] {
     data(selectAmplifiersCard),
     views(selectObservedViewsCard),
     data(selectCitedWorkCard),
+    data(selectH1BDataCard),
+    data(selectLayoffDataCard),
+    data(selectInvestigationCard),
     data(selectPressCard),
     views(selectPostsAbove1MCard),
     views(selectMedianPostCard),
     data(selectGovernmentCard),
+    data(selectDistrictsPostCard),
+    data(selectSiteAndToolsCard),
     data(selectNewsroomCountriesCard),
     data(selectCrossoverCard),
     data(selectNamedAsSourceCard),

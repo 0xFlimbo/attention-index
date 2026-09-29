@@ -152,6 +152,8 @@ values — this section draws the shape and deliberately prints no count of its 
 
 Desktop 2×2; mobile 1 column (2×2 only if labels stay comfortably readable).
 Flat, border-led, low radius, no shadows, strongly typographic.
+Below the grid, one `SHARE THESE FIGURES →` link to `/share` (§18): the page's way in from where
+the figures have just been read.
 Hover may shift surface color and reveal source link / observation date — never a shadow lift,
 and never hide the observation date on mobile.
 
@@ -442,13 +444,15 @@ ATTENTION CAME FIRST.
 This site documents the public attention around LayoffHedge.
 The project itself publishes at layoffhedge.com.
 
-OFFICIAL LAYOFFHEDGE ↗
+OFFICIAL LAYOFFHEDGE ↗   SHARE THESE FIGURES →
 ```
 
 **It is information, not a recommendation.** No imperative verb, no community recruitment, no
 token, no purchase path. An imperative like "join the community" reads as an implied endorsement,
 which this site avoids everywhere; it grows by being cited rather than by converting readers. The
 second sentence says where the destination is; it never suggests going there.
+`SHARE THESE FIGURES →` is the one imperative, and it points at this site's own figures on
+`/share` (§18), never at LayoffHedge.
 
 Three deliberate calls, worth keeping explicit:
 
@@ -577,6 +581,11 @@ OPEN ARCHIVE →    POST ON X ↗
 - **Every figure is derived** by `selectShareCards` (`docs/DATA.md §10`), never typed in. A card
   whose records are gone is not rendered; a named sentence whose record is gone is dropped and the
   figure stays.
+- **Two families of card:** the attention itself (views, amplifiers, press, countries), and
+  LayoffHedge's own work read through what others did with it (the press citing its H-1B and
+  layoff data, newsrooms reporting its investigations, accounts sharing its site and tools). The
+  second kind describes the work as `docs/EDITORIAL.md §2` does, never rates it, and never restates
+  a figure LayoffHedge publishes: every number is a count of this dataset's records.
 - **Aggregates first.** A card names at most one or two people or outlets, as plain text, never as
   an @-tag. Government records are named by department, not by person.
 - **The hook** is short, declarative and true on the card's own figure (`Not a one-off.` needs two
@@ -596,6 +605,7 @@ OPEN ARCHIVE →    POST ON X ↗
   a four-row subgrid (hook, figure, claim with its detail, links), so the figures and the links line
   up across a row whatever the length of each hook. The page carries
   the independence line under its intro, like `/archive`.
-- Linked from the footer (`SHARE`) and the nav from `lg` up. At 768 the nav row has no room for a
+- Linked from the homepage (`SHARE THESE FIGURES →` under the Attention Grid, §6, and in the
+  closing line, §13), the footer (`SHARE`) and the nav from `lg` up. At 768 the nav row has no room for a
   sixth link (measured: 20px left beside the short brand, 3px under a scrollbar), so there it is in
   the mobile panel and the footer only.

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ExternalArrow } from "./external-arrow";
 
 /**
@@ -11,6 +12,10 @@ import { ExternalArrow } from "./external-arrow";
  * rules out, and the site's growth mechanism is being cited by journalists
  * and researchers rather than converting readers. The second sentence says
  * where the destination is; it never suggests going there.
+ *
+ * `SHARE THESE FIGURES →` beside it (maintainer, 2026-09-29) is the one
+ * imperative here, and it points at this site's own figures on /share, never
+ * at LayoffHedge: the rule above is about the project link, which keeps no verb.
  *
  * Three calls made with the maintainer when this section was planned, so they
  * are not re-derived from the section sketch:
@@ -54,15 +59,20 @@ export function ClosingLine({ officialProjectUrl }: ClosingLineProps) {
         This site documents the public attention around LayoffHedge. The project itself publishes
         at layoffhedge.com.
       </p>
-      <a
-        href={officialProjectUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-metadata mt-10 inline-block font-bold text-ink underline-offset-2 hover:underline md:mt-14"
-      >
-        OFFICIAL LAYOFFHEDGE <ExternalArrow />
-        <span className="sr-only"> (opens in a new tab)</span>
-      </a>
+      <div className="text-metadata mt-10 flex flex-wrap gap-x-6 gap-y-2 font-bold md:mt-14">
+        <a
+          href={officialProjectUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-ink underline-offset-2 hover:underline"
+        >
+          OFFICIAL LAYOFFHEDGE <ExternalArrow />
+          <span className="sr-only"> (opens in a new tab)</span>
+        </a>
+        <Link href="/share" className="text-ink underline-offset-2 hover:underline">
+          SHARE THESE FIGURES <span aria-hidden="true">→</span>
+        </Link>
+      </div>
     </section>
   );
 }

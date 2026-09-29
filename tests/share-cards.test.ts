@@ -22,6 +22,9 @@ import {
   medianObservedViews,
   postsOver500K,
   selectAmplifiersCard,
+  selectDistrictsPostCard,
+  selectInvestigationCard,
+  selectSiteAndToolsCard,
   selectGovernmentCard,
   selectOfficeholdersCard,
   selectPostsAbove1MCard,
@@ -70,16 +73,21 @@ function postWithViews(id: string, views: number): Post {
 describe("share cards — frozen dataset (2026-09-20)", () => {
   const cards = selectShareCards(frozen);
 
-  it("builds all twelve cards, in page order", () => {
+  it("builds every card the dataset supports, in page order", () => {
+    // No share, citation or mention act existed yet, so there is no site-and-tools card.
     expect(cards.map((card) => card.id)).toEqual([
       "officeholders",
       "amplifiers",
       "observed-views",
       "cited-work",
+      "h1b-data",
+      "layoff-data",
+      "investigation",
       "press",
       "posts-above-1m",
       "median-post",
       "government",
+      "districts-post",
       "newsroom-countries",
       "crossover",
       "named-as-source",
@@ -134,6 +142,38 @@ describe("share cards — frozen dataset (2026-09-20)", () => {
   });
 });
 
+describe("share cards — LayoffHedge's work, frozen dataset (2026-09-20)", () => {
+  const cards = selectShareCards(frozen);
+
+  it("counts originals citing each work, and names only publications among them", () => {
+    expect(byId(cards, "h1b-data").claim).toBe(
+      "original press pieces in 9 publications cite LayoffHedge's H-1B filings data, Newsweek and Fox News among them",
+    );
+    expect(byId(cards, "h1b-data").figure).toBe("11");
+    // IBTimes UK cites the layoff data, so it is named.
+    expect(byId(cards, "layoff-data").claim).toBe(
+      "original press pieces in 7 publications cite LayoffHedge's layoff data, IBTimes UK among them",
+    );
+  });
+
+  it("ties the government accounts to the investigation through the post they quoted", () => {
+    const card = byId(cards, "investigation");
+    expect(card.figure).toBe("4");
+    expect(card.hook).toBe("One investigation, two federal offices.");
+    expect(card.claim).toBe(
+      "newsrooms reported LayoffHedge's investigations. Accounts at the Justice and Labor Departments quote-posted the one on Trine University's international enrollment",
+    );
+  });
+
+  it("counts every identified account on the districts post, politicians among them", () => {
+    const card = byId(cards, "districts-post");
+    expect(card.figure).toBe("4");
+    expect(card.claim).toBe(
+      "identified accounts amplified a single @LayoffAI post on H-1B growth by congressional district, 4 politicians among them",
+    );
+  });
+});
+
 describe("share cards — selectors", () => {
   it("computes the median as the middle reading, or the mean of the two middle ones", () => {
     const odd = [1, 5, 3].map((views, index) => postWithViews(`post-${index}`, views));
@@ -178,6 +218,29 @@ describe("share cards — selectors", () => {
     const withoutFox = frozen.mediaReferences.filter((reference) => reference.publication !== "Fox News");
     const press = selectPressCard({ ...frozen, mediaReferences: withoutFox }, AS_OF);
     expect(press?.hook).toBe("Not only crypto media.");
+  });
+
+  it("keeps the investigation count when no government account quoted its post", () => {
+    const withoutGovernment = frozen.amplifications.filter((record) => record.category !== "government");
+    const card = selectInvestigationCard({ ...frozen, amplifications: withoutGovernment }, AS_OF);
+    expect(card?.figure).toBe("4");
+    expect(card?.hook).toBe("Newsrooms report its investigations.");
+    expect(card?.claim).toBe("newsrooms reported LayoffHedge's investigations");
+  });
+
+  it("builds the districts card only while its post is verified", () => {
+    const withoutPost = frozen.posts.filter((post) => post.id !== "post-layoffai-2087170419027526094");
+    expect(selectDistrictsPostCard({ ...frozen, posts: withoutPost }, AS_OF)).toBeNull();
+  });
+
+  it("counts accounts that acted on the site, not on a post, and the former members among them", () => {
+    expect(selectSiteAndToolsCard(frozen, AS_OF)).toBeNull();
+    const card = selectSiteAndToolsCard(live, AS_OF);
+    const acts = live.amplifications.filter(
+      (record) =>
+        record.status === "verified" && ["share", "citation", "mention"].includes(record.action),
+    );
+    expect(card?.figure).toBe(String(new Set(acts.map((record) => `${record.entity_type}:${record.entity_name.toLowerCase()}`)).size));
   });
 
   it("does not claim a pattern from a single post above 1M", () => {
